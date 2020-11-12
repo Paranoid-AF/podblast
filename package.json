@@ -16,7 +16,7 @@
   "scripts": {
     "start:view": "craco start",
     "start:core": "npm run build:core -s && electron ./build-electron",
-    "start": "concurrently \"BROWSER=none yarn start:view\" \"wait-on http://localhost:3000 && electron .",
+    "start": "concurrently \"BROWSER=none yarn start:view\" \"wait-on http://localhost:3000 && electron .\"",
     "build:view": "craco build",
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
