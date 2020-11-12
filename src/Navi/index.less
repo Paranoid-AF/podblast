@@ -1,7 +1,7 @@
 @import "../App.less";
 @naviWidth: 85px;
-@naviLeftRightPadding: 5px;
-@naviTopBottomPadding: 5px;
+@naviLeftRightPadding: 10px;
+@naviTopBottomPadding: 10px;
 .navi {
   top: @naviTopBottomPadding;
   left: @naviLeftRightPadding;
@@ -14,4 +14,11 @@
   border-top-left-radius: @windowRadius;
   border-bottom-left-radius: @windowRadius;
   -webkit-app-region: drag;
+}
+
+.navi-fullscreen {
+  border-radius: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
 }

@@ -3,14 +3,26 @@ import './index.less'
 
 import Panel from './Panel'
 
-class Navi extends Component {
+class Navi extends Component <Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      fullscreen: false
+    }
+  }
   render() {
     return (
-      <div className="navi">
+      <div className={ this.state.fullscreen ? "navi navi-fullscreen" : "navi" }>
         <Panel />
       </div>
     )
   }
 }
+
+type State = {
+  fullscreen: boolean
+}
+
+type Props = { }
 
 export default Navi

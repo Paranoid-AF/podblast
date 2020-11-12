@@ -18,6 +18,9 @@ app.on('ready', () => {
   }
   win.on('ready-to-show', () => {
     win.show()
+    // Prevent white margin on Windows
+    win.hide()
+    win.show()
   })
   win.on('closed', () => {
     win.destroy()

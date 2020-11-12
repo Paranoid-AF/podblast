@@ -6,8 +6,11 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    border-radius: @windowRadius;
     margin: @naviTopBottomPadding 0;
+}
+
+.app-wrapper-fullscreen {
+    margin: 0;
 }
 
 .container {
@@ -17,4 +20,14 @@
     width: calc(100% - @naviWidth - @naviLeftRightPadding * 2);
     height: calc(100% - @naviTopBottomPadding * 2);
     background-color: @containerBackground;
+    border-top-right-radius: @windowRadius;
+    border-bottom-right-radius: @windowRadius;
+}
+
+.container-fullscreen {
+    margin: 0;
+    margin-left: @naviWidth;
+    width: calc(100% - @naviWidth);
+    height: 100%;
+    border-radius: 0;
 }
