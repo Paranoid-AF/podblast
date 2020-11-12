@@ -7,7 +7,9 @@ app.on('ready', () => {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false
-    }
+    },
+    frame: false,
+    transparent: true
   })
   if(isDev){
     win.loadURL(`http://localhost:3000/`)

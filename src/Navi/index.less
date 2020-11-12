@@ -1,7 +1,14 @@
+@import "../App.less";
+@naviWidth: 85px;
 .navi {
+  top: 0;
+  left: 0;
+  padding-top: 10px;
   position: fixed;
-  width: 72px;
+  width: @naviWidth;
   height: 100%;
   background: #232527;
   color: #fff;
+  border-top-left-radius: @windowRadius;
+  border-bottom-left-radius: @windowRadius;
 }

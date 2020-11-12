@@ -20,7 +20,7 @@ class Panel extends Component <Props, {}> {
   render() {
     return (
       <div className="panel">
-        <PanelItem name="华北浪革" color="#888" hidden={true}/>
+        <PanelItem name="华北浪革" color="#888"/>
         <PanelItem name="捕蛇者说" image="https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss" active={true} />
         { this.renderDivider() }
       </div>
