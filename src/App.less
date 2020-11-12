@@ -7,11 +7,14 @@
     height: 100vh;
     overflow: hidden;
     border-radius: @windowRadius;
+    margin: @naviTopBottomPadding 0;
 }
 
 .container {
-    margin-left: @naviWidth;
-    width: calc(100vw - @naviWidth);
-    height: 100vh;
+    position: relative;
+    margin-left: calc(@naviLeftRightPadding + @naviWidth);
+    margin-right: @naviLeftRightPadding;
+    width: calc(100% - @naviWidth - @naviLeftRightPadding * 2);
+    height: calc(100% - @naviTopBottomPadding * 2);
     background-color: @containerBackground;
 }
