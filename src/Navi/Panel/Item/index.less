@@ -1,8 +1,9 @@
 .panel-item-wrapper {
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 .panel-item {
@@ -13,16 +14,48 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: border-radius ease-out .1s;
+  transition: all ease .1s;
   background-size: 100%;
 }
 
-.panel-item:hover {
+.panel-item-visible:hover {
+  border: none;
   border-radius: 5px;
+}
+
+.panel-item.panel-item-drag {
+  border-radius: 5px;
+  transform: scale(1.5);
+  margin: 10px 0;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
 .panel-item-text {
   display: block;
   user-select: none;
   font-size: 22px;
+}
+
+.panel-item-active {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: 0;
+  top: 0;
+  width: 22px;
+  height: 100%;
+}
+
+.panel-item-active-indicator {
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-right: 12px solid #fff;
+  overflow: hidden;
+}
+
+.panel-item-hidden {
+  cursor: default;
+  border: 2px dashed #fff;
+  border-radius: 5px;
 }

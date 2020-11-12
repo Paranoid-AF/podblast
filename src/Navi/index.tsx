@@ -7,7 +7,7 @@ class Navi extends Component {
   render() {
     return (
       <div className="navi">
-        <Panel /><Panel withDivider={false}/>
+        <Panel />
       </div>
     )
   }
