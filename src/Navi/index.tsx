@@ -7,7 +7,7 @@ class Navi extends Component <Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      fullscreen: false
+      fullscreen: true // TODO: Always true on Linux, but works on Windows.
     }
   }
   render() {

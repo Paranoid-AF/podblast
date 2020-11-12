@@ -6,11 +6,10 @@ class App extends Component <Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      fullscreen: false
+      fullscreen: true // TODO: Always true on Linux, but works on Windows.
     }
   }
   render() {
-    console.log(this.state.fullscreen)
     return (
       <div className={ this.state.fullscreen ? "app-wrapper app-wrapper-fullscreen" : "app-wrapper"}>
         <Navi />
