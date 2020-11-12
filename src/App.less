@@ -1,6 +1,7 @@
 @import "./Navi";
 @containerBackground: #eee;
 @windowRadius: 6px;
+@naviExtensionWidth: 6px; // To make radius work
 .app-wrapper {
     position: relative;
     width: 100vw;
@@ -20,8 +21,7 @@
     width: calc(100% - @naviWidth - @naviLeftRightPadding * 2);
     height: calc(100% - @naviTopBottomPadding * 2);
     background-color: @containerBackground;
-    border-top-right-radius: @windowRadius;
-    border-bottom-right-radius: @windowRadius;
+    border-radius: @windowRadius;
 }
 
 .container-fullscreen {
@@ -29,5 +29,6 @@
     margin-left: @naviWidth;
     width: calc(100% - @naviWidth);
     height: 100%;
-    border-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
