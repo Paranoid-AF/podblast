@@ -15,8 +15,8 @@
   "main": "./build-electron/index.js",
   "scripts": {
     "start:view": "craco start",
-    "start:core": "npm run build:core -s && electron ./build-electron",
-    "start": "concurrently \"BROWSER=none yarn start:view\" \"wait-on http://localhost:3000 && electron .\"",
+    "start:core": "npm run build:core -s && electron --enable-transparent-visuals --disable-gpu ./build-electron",
+    "start": "concurrently \"cross-env BROWSER=none npm run start:view\" \"wait-on http://localhost:3000 && npm run start:core -s\"",
     "build:view": "craco build",
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
@@ -51,6 +51,7 @@
     "antd": "^4.7.2",
     "concurrently": "^5.3.0",
     "craco-less": "^1.17.0",
+    "cross-env": "^7.0.2",
     "electron": "^10.1.4",
     "electron-builder": "^22.9.1",
     "react": "^17.0.1",
