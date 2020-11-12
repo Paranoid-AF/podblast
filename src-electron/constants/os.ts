@@ -1,9 +1,9 @@
 import os from 'os';
 export enum Platforms {
-  WINDOWS = "WINDOWS",
-  MAC = "MAC",
+  WINDOWS = "WIN32",
+  MAC = "DARWIN",
   LINUX = "LINUX",
-  SUN = "SUN",
+  SUN = "SUNOS",
   OPENBSD = "OPENBSD",
   ANDROID = "ANDROID",
   AIX = "AIX",
