@@ -1,8 +1,10 @@
-import { BrowserWindow, app, BrowserWindowConstructorOptions } from 'electron';
-import isDev from 'electron-is-dev';
-import path from 'path';
+import { BrowserWindow, app, BrowserWindowConstructorOptions } from 'electron'
+import isDev from 'electron-is-dev'
+import path from 'path'
+import { Platforms, getPlatform } from './constants/os'
 
 app.on('ready', () => {
+  const currentPlatform = getPlatform()
   const windowConf: BrowserWindowConstructorOptions = {
     show: false,
     webPreferences: {
@@ -10,7 +12,11 @@ app.on('ready', () => {
       nodeIntegrationInWorker: false
     }
   }
-  windowConf.frame = false
+  if(currentPlatform === Platforms.WINDOWS) {
+    windowConf.frame = false
+  } else {
+    windowConf.frame = true
+  }
 
   var win = new BrowserWindow(windowConf)
   if(isDev){
