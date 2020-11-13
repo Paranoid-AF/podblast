@@ -60,13 +60,13 @@ class Panel extends Component <Props, State> {
 
   handleMouseUp = (e: MouseEvent) => {
     if(this.state.sortActive) {
-      this.sortTargetKey = null
       this.setState({
         sortActive: false
       })
-      document.body.removeEventListener('mousemove', this.handleMouseMove)
-      document.body.removeEventListener('mouseup', this.handleMouseUp)
     }
+    document.body.removeEventListener('mousemove', this.handleMouseMove)
+    document.body.removeEventListener('mouseup', this.handleMouseUp)
+    this.sortTargetKey = null
   }
 
   renderDivider() {
