@@ -2,10 +2,7 @@ import { BrowserWindow, app, BrowserWindowConstructorOptions } from 'electron';
 import isDev from 'electron-is-dev';
 import path from 'path';
 
-import { getPlatform, Platforms } from './constants/os'
-
 app.on('ready', () => {
-  const osPlatform = getPlatform()
   const windowConf: BrowserWindowConstructorOptions = {
     show: false,
     webPreferences: {
@@ -13,12 +10,7 @@ app.on('ready', () => {
       nodeIntegrationInWorker: false
     }
   }
-  /* Frameless and transparent only works well on Windows */
-  if(osPlatform === Platforms.WINDOWS) {
-    windowConf.frame = false
-    windowConf.transparent = true
-    windowConf.maximizable = false // But maximize works incorrectly without frames on Windows
-  }
+  windowConf.frame = false
 
   var win = new BrowserWindow(windowConf)
   if(isDev){
@@ -28,6 +20,7 @@ app.on('ready', () => {
   }
   win.on('ready-to-show', () => {
     win.show()
+    win.setSize(800, 600) // Set this to make the window always resizable on Linux.
   })
   win.on('closed', () => {
     win.destroy()

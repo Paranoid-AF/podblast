@@ -1,24 +1,13 @@
 @import "../App.less";
 @naviWidth: 85px;
-@naviLeftRightPadding: 6px;
-@naviTopBottomPadding: 6px;
 .navi {
-  top: @naviTopBottomPadding;
-  left: @naviLeftRightPadding;
+  top: @windowTopBottomBorder;
+  left: @windowLeftRightBorder;
   padding-top: 10px;
   position: fixed;
   width: calc(@naviWidth + @naviExtensionWidth);
-  height: calc(100% - @naviTopBottomPadding * 2);
+  height: calc(100% - @windowTopBottomBorder * 3);
   background: #232527;
   color: #fff;
-  border-top-left-radius: @windowRadius;
-  border-bottom-left-radius: @windowRadius;
   -webkit-app-region: drag;
-}
-
-.navi-fullscreen {
-  border-radius: 0;
-  height: 100%;
-  top: 0;
-  left: 0;
 }

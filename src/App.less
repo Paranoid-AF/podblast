@@ -1,5 +1,8 @@
 @import "./Navi";
 @containerBackground: #eee;
+@windowBorderColor: #585858;
+@windowLeftRightBorder: 1px;
+@windowTopBottomBorder: 1px;
 @windowRadius: 6px;
 @naviExtensionWidth: 6px; // To make radius work
 .app-wrapper {
@@ -7,28 +10,21 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    margin: @naviTopBottomPadding 0;
-}
-
-.app-wrapper-fullscreen {
-    margin: 0;
+    margin-top: calc(@windowTopBottomBorder);
+    margin-bottom: calc(@windowTopBottomBorder);
 }
 
 .container {
     position: relative;
-    margin-left: calc(@naviLeftRightPadding + @naviWidth);
-    margin-right: @naviLeftRightPadding;
-    width: calc(100% - @naviWidth - @naviLeftRightPadding * 2);
-    height: calc(100% - @naviTopBottomPadding * 2);
+    margin-left: calc(@windowLeftRightBorder + @naviWidth);
+    margin-right: @windowLeftRightBorder;
+    width: calc(100% - @naviWidth - @windowLeftRightBorder * 3);
+    height: calc(100% - @windowTopBottomBorder * 3);
     background-color: @containerBackground;
-    border-radius: @windowRadius;
+    border-top-left-radius: @windowRadius;
+    border-bottom-left-radius: @windowRadius;
 }
 
-.container-fullscreen {
-    margin: 0;
-    margin-left: @naviWidth;
-    width: calc(100% - @naviWidth);
-    height: 100%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+body {
+    background-color: @windowBorderColor; /* App border */
 }
