@@ -17,6 +17,7 @@ class Panel extends Component <Props, State> {
     sortTargetKey: null,
     sortActive: false
   }
+  refSet: Record<string, React.RefObject<HTMLDivElement>> = {}
 
   static getDerivedStateFromProps(props: Props, state: State) {
     if(!state.sortActive && props.items !== state.items) {
@@ -25,6 +26,10 @@ class Panel extends Component <Props, State> {
       }
     }
     return null
+  }
+
+  setItemRef = (key: string, ref: React.RefObject<HTMLDivElement>) => {
+    this.refSet[key] = ref
   }
 
   handleItemMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
@@ -39,7 +44,7 @@ class Panel extends Component <Props, State> {
   }
 
   handleItemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    console.warn(key)
+    
   }
 
   handleMouseMove = (e: MouseEvent) => {
@@ -76,6 +81,7 @@ class Panel extends Component <Props, State> {
 
 
   render() {
+    console.log("rerendered!")
     return (
       <div className="panel">
         {this.state.items.map(item => (
@@ -90,6 +96,7 @@ class Panel extends Component <Props, State> {
             onClick={this.handleItemClick}
             hidden={this.state.sortActive && this.sortTargetKey === item.key}
             tooltip={this.state.sortActive ? false : undefined}
+            setRef={this.setItemRef}
           />
         ))}
         { this.renderDivider() }

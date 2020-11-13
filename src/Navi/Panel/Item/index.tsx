@@ -17,6 +17,12 @@ class PanelItem extends Component <Props, State> {
     tooltip: false
   }
 
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef()
+
+  componentDidUpdate() {
+    this.props.setRef(this.props.id, this.itemRef)
+  }
+
   handleTooltip = (visible: boolean )=> {
     this.setState(() => ({
       tooltip: this.props.tooltip && !this.props.dragged && visible
@@ -66,7 +72,7 @@ class PanelItem extends Component <Props, State> {
     return (
       <Tooltip placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
         <div className="panel-item-wrapper">
-          <div className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
+          <div ref={this.itemRef} className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
             {
               !this.props.image && 
               (
@@ -104,7 +110,8 @@ type Props = {
   active?: boolean,
   dragged?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
+  setRef: (key: string, ref: React.RefObject<HTMLDivElement>) => void
 }
 
 export default PanelItem
