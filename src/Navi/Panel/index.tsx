@@ -54,7 +54,11 @@ class Panel extends Component <Props, State> {
       })
     }
     if(this.state.sortActive) {
-      // TODO: handle dragging to sort
+      const newItems = this.state.items // TODO: handle dragging to sort
+      this.setState({ items: newItems })
+      if(typeof this.props.handleSort === "function") {
+        this.props.handleSort(newItems)
+      }
     }
   }
 
@@ -63,6 +67,9 @@ class Panel extends Component <Props, State> {
       this.setState({
         sortActive: false
       })
+      if(typeof this.props.handleSortDone === "function") {
+        this.props.handleSortDone()
+      }
     }
     document.body.removeEventListener('mousemove', this.handleMouseMove)
     document.body.removeEventListener('mouseup', this.handleMouseUp)
@@ -79,9 +86,7 @@ class Panel extends Component <Props, State> {
     }
   }
 
-
   render() {
-    console.log("rerendered!")
     return (
       <div className="panel">
         {this.state.items.map(item => (
@@ -92,7 +97,7 @@ class Panel extends Component <Props, State> {
             color={item.color}
             image={item.image}
             active={item.key === this.props.current}
-            onMouseDown={typeof this.props.onDrag === "function" ? this.handleItemMouseDown : undefined}
+            onMouseDown={typeof this.props.handleSort === "function" ? this.handleItemMouseDown : undefined}
             onClick={this.handleItemClick}
             hidden={this.state.sortActive && this.sortTargetKey === item.key}
             tooltip={this.state.sortActive ? false : undefined}
@@ -121,7 +126,8 @@ type Props = {
   items: Array<ItemList>,
   current: string,
   withDivider: boolean,
-  onDrag?: (newList: Array<ItemList>) => void
+  handleSort?: (newList: Array<ItemList>) => void,
+  handleSortDone?: () => void
 }
 
 Panel.defaultProps = {

@@ -22,7 +22,7 @@ class Navi extends Component <Props, State> {
     itemList: bruh,
     currentItemKey: ""
   }
-
+  nextList: Array<ItemList> | null = null
   componentDidMount() {
     this.setState({
       itemList: bruh,
@@ -30,16 +30,22 @@ class Navi extends Component <Props, State> {
     })
   }
 
-  onPanelSort = (newList: Array<ItemList>)=> {
-    this.setState({
-      itemList: newList
-    })
+  onPanelSort = (newList: Array<ItemList>) => {
+    this.nextList = newList
+  }
+
+  onSortDone = () => {
+    if(this.nextList !== null) {
+      this.setState({
+        itemList: this.nextList
+      })
+    }
   }
 
   render() {
     return (
       <div className={ this.state.borderless ? "navi navi-borderless" : "navi" }>
-        <Panel items={this.state.itemList} current={this.state.currentItemKey} onDrag={this.onPanelSort} />
+        <Panel items={this.state.itemList} current={this.state.currentItemKey} handleSort={this.onPanelSort} handleSortDone={this.onSortDone} />
       </div>
     )
   }
