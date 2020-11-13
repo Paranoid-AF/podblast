@@ -3,11 +3,8 @@ import Navi from './Navi'
 import './App.less'
 
 class App extends Component <{}, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      borderless: false
-    }
+  state = {
+    borderless: false
   }
 
   render() {

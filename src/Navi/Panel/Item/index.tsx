@@ -8,19 +8,17 @@ class PanelItem extends Component <Props, State> {
     hidden: false,
     tooltip: true,
     active: false,
-    dragged: false
+    dragged: false,
+    onMouseDown: null
   }
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      hidden: props.hidden,
-      tooltip: false
-    }
+  
+  state = {
+    hidden: this.props.hidden,
+    tooltip: false
   }
 
   handleTooltip = (visible: boolean )=> {
-    this.setState(prevState => ({
+    this.setState(() => ({
       tooltip: this.props.tooltip && !this.props.dragged && visible
     }))
   }
@@ -32,6 +30,21 @@ class PanelItem extends Component <Props, State> {
           <div className="panel-item-active-indicator"></div>
         </div>
       )
+    }
+  }
+
+  processMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    if(typeof this.props.onMouseDown === "function") {
+      this.props.onMouseDown(e, this.props.id)
+      this.setState(() => ({
+        tooltip: false
+      }))
+    }
+  }
+
+  processClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    if(typeof this.props.onClick === "function") {
+      this.props.onClick(e, this.props.id)
     }
   }
 
@@ -53,7 +66,7 @@ class PanelItem extends Component <Props, State> {
     return (
       <Tooltip placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
         <div className="panel-item-wrapper">
-          <div className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle }>
+          <div className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
             {
               !this.props.image && 
               (
@@ -83,12 +96,15 @@ type State = {
 
 type Props = {
   name: string,
+  id: string,
   color: string,
   image?: string,
   hidden?: boolean,
   tooltip?: boolean,
   active?: boolean,
-  dragged?: boolean
+  dragged?: boolean,
+  onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
 }
 
 export default PanelItem
