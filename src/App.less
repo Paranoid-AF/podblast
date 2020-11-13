@@ -14,6 +14,10 @@
     margin-bottom: calc(@windowTopBottomBorder);
 }
 
+.app-wrapper-borderless {
+    margin: 0;
+}
+
 .container {
     position: relative;
     margin-left: calc(@windowLeftRightBorder + @naviWidth);
@@ -23,6 +27,13 @@
     background-color: @containerBackground;
     border-top-left-radius: @windowRadius;
     border-bottom-left-radius: @windowRadius;
+}
+
+.container-borderless {
+    margin: 0;
+    margin-left: @naviWidth;
+    width: calc(100% - @naviWidth);
+    height: 100%;
 }
 
 body {
