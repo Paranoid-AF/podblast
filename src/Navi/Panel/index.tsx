@@ -31,6 +31,10 @@ class Panel extends Component <Props, State> {
     return null
   }
 
+  componentDidMount() {
+    document.addEventListener('mouseleave', this.handleMouseLeave)
+  }
+
   setItemRef = (dragged = false) => {
     if(dragged) {
       return ((key: string, ref: React.RefObject<HTMLDivElement>) => {
@@ -73,6 +77,7 @@ class Panel extends Component <Props, State> {
 
   /* Set drag icon to mouse position. */
   setDragPos = (clientY: number) => {
+    console.log(clientY)
     if(this.panelRef.current !== null && this.refDragged.current !== null) {
       const dragHeight = this.refDragged.current.getBoundingClientRect().height
       if(this.dragContainer !== null) {
@@ -136,6 +141,12 @@ class Panel extends Component <Props, State> {
       this.dragContainer = null
     }
     this.sortTarget = null
+  }
+
+  handleMouseLeave = (e: MouseEvent) => {
+    if(this.state.sortActive) {
+      this.handleMouseUp(e)
+    }
   }
 
   renderDivider() {
