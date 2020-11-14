@@ -92,11 +92,11 @@ class Panel extends Component <Props, State> {
     const resultMap: Array<PosMap> = []
     this.state.items.forEach((val) => {
       const targetRef = this.refSet[val.key]
-      if(typeof targetRef === "object" && targetRef.current !== null) {
-        const itemHtml = targetRef.current
+      if(typeof targetRef === "object" && targetRef.current !== null && this.panelRef.current !== null) {
+        const itemHtmlRect = targetRef.current.getBoundingClientRect()
         resultMap.push({
           key: val.key,
-          y: itemHtml.getBoundingClientRect().y
+          y: itemHtmlRect.y + itemHtmlRect.height / 2
         })
       }
     })
