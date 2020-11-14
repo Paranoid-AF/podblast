@@ -124,7 +124,7 @@ class PanelItem extends Component <Props, State> {
     }
     if(!this.props.dragged) {
       return (
-        <Tooltip placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
+        <Tooltip overlayClassName="panel-tooltip" placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
           {this.renderFinal()}
         </Tooltip>
       )
