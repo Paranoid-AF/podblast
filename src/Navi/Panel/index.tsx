@@ -120,6 +120,9 @@ class Panel extends Component <Props, State> {
         if(container === null) {
           container = document.createElement('div')
           container.id = 'panel-drag-container'
+          if(this.panelRef.current !== null) {
+            container.style.left = `${this.panelRef.current.getBoundingClientRect().x}px`
+          }
           document.body.appendChild(container)
           const wrapper = document.createElement('div')
           wrapper.id = 'panel-drag-wrapper'
