@@ -10,7 +10,9 @@ app.on('ready', () => {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false
-    }
+    },
+    minWidth: 650,
+    minHeight: 400
   }
   if(currentPlatform === Platforms.WINDOWS) {
     windowConf.frame = false
