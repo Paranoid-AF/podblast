@@ -77,13 +77,28 @@ class Panel extends Component <Props, State> {
 
   /* Set drag icon to mouse position. */
   setDragPos = (clientY: number) => {
-    console.log(clientY)
     if(this.panelRef.current !== null && this.refDragged.current !== null) {
       const dragHeight = this.refDragged.current.getBoundingClientRect().height
       if(this.dragContainer !== null) {
         this.dragContainer.style.top = `${clientY - dragHeight / 2}px`
       }
     }
+  }
+
+  /* Build an array of item center points */
+  buildPosMap = () => {
+    const resultMap: Array<PosMap> = []
+    this.state.items.forEach((val) => {
+      const targetRef = this.refSet[val.key]
+      if(typeof targetRef === "object" && targetRef.current !== null) {
+        const itemHtml = targetRef.current
+        resultMap.push({
+          key: val.key,
+          y: itemHtml.getBoundingClientRect().y
+        })
+      }
+    })
+    return resultMap
   }
 
   handleMouseMove = (e: MouseEvent) => {
@@ -115,8 +130,10 @@ class Panel extends Component <Props, State> {
       /* Adjust position. */
       this.setDragPos(e.clientY)
     }
+    /* Drag logic for sorting. */
     if(this.state.sortActive) {
       this.setDragPos(e.clientY)
+      console.log(this.buildPosMap())
       let items = this.state.items
       this.setState({ items: items })
       if(typeof this.props.handleSort === "function") {
@@ -198,6 +215,11 @@ class Panel extends Component <Props, State> {
 
 type Position = {
   x: number,
+  y: number
+}
+
+interface PosMap {
+  key: string,
   y: number
 }
 

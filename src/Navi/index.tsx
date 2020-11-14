@@ -13,6 +13,11 @@ const bruh = [
     key: "uuid2",
     name: "捕蛇者说",
     image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
+  },
+  {
+    key: "uuid3",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
   }
 ]
 
