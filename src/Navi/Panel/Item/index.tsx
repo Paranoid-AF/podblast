@@ -59,6 +59,9 @@ class PanelItem extends Component <Props, State> {
   }
 
   processMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    if(e.button !== 0) {
+      return
+    }
     if(typeof this.props.onMouseDown === "function") {
       this.props.onMouseDown(e, this.props.id)
       this.setState({
