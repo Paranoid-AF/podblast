@@ -13,8 +13,8 @@ class PanelItem extends Component <Props, State> {
   }
   
   state = {
-    hidden: this.props.hidden,
-    tooltip: false
+    tooltip: false,
+    pressed: false
   }
 
   itemRef: React.RefObject<HTMLDivElement> = React.createRef()
@@ -27,6 +27,15 @@ class PanelItem extends Component <Props, State> {
     this.sendRef()
   }
   
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if(props.hidden) {
+      return {
+        pressed: false
+      }
+    }
+    return null
+  }
+
   sendRef() {
     if(typeof this.props.setRef === "function") {
       this.props.setRef(this.props.id, this.itemRef)
@@ -52,16 +61,25 @@ class PanelItem extends Component <Props, State> {
   processMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
     if(typeof this.props.onMouseDown === "function") {
       this.props.onMouseDown(e, this.props.id)
-      this.setState(() => ({
-        tooltip: false
-      }))
+      this.setState({
+        tooltip: false,
+      })
     }
+    this.setState({
+      pressed: true
+    })
   }
 
   processClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
     if(typeof this.props.onClick === "function") {
       this.props.onClick(e, this.props.id)
     }
+  }
+
+  onMouseUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    this.setState({
+      pressed: false
+    })
   }
 
   renderFinal() {
@@ -71,9 +89,13 @@ class PanelItem extends Component <Props, State> {
     if("image" in this.props && this.props.image !== undefined) {
       itemStyle.backgroundImage = `url(${this.props.image})`
     }
+    let itemClassName = this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible"
+    if(this.state.pressed) {
+      itemClassName += " panel-item-pressed"
+    }
     return (
       <div className="panel-item-wrapper">
-      <div ref={this.itemRef} className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
+      <div ref={this.itemRef} className={itemClassName} style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick} onMouseUp={this.onMouseUp} >
         {
           !this.props.image && 
           (
@@ -115,9 +137,8 @@ interface ItemStyle {
 }
 
 type State = {
-  color?: string,
-  hidden?: boolean,
-  tooltip?: boolean
+  tooltip?: boolean,
+  pressed: boolean
 }
 
 type Props = {
