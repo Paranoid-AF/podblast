@@ -19,8 +19,18 @@ class PanelItem extends Component <Props, State> {
 
   itemRef: React.RefObject<HTMLDivElement> = React.createRef()
 
+  componentDidMount() {
+    this.sendRef()
+  }
+
   componentDidUpdate() {
-    this.props.setRef(this.props.id, this.itemRef)
+    this.sendRef()
+  }
+  
+  sendRef() {
+    if(typeof this.props.setRef === "function") {
+      this.props.setRef(this.props.id, this.itemRef)
+    }
   }
 
   handleTooltip = (visible: boolean )=> {
@@ -30,7 +40,7 @@ class PanelItem extends Component <Props, State> {
   }
 
   renderActiveIndicator = () => {
-    if(this.props.active) {
+    if(this.props.active && !this.props.dragged) {
       return (
         <div className="panel-item-active">
           <div className="panel-item-active-indicator"></div>
@@ -66,7 +76,7 @@ class PanelItem extends Component <Props, State> {
     const itemStyle: ItemStyle = {
       backgroundColor: this.props.color
     }
-    if("image" in this.props) {
+    if("image" in this.props && this.props.image !== undefined) {
       itemStyle.backgroundImage = `url(${this.props.image})`
     }
     return (
@@ -111,7 +121,7 @@ type Props = {
   dragged?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
-  setRef: (key: string, ref: React.RefObject<HTMLDivElement>) => void
+  setRef: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null
 }
 
 export default PanelItem
