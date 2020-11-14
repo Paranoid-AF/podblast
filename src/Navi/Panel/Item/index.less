@@ -1,10 +1,13 @@
 @import "../../../App.less";
+@windowDragArea: 20px;
 .panel-item-wrapper {
   position: relative;
-  width: 100%;
+  width: calc(100% - @windowDragArea * 2);
   display: flex;
   justify-content: center;
-  margin: 15px 0;
+  margin: 0 @windowDragArea;
+  padding: 7px 0;
+  -webkit-app-region: no-drag;
 }
 
 .panel-item {
@@ -18,7 +21,6 @@
   transition: all ease .1s;
   background-size: 100%;
   color: #fff;
-  -webkit-app-region: no-drag;
   user-select: none;
 }
 
@@ -45,7 +47,7 @@
   position: absolute;
   display: flex;
   align-items: center;
-  right: 0;
+  right: -@windowDragArea;
   top: 0;
   width: 22px;
   height: 100%;
