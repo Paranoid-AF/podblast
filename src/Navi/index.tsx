@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './index.less'
 
-import Panel, { ItemList } from './Panel'
+import Panel, { ItemList, SortResult } from './Panel'
 
 const bruh = [
   {
@@ -79,7 +79,7 @@ class Navi extends Component <Props, State> {
     this.nextList = newList
   }
 
-  onSortDone = () => {
+  onSortDone = (result: SortResult) => {
     if(this.nextList !== null) {
       this.setState({
         itemList: this.nextList

@@ -17,6 +17,8 @@ class Panel extends Component <Props, State> {
     items: this.props.items,
     sortActive: false
   }
+  sortInitPos: number = -1
+  sortCurrentPos: number = -1
   refSet: Record<string, React.RefObject<HTMLDivElement>> = {}
   refDragged: React.RefObject<HTMLDivElement> = React.createRef()
   panelRef: React.RefObject<HTMLDivElement> = React.createRef()
@@ -108,6 +110,10 @@ class Panel extends Component <Props, State> {
       this.setState({
         sortActive: true
       })
+      if(this.sortTarget !== null) {
+        this.sortInitPos = this.state.items.indexOf(this.sortTarget)
+        this.sortCurrentPos = this.sortInitPos
+      }
       /* Create drag icon. */
       if(this.dragContainer === null) {
         let container: HTMLDivElement | null = document.body.querySelector('#panel-drag-container')
@@ -145,6 +151,7 @@ class Panel extends Component <Props, State> {
             key: targetKey,
             y: e.clientY
           })
+          this.sortCurrentPos = index
           return true
         }
         if(index === arr.length - 1) {
@@ -152,6 +159,7 @@ class Panel extends Component <Props, State> {
             key: targetKey,
             y: e.clientY
           })
+          this.sortCurrentPos = index + 1
         }
         return false
       })
@@ -186,8 +194,12 @@ class Panel extends Component <Props, State> {
       this.setState({
         sortActive: false
       })
-      if(typeof this.props.handleSortDone === "function") {
-        this.props.handleSortDone()
+      if(typeof this.props.handleSortDone === "function" && this.sortTarget !== null) {
+        this.props.handleSortDone({
+          key: this.sortTarget.key,
+          fromIndex: this.sortInitPos,
+          toIndex: this.sortCurrentPos
+        })
       }
     }
     document.body.removeEventListener('mousemove', this.handleMouseMove)
@@ -196,6 +208,7 @@ class Panel extends Component <Props, State> {
       this.dragContainer.remove()
       this.dragContainer = null
     }
+    this.sortInitPos = -1
     this.sortTarget = null
   }
 
@@ -274,7 +287,7 @@ type Props = {
   current: string,
   withDivider: boolean,
   handleSort?: (newList: Array<ItemList>) => void,
-  handleSortDone?: () => void
+  handleSortDone?: (result :SortResult) => void
 }
 
 Panel.defaultProps = {
@@ -286,6 +299,12 @@ Panel.defaultProps = {
 type State = {
   items: Array<ItemList>,
   sortActive: boolean
+}
+
+export interface SortResult {
+  key: string,
+  fromIndex: number,
+  toIndex: number
 }
 
 export default Panel
