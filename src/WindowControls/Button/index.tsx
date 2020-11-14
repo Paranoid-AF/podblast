@@ -11,7 +11,8 @@ import iconRestoreLight from '../../common/res/window-controls/restore-w-30.png'
 
 class Button extends Component <Props, {}> {
   static defaultProps = {
-    color: "dark"
+    color: "dark",
+    focused: true
   }
   iconSetDark: IconSet = {
     close: iconCloseDark,
@@ -43,7 +44,7 @@ class Button extends Component <Props, {}> {
     }
 
     return (
-      <div className={`window-controll-button window-controll-button-${this.props.type}`} onClick={this.props.onClick}>
+      <div className={`window-controll-button window-controll-button-${this.props.type}${this.props.focused ? "" : " window-controll-button-defocused"}`} onClick={this.props.onClick}>
         <div className="window-controll-icon">
           <img
             src={icon}
@@ -59,7 +60,8 @@ class Button extends Component <Props, {}> {
 type Props = {
   type: "close" | "maximize" | "restore" | "minimize",
   color?: "light" | "dark",
-  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+  focused?: boolean
 }
 
 type IconSet = {
