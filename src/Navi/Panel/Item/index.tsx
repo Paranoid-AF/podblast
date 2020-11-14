@@ -64,6 +64,30 @@ class PanelItem extends Component <Props, State> {
     }
   }
 
+  renderFinal() {
+    const itemStyle: ItemStyle = {
+      backgroundColor: this.props.color
+    }
+    if("image" in this.props && this.props.image !== undefined) {
+      itemStyle.backgroundImage = `url(${this.props.image})`
+    }
+    return (
+      <div className="panel-item-wrapper">
+      <div ref={this.itemRef} className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
+        {
+          !this.props.image && 
+          (
+            <div className="panel-item-text">
+              { this.props.name.substring(0, 1) }
+            </div>
+          )
+        }
+      </div>
+      { this.renderActiveIndicator() }
+    </div>
+    )
+  }
+
   render() {
     if(this.props.hidden) {
       return (
@@ -73,29 +97,15 @@ class PanelItem extends Component <Props, State> {
         </div>
       )
     }
-    const itemStyle: ItemStyle = {
-      backgroundColor: this.props.color
+    if(!this.props.dragged) {
+      return (
+        <Tooltip placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
+          {this.renderFinal()}
+        </Tooltip>
+      )
+    } else {
+      return this.renderFinal()
     }
-    if("image" in this.props && this.props.image !== undefined) {
-      itemStyle.backgroundImage = `url(${this.props.image})`
-    }
-    return (
-      <Tooltip placement="right" title={<span>{this.props.name}</span>} onVisibleChange={this.handleTooltip} visible={this.state.tooltip}>
-        <div className="panel-item-wrapper">
-          <div ref={this.itemRef} className={ this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible" } style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick}>
-            {
-              !this.props.image && 
-              (
-                <div className="panel-item-text">
-                  { this.props.name.substring(0, 1) }
-                </div>
-              )
-            }
-          </div>
-          { this.renderActiveIndicator() }
-        </div>
-      </Tooltip>
-    )
   }
 }
 
