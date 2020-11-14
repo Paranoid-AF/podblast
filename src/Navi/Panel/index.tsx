@@ -133,13 +133,52 @@ class Panel extends Component <Props, State> {
     /* Drag logic for sorting. */
     if(this.state.sortActive) {
       this.setDragPos(e.clientY)
-      console.log(this.buildPosMap())
-      let items = this.state.items
+      const posMap = this.buildPosMap()
+      let targetKey: string = ""
+      if(this.sortTarget !== null) {
+        targetKey = this.sortTarget.key
+      }
+      /* Find a position for current sorting target item. */
+      posMap.some((val, index, arr) => {
+        if(e.clientY < val.y) {
+          arr.splice(index, 0, {
+            key: targetKey,
+            y: e.clientY
+          })
+          return true
+        }
+        if(index === arr.length - 1) {
+          arr.push({
+            key: targetKey,
+            y: e.clientY
+          })
+        }
+        return false
+      })
+      let items: Array<ItemList> = []
+      posMap.forEach((val) => {
+        const item = this.getItemByKey(val.key)
+        if(item !== null) {
+          items.push(item)
+        }
+      })
       this.setState({ items: items })
       if(typeof this.props.handleSort === "function") {
         this.props.handleSort(items)
       }
     }
+  }
+
+  getItemByKey = (key: string) => {
+    let result: ItemList | null = null
+    this.state.items.some((val) => {
+      if(val.key === key) {
+        result = val
+        return true
+      }
+      return false
+    })
+    return result
   }
 
   handleMouseUp = (e: MouseEvent) => {
