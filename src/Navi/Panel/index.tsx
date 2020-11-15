@@ -82,7 +82,7 @@ class Panel extends Component <Props, State> {
     if(this.panelRef.current !== null && this.refDragged.current !== null) {
       const dragHeight = this.refDragged.current.getBoundingClientRect().height
       if(this.dragContainer !== null) {
-        this.dragContainer.style.top = `${clientY - dragHeight / 2}px`
+        this.dragContainer.style.transform = `translateY(${clientY - dragHeight / 2}px)`
       }
     }
   }
