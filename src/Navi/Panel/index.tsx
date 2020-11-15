@@ -23,6 +23,7 @@ class Panel extends Component <Props, State> {
   refDragged: React.RefObject<HTMLDivElement> = React.createRef()
   panelRef: React.RefObject<HTMLDivElement> = React.createRef()
   dragContainer: HTMLDivElement | null = null
+  posMap: Array<PosMap> = []
 
   static getDerivedStateFromProps(props: Props, state: State) {
     if(!state.sortActive && props.items !== state.items) {
@@ -91,6 +92,9 @@ class Panel extends Component <Props, State> {
   buildPosMap = () => {
     const resultMap: Array<PosMap> = []
     this.state.items.forEach((val) => {
+      if(val.key === this.sortTarget?.key) {
+        return
+      }
       const targetRef = this.refSet[val.key]
       if(typeof targetRef === "object" && targetRef.current !== null && this.panelRef.current !== null) {
         const itemHtmlRect = targetRef.current.getBoundingClientRect()
@@ -107,6 +111,7 @@ class Panel extends Component <Props, State> {
     /* When sort is not active but should be activated. */
     if(!this.state.sortActive && Math.abs(e.clientY - this.initPos.y) > dragThreshold) {
       /* Set sort to active. */
+      this.posMap = this.buildPosMap()
       this.setState({
         sortActive: true
       })
@@ -142,40 +147,52 @@ class Panel extends Component <Props, State> {
     /* Drag logic for sorting. */
     if(this.state.sortActive) {
       this.setDragPos(e.clientY)
-      const posMap = this.buildPosMap()
       let targetKey: string = ""
       if(this.sortTarget !== null) {
         targetKey = this.sortTarget.key
       }
+      
       /* Find a position for current sorting target item. */
-      posMap.some((val, index, arr) => {
+      const originalPos = this.sortCurrentPos
+      this.posMap.some((val, index, arr) => {
+        let curPos = originalPos
         if(e.clientY < val.y) {
-          arr.splice(index, 0, {
-            key: targetKey,
-            y: e.clientY
-          })
-          this.sortCurrentPos = index
+          curPos = index
+          if(this.sortCurrentPos !== curPos) {
+            arr.splice(index, 0, {
+              key: targetKey,
+              y: e.clientY
+            })
+            this.sortCurrentPos = curPos
+          }
           return true
         }
         if(index === arr.length - 1) {
-          arr.push({
-            key: targetKey,
-            y: e.clientY
-          })
-          this.sortCurrentPos = index + 1
+          curPos = index + 1
+          if(this.sortCurrentPos !== curPos) {
+            arr.push({
+              key: targetKey,
+              y: e.clientY
+            })
+            this.sortCurrentPos = curPos
+          }
+          return true
         }
         return false
       })
-      let items: Array<ItemList> = []
-      posMap.forEach((val) => {
-        const item = this.getItemByKey(val.key)
-        if(item !== null) {
-          items.push(item)
+      if(originalPos !== this.sortCurrentPos) {
+        let items: Array<ItemList> = []
+        this.posMap.forEach((val) => {
+          const item = this.getItemByKey(val.key)
+          if(item !== null) {
+            items.push(item)
+          }
+        })
+        this.setState({ items: items })
+        if(typeof this.props.handleSort === "function") {
+          this.props.handleSort(items)
         }
-      })
-      this.setState({ items: items })
-      if(typeof this.props.handleSort === "function") {
-        this.props.handleSort(items)
+        this.posMap = this.buildPosMap()
       }
     }
   }
@@ -211,6 +228,7 @@ class Panel extends Component <Props, State> {
       this.dragContainer.remove()
       this.dragContainer = null
     }
+    this.posMap = []
     this.sortInitPos = -1
     this.sortTarget = null
   }
