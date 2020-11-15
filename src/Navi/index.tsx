@@ -90,7 +90,12 @@ class Navi extends Component <Props, State> {
   render() {
     return (
       <div className={ this.state.borderless ? "navi navi-borderless" : "navi" }>
-        <Panel items={this.state.itemList} current={this.state.currentItemKey} handleSort={this.onPanelSort} handleSortDone={this.onSortDone} />
+        <Panel
+         items={this.state.itemList}
+         current={this.state.currentItemKey}
+         handleSort={this.onPanelSort}
+         handleSortDone={this.onSortDone}
+        />
       </div>
     )
   }
