@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Tooltip } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
 import './index.less'
 
 class PanelItem extends Component <Props, State> {
@@ -9,12 +10,15 @@ class PanelItem extends Component <Props, State> {
     tooltip: true,
     active: false,
     dragged: false,
-    onMouseDown: null
+    onMouseDown: null,
+    extraButtonIcon: null,
+    extraButtonIconStyle: "outlined"
   }
   
   state = {
     tooltip: false,
-    pressed: false
+    pressed: false,
+    showButton: false
   }
 
   itemRef: React.RefObject<HTMLDivElement> = React.createRef()
@@ -69,11 +73,12 @@ class PanelItem extends Component <Props, State> {
       })
     }
     this.setState({
-      pressed: true
+      pressed: true,
+      showButton: false
     })
   }
 
-  processClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+  processClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(typeof this.props.onClick === "function") {
       this.props.onClick(e, this.props.id)
     }
@@ -83,6 +88,47 @@ class PanelItem extends Component <Props, State> {
     this.setState({
       pressed: false
     })
+  }
+
+  onMouseEnter = () => {
+    if(!this.props.dragged) {
+      this.setState({
+        showButton: true
+      })
+    }
+  }
+
+  onMouseLeave = () => {
+    this.setState({
+      showButton: false
+    })
+  }
+
+  onButtonMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+  }
+
+  onButtonMouseClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
+    if(typeof this.props.onCloseButtonClick === "function") {
+      this.props.onCloseButtonClick(e, this.props.id)
+    }
+  }
+
+  renderExtraButton() {
+    if(!this.props.onCloseButtonClick) {
+      return
+    }
+    return (
+    <div className={`panel-item-button${ this.state.showButton ? " panel-item-button-shown" : "" }`}
+         onMouseDown={this.onButtonMouseDown}
+         onClick={this.onButtonMouseClick}
+    >
+      <div className="panel-item-button-inner">
+        <CloseOutlined />
+      </div>
+    </div>
+    )
   }
 
   renderFinal() {
@@ -97,8 +143,16 @@ class PanelItem extends Component <Props, State> {
       itemClassName += " panel-item-pressed"
     }
     return (
-      <div className="panel-item-wrapper">
-      <div ref={this.itemRef} className={itemClassName} style={ itemStyle } onMouseDown={this.processMouseDown} onClick={this.processClick} onMouseUp={this.onMouseUp} >
+    <div className="panel-item-wrapper">
+      <div ref={this.itemRef}
+           className={itemClassName}
+           style={ itemStyle }
+           onMouseDown={this.processMouseDown}
+           onClick={this.processClick}
+           onMouseUp={this.onMouseUp}
+           onMouseEnter={this.onMouseEnter}
+           onMouseLeave={this.onMouseLeave}
+      >
         {
           !this.props.image && 
           (
@@ -107,6 +161,7 @@ class PanelItem extends Component <Props, State> {
             </div>
           )
         }
+        {this.renderExtraButton()}
       </div>
       { this.renderActiveIndicator() }
     </div>
@@ -141,7 +196,8 @@ interface ItemStyle {
 
 type State = {
   tooltip?: boolean,
-  pressed: boolean
+  pressed: boolean,
+  showButton: boolean
 }
 
 type Props = {
@@ -155,7 +211,8 @@ type Props = {
   dragged?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
-  setRef: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null
+  setRef: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
+  onCloseButtonClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
 }
 
 export default PanelItem

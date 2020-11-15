@@ -221,6 +221,10 @@ class Panel extends Component <Props, State> {
     }
   }
 
+  handleItemClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
+    console.log("closed " + key)
+  }
+
   renderDivider() {
     if(this.props.withDivider) {
       return (
@@ -251,6 +255,7 @@ class Panel extends Component <Props, State> {
         tooltip={(this.state.sortActive || dragged) ? false : undefined}
         dragged={dragged}
         setRef={this.setItemRef(dragged)}
+        onCloseButtonClick={this.handleItemClose}
       />
     )
   }
