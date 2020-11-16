@@ -9,7 +9,8 @@ app.on('ready', () => {
     show: false,
     webPreferences: {
       nodeIntegration: false,
-      nodeIntegrationInWorker: false
+      nodeIntegrationInWorker: false,
+      preload: path.join(__dirname, 'ipc-renderer/index.js')
     },
     minWidth: 650,
     minHeight: 400
