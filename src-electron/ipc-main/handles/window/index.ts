@@ -1,23 +1,32 @@
 import mainWindow from '../../../windows/main'
+enum ActionTypes {
+  CLOSE = 'close',
+  MINIMIZE = 'minimize',
+  MAXIMIZE = 'maximize',
+  RESTORE = 'restore',
+  IS_MAXIMIZED = 'isMaximized'
+}
 export interface appWindowPayload {
-  action: 'close' | 'minimize' | 'maximize' | 'restore'
+  action: ActionTypes
 }
 export const appWindow = (event: Electron.IpcMainInvokeEvent, payload: appWindowPayload) => {
   if(mainWindow.target === null) {
     return
   }
   switch(payload.action) {
-    case 'close':
+    case ActionTypes.CLOSE:
       mainWindow.target.close()
       break
-    case 'minimize':
+    case ActionTypes.MINIMIZE:
       mainWindow.target.minimize()
       break
-    case 'maximize':
+    case ActionTypes.MAXIMIZE:
       mainWindow.target.maximize()
       break
-    case 'restore':
+    case ActionTypes.RESTORE:
       mainWindow.target.restore()
       break
+    case ActionTypes.IS_MAXIMIZED:
+      return mainWindow.target.isMaximized()
   }
 }

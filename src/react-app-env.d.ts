@@ -7,7 +7,8 @@ declare global {
         close: () => void,
         maximize: () => void,
         minimize: () => void,
-        restore: () => void
+        restore: () => void,
+        isMaximized: () => Promise<boolean>
       }
     }
   }

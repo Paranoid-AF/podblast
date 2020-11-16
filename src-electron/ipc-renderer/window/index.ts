@@ -19,5 +19,11 @@ export const appWindow = {
     ipcRenderer.invoke('appWindow', {
       action: "restore"
     })
+  },
+  isMaximized: async () => {
+    const isMaximized: boolean = await ipcRenderer.invoke('appWindow', {
+      action: "isMaximized"
+    })
+    return isMaximized
   }
 }
