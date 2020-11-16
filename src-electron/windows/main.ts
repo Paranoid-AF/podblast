@@ -16,7 +16,7 @@ export const initMainWindow = () => {
   if(isDev){
     win.target.loadURL(`http://localhost:3000/`)
   }else{
-    win.target.loadFile(path.join(__dirname, '../build/index.html'))
+    win.target.loadFile(path.join(__dirname, '../../build/index.html'))
   }
   win.target.on('ready-to-show', () => {
     if(win.target !== null) {
