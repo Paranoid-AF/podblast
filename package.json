@@ -13,9 +13,13 @@
     "extends": null
   },
   "main": "./build-electron/index.js",
+  "nodemonConfig": {
+    "ext": "ts,js",
+    "exec": "npm run build:core -s && electron ./build-electron"
+  },
   "scripts": {
     "start:view": "craco start",
-    "start:core": "npm run build:core -s && electron --enable-transparent-visuals --disable-gpu ./build-electron",
+    "start:core": "nodemon --watch src-electron",
     "start": "concurrently \"cross-env BROWSER=none npm run start:view\" \"wait-on http://localhost:3000 && npm run start:core -s\"",
     "build:view": "craco build",
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json",
@@ -56,6 +60,7 @@
     "electron": "^10.1.4",
     "electron-builder": "^22.9.1",
     "electron-redux": "^1.5.4",
+    "nodemon": "^2.0.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "3.4.4",
