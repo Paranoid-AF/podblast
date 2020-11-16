@@ -1,4 +1,5 @@
 import mainWindow from '../../../windows/main'
+import { getPlatform } from '../../../constants/os'
 const sendMessage = (type: 'maximize_main' | 'minimize_main' | 'restore_main' | 'close_main') => {
   if(mainWindow.target !== null) {
     mainWindow.target.webContents.send(type)
@@ -24,6 +25,14 @@ const registerEvents = () => {
 
   mainWindow.target.on('close', () => {
     sendMessage("close_main")
+  })
+
+  mainWindow.target.on('ready-to-show', () => {
+    if(mainWindow.target !== null) {
+      mainWindow.target.webContents.send('ready_main', {
+        platform: getPlatform()
+      })
+    }
   })
 }
 
