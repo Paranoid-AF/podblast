@@ -1,5 +1,5 @@
 import mainWindow from '../../../windows/main'
-const sendMessage = (type: 'maximize_main' | 'minimize_main' | 'restore_main') => {
+const sendMessage = (type: 'maximize_main' | 'minimize_main' | 'restore_main' | 'close_main') => {
   if(mainWindow.target !== null) {
     mainWindow.target.webContents.send(type)
   }
@@ -20,6 +20,10 @@ const registerEvents = () => {
   
   mainWindow.target.on('restore', () => {
     sendMessage("restore_main")
+  })
+
+  mainWindow.target.on('close', () => {
+    sendMessage("close_main")
   })
 }
 
