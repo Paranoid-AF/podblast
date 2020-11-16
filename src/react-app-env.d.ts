@@ -1,5 +1,4 @@
 /// <reference types="react-scripts" />
-
 declare global {
   interface Window {
     electron: {
@@ -9,7 +8,8 @@ declare global {
         minimize: () => void,
         restore: () => void,
         isMaximized: () => Promise<boolean>
-      }
+      },
+      on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     }
   }
 }

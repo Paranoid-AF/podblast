@@ -9,3 +9,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+window.electron.on('maximized', () => {
+  console.log("The App window is maximized!")
+})

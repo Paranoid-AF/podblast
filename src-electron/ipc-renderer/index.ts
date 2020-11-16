@@ -1,10 +1,13 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
+import invokes from './invokes'
 
-import { appWindow } from './window'
+const registerEventHandler = (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => {
+  ipcRenderer.on(channel, callback)
+}
 
 contextBridge.exposeInMainWorld(
-  'electron',
-  {
-    appWindow
+  'electron', {
+    ...invokes,
+    on: registerEventHandler
   }
 )

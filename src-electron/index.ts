@@ -1,7 +1,8 @@
 import { app } from 'electron'
 import { initMainWindow } from './windows/main'
-import './ipc-main'
+import { registerEvents } from './ipc-main'
 
 app.on('ready', () => {
   initMainWindow()
+  registerEvents()
 })
