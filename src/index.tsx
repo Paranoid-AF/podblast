@@ -10,6 +10,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-window.electron.on('maximized', () => {
+window.electron.on('maximize_main', () => {
   console.log("The App window is maximized!")
 })
