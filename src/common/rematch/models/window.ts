@@ -37,6 +37,6 @@ export const appWindow = createModel<RootModel>()({
 })
 
 export interface windowState {
-  platform: Platforms,
-  maximized: boolean
+  platform?: Platforms,
+  maximized?: boolean
 }

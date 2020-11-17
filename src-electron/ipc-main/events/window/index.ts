@@ -30,7 +30,8 @@ const registerEvents = () => {
   mainWindow.target.on('ready-to-show', () => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('ready_main', {
-        platform: getPlatform()
+        platform: getPlatform(),
+        isMaximized: mainWindow.target.isMaximized()
       })
     }
   })
