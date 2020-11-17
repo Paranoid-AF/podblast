@@ -7,18 +7,25 @@ export const appWindow = createModel<RootModel>()({
   state: {
     platform: Platforms.LINUX,
     maximized: false,
+    focused: true
   } as windowState,
   reducers: {
-      setInitialState(state: any, payload: windowState) {
+      setInitialState(state: windowState, payload: windowState) {
         return {
           ...state,
           ...payload
         }
       },
-      setMaximizeState(state: any, payload: boolean) {
+      setMaximizeState(state: windowState, payload: boolean) {
         return {
           ...state,
           maximized: payload
+        }
+      },
+      setFocusState(state: windowState, payload: boolean) {
+        return {
+          ...state,
+          focused: payload
         }
       }
   },
@@ -26,6 +33,15 @@ export const appWindow = createModel<RootModel>()({
     async maximize() {
       window.electron.appWindow.maximize()
       dispatch.appWindow.setMaximizeState(true)
+    },
+    async minimize() {
+      window.electron.appWindow.minimize()
+    },
+    async close() {
+      window.electron.appWindow.close()
+    },
+    async restore() {
+      window.electron.appWindow.restore()
     },
     async init(initState: windowState) {
       dispatch.appWindow.setInitialState({
@@ -38,5 +54,6 @@ export const appWindow = createModel<RootModel>()({
 
 export interface windowState {
   platform?: Platforms,
-  maximized?: boolean
+  maximized?: boolean,
+  focused?: boolean
 }

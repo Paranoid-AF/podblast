@@ -10,10 +10,19 @@ events["restore_main"] = () => {
   store.dispatch.appWindow.setMaximizeState(false)
 }
 
-events["ready_main"] = (event, info: { isMaximized: boolean, platform: Platforms }) => {
+events["focus_main"] = () => {
+  store.dispatch.appWindow.setFocusState(true)
+}
+
+events["blur_main"] = () => {
+  store.dispatch.appWindow.setFocusState(false)
+}
+
+events["ready_main"] = (event, info: { isMaximized: boolean, platform: Platforms, isFocused: boolean }) => {
   store.dispatch.appWindow.init({
     maximized: info.isMaximized,
-    platform: info.platform
+    platform: info.platform,
+    focused: info.isFocused
   })
 }
 

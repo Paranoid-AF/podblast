@@ -1,6 +1,6 @@
 import mainWindow from '../../../windows/main'
 import { getPlatform } from '../../../constants/os'
-const sendMessage = (type: 'maximize_main' | 'minimize_main' | 'restore_main' | 'close_main') => {
+const sendMessage = (type: string) => {
   if(mainWindow.target !== null) {
     mainWindow.target.webContents.send(type)
   }
@@ -19,8 +19,16 @@ const registerEvents = () => {
     sendMessage("minimize_main")
   })
   
-  mainWindow.target.on('restore', () => {
+  mainWindow.target.on('unmaximize', () => {
     sendMessage("restore_main")
+  })
+
+  mainWindow.target.on('focus', () => {
+    sendMessage("focus_main")
+  })
+
+  mainWindow.target.on('blur', () => {
+    sendMessage("blur_main")
   })
 
   mainWindow.target.on('close', () => {
@@ -31,7 +39,8 @@ const registerEvents = () => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('ready_main', {
         platform: getPlatform(),
-        isMaximized: mainWindow.target.isMaximized()
+        isMaximized: mainWindow.target.isMaximized(),
+        isFocused: mainWindow.target.isFocused()
       })
     }
   })
