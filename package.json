@@ -44,6 +44,7 @@
   },
   "homepage": ".",
   "devDependencies": {
+    "@rematch/core": "^2.0.0-next.6",
     "@ant-design/icons": "^4.3.0",
     "@craco/craco": "^5.7.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -53,19 +54,20 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.11",
     "antd": "^4.7.2",
     "concurrently": "^5.3.0",
     "craco-less": "^1.17.0",
     "cross-env": "^7.0.2",
     "electron": "^10.1.4",
     "electron-builder": "^22.9.1",
-    "electron-redux": "^1.5.4",
     "nodemon": "^2.0.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
     "react-scripts": "3.4.4",
     "rimraf": "^3.0.2",
-    "typescript": "~3.7.2",
+    "typescript": "^4.0.3",
     "wait-on": "^5.2.0"
   }
 }
