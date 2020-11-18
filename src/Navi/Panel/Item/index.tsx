@@ -108,7 +108,8 @@ class PanelItem extends Component <Props, State> {
 
   onMouseLeave = () => {
     this.setState({
-      showButton: false
+      showButton: false,
+      pressed: false,
     })
   }
 
