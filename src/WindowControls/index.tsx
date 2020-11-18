@@ -7,14 +7,16 @@ import { connect } from 'react-redux'
 class WindowControls extends Component <StateProps & DispatchProps> {
   render() {
     return (
-      <div className="window-controls">
-        <ControlButton type="close" focused={this.props.isFocused} onClick={this.props.windowControls.close}/>
-        {
-          this.props.isMaximized ?
-          <ControlButton type="restore" focused={this.props.isFocused} onClick={this.props.windowControls.restore}/> :
-          <ControlButton type="maximize" focused={this.props.isFocused} onClick={this.props.windowControls.maximize}/>
-        }
-        <ControlButton type="minimize" focused={this.props.isFocused} onClick={this.props.windowControls.minimize}/>
+      <div className="window-controlbar">
+        <div className="window-controls">
+          <ControlButton type="close" focused={this.props.isFocused} onClick={this.props.windowControls.close}/>
+          {
+            this.props.isMaximized ?
+            <ControlButton type="restore" focused={this.props.isFocused} onClick={this.props.windowControls.restore}/> :
+            <ControlButton type="maximize" focused={this.props.isFocused} onClick={this.props.windowControls.maximize}/>
+          }
+          <ControlButton type="minimize" focused={this.props.isFocused} onClick={this.props.windowControls.minimize}/>
+        </div>
       </div>
     )
   }

@@ -43,13 +43,15 @@ class Button extends Component <Props, {}> {
         icon = currentIconSet.restore
     }
 
+    const title = this.props.type.toUpperCase().substring(0, 1) + this.props.type.substring(1)
+
     return (
-      <div className={`window-controll-button window-controll-button-${this.props.type}${this.props.focused ? "" : " window-controll-button-defocused"}`} onClick={this.props.onClick}>
+      <div title={title} className={`window-controll-button window-controll-button-${this.props.type}${this.props.focused ? "" : " window-controll-button-defocused"}`} onClick={this.props.onClick}>
         <div className="window-controll-icon">
           <img
             src={icon}
             draggable="false"
-            alt={this.props.type.toUpperCase().substring(0, 1) + this.props.type.substring(1)}
+            alt={title}
           />
         </div>
       </div>

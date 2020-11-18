@@ -5,7 +5,6 @@ import WindowControls from './WindowControls'
 import { listenEvents } from './common/events'
 import { RootState } from'./common/rematch'
 import { connect } from 'react-redux'
-import { Platforms } from './common/constants/os'
 
 class App extends Component <StateProps> {
   componentDidMount() {
