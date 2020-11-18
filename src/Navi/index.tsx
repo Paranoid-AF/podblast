@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import './index.less'
-
+import { RootState } from '../common/rematch'
 import Panel, { ItemList, SortResult } from './Panel'
 
 const bruh = [
@@ -61,7 +62,7 @@ const bruh = [
   }
 ]
 
-class Navi extends Component <Props, State> {
+class Navi extends Component <StateProps, State> {
   state = {
     borderless: false,
     itemList: bruh,
@@ -89,7 +90,7 @@ class Navi extends Component <Props, State> {
 
   render() {
     return (
-      <div className={ this.state.borderless ? "navi navi-borderless" : "navi" }>
+      <div className={ this.props.maximized ? "navi navi-borderless" : "navi" }>
         <Panel
          items={this.state.itemList}
          current={this.state.currentItemKey}
@@ -101,13 +102,15 @@ class Navi extends Component <Props, State> {
   }
 }
 
-type Props = { }
-
 type State = {
-  borderless: boolean,
   itemList: Array<ItemList>,
   currentItemKey: string
 }
 
+const mapState = (state: RootState) => ({
+  maximized: state.appWindow.maximized
+})
 
-export default Navi
+type StateProps = ReturnType<typeof mapState>
+
+export default connect(mapState)(Navi)

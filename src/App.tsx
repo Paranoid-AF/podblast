@@ -3,12 +3,11 @@ import Navi from './Navi'
 import './App.less'
 import WindowControls from './WindowControls'
 import { listenEvents } from './common/events'
+import { RootState } from'./common/rematch'
+import { connect } from 'react-redux'
+import { Platforms } from './common/constants/os'
 
-class App extends Component <{}, State> {
-  state = {
-    borderless: false
-  }
-
+class App extends Component <StateProps> {
   componentDidMount() {
     listenEvents()
   }
@@ -17,7 +16,7 @@ class App extends Component <{}, State> {
     return (
       <div className="app-wrapper">
         <Navi />
-        <div className={ this.state.borderless ? "container container-borderless" : "container" }>
+        <div className={ this.props.maximized ? "container container-borderless" : "container" }>
           <WindowControls />
         </div>
       </div>
@@ -25,10 +24,10 @@ class App extends Component <{}, State> {
   }
 }
 
-type Props = { }
+const mapState = (state: RootState) => ({
+  maximized: state.appWindow.maximized
+})
 
-type State = {
-  borderless: boolean
-}
+type StateProps = ReturnType<typeof mapState>
 
-export default App
+export default connect(mapState)(App)
