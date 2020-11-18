@@ -50,6 +50,10 @@ class Panel extends Component <Props, State> {
     }
   }
 
+  removeRef = (key: string) => {
+    delete this.refSet[key]
+  }
+
   handleItemMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
     if(this.sortTarget !== null) {
       return

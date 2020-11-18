@@ -12,7 +12,9 @@ class PanelItem extends Component <Props, State> {
     dragged: false,
     onMouseDown: null,
     extraButtonIcon: null,
-    extraButtonIconStyle: "outlined"
+    extraButtonIconStyle: "outlined",
+    removeRef: null,
+    setRef: null
   }
   
   state = {
@@ -31,6 +33,12 @@ class PanelItem extends Component <Props, State> {
     this.sendRef()
   }
   
+  componentWillUnmount() {
+    if(typeof this.props.removeRef === "function") {
+      this.props.removeRef(this.props.id)
+    }
+  }
+
   static getDerivedStateFromProps(props: Props, state: State) {
     if(props.hidden) {
       return {
@@ -211,7 +219,8 @@ type Props = {
   dragged?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
-  setRef: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
+  setRef?: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
+  removeRef?: (key: string) => void | null
   onCloseButtonClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
 }
 
