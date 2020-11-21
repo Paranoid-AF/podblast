@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "electron-is-dev": "^1.2.0"
+    "axios": "^0.21.0",
+    "electron-is-dev": "^1.2.0",
+    "got": "^11.8.0",
+    "vm2": "^3.9.2"
   },
   "build": {
     "files": [
@@ -44,9 +47,9 @@
   },
   "homepage": ".",
   "devDependencies": {
-    "@rematch/core": "^2.0.0-next.6",
     "@ant-design/icons": "^4.3.0",
     "@craco/craco": "^5.7.0",
+    "@rematch/core": "^2.0.0-next.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
