@@ -37,6 +37,7 @@ export const loadExtensions = () => {
         } as PopupMessage
       } as ExtensionMessage)
     }
+    extensionCount = 0
   }
   
   checkExtension()
