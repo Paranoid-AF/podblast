@@ -31,4 +31,20 @@ export const initMainWindow = () => {
   })
 }
 
+export const sendPopupMessage = (msg: PopupMessage) => {
+  if(win.target) {
+    win.target.webContents.once('dom-ready', () => {
+      if(win.target) {
+        win.target.webContents.send('message', msg)
+      }
+    })
+    win.target.webContents.send('message', msg)
+  }
+}
+
+export interface PopupMessage {
+  icon: 'info' | 'success' | 'warning' | 'normal' | 'error',
+  content: string
+}
+
 export default win

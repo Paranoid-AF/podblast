@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { runInVM } from './runner'
+import type { PopupMessage } from '../../windows/main'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
@@ -10,8 +11,12 @@ let extensionLoaded = 0
 
 const checkExtension = () => {
   if(extensionCount > 0 && extensionLoaded >= extensionCount) {
-    // TODO
-    console.log(`Loaded ${extensions.length} extension(s), with ${sources.length} source(s).`)
+    if(process.send && process.env.dev === 'true') {
+      process.send({
+        icon: 'success',
+        content: `Loaded ${extensions.length} extension(s), with ${sources.length} source(s).`
+      } as PopupMessage)
+    }
   }
 }
 
@@ -22,8 +27,12 @@ export const loadExtensions = () => {
     fileList = fs.readdirSync(extensionDirPath)
     extensionCount = fileList.length
   } catch (e) {
-    // TODO
-    console.error('Unable to read extension directory.')
+    if(process.send) {
+      process.send({
+        icon: 'error',
+        content: 'Unable to read extension directory.'
+      } as PopupMessage)
+    }
   }
   
   fileList.forEach((val) => {
@@ -31,8 +40,12 @@ export const loadExtensions = () => {
     fs.readFile(extensionPath, { encoding: 'utf8' }, (err, data) => {
       extensionLoaded++
       if(err) {
-        // TODO
-        console.error('Unable to read extension file: ' + extensionPath)
+        if(process.send) {
+          process.send({
+            icon: 'error',
+            content: 'Unable to read extension file: ' + extensionPath
+          } as PopupMessage)
+        }
       }
       runInVM(data)
       checkExtension()

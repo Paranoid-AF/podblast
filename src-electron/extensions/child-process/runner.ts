@@ -1,6 +1,7 @@
 import path from 'path'
 import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
+import type { PopupMessage } from '../../windows/main'
 
 const allowedModules = [
   "axios",
@@ -8,8 +9,12 @@ const allowedModules = [
 ]
 
 process.on('uncaughtException', (err) => {
-  // TODO
-  console.error('An error occurred in an extension.');
+  if(process.send) {
+    process.send({
+      icon: 'error',
+      content: 'An unknown error occurred in an extension.'
+    } as PopupMessage)
+  }
 })
 
 export const runInVM = (scriptCode: string) => {
