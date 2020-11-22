@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { runInVM } from './runner'
 import type { PopupMessage } from '../../windows/main'
+import type { ExtensionMessage } from '../../ipc-main/events/message'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
@@ -13,9 +14,12 @@ const checkExtension = () => {
   if(extensionCount > 0 && extensionLoaded >= extensionCount) {
     if(process.send && process.env.dev === 'true') {
       process.send({
-        icon: 'success',
-        content: `Loaded ${extensions.length} extension(s), with ${sources.length} source(s).`
-      } as PopupMessage)
+        type: 'popup',
+        action: {
+          icon: 'success',
+          content: `Loaded ${extensions.length} extension(s), with ${sources.length} source(s).`
+        } as PopupMessage
+      } as ExtensionMessage)
     }
   }
 }
@@ -29,9 +33,12 @@ export const loadExtensions = () => {
   } catch (e) {
     if(process.send) {
       process.send({
-        icon: 'error',
-        content: 'Unable to read extension directory.'
-      } as PopupMessage)
+        type: 'popup',
+        action: {
+          icon: 'error',
+          content: 'Unable to read extension directory.'
+        } as PopupMessage
+      } as ExtensionMessage)
     }
   }
   
@@ -42,9 +49,12 @@ export const loadExtensions = () => {
       if(err) {
         if(process.send) {
           process.send({
-            icon: 'error',
-            content: 'Unable to read extension file: ' + extensionPath
-          } as PopupMessage)
+            type: 'popup',
+            action: {
+              icon: 'error',
+              content: 'Unable to read extension file: ' + extensionPath
+            } as PopupMessage
+          } as ExtensionMessage)
         }
       }
       runInVM(data)

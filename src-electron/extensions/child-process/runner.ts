@@ -2,6 +2,7 @@ import path from 'path'
 import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
 import type { PopupMessage } from '../../windows/main'
+import type { ExtensionMessage } from '../../ipc-main/events/message'
 
 const allowedModules = [
   "axios",
@@ -11,9 +12,12 @@ const allowedModules = [
 process.on('uncaughtException', (err) => {
   if(process.send) {
     process.send({
-      icon: 'error',
-      content: 'An unknown error occurred in an extension.'
-    } as PopupMessage)
+      type: 'popup',
+      action: {
+        icon: 'error',
+        content: 'An unknown error occurred in an extension.'
+      } as PopupMessage
+    } as ExtensionMessage)
   }
 })
 

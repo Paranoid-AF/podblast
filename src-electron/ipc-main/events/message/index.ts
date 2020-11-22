@@ -5,13 +5,16 @@ const registerEvents = () => {
   if(!extensionProcess) {
     return
   }
-  extensionProcess.on('message', (msg: PopupMessage) => {
-    if(msg && msg.icon && msg.content) {
-      sendPopupMessage(msg)
+  extensionProcess.on('message', (msg: ExtensionMessage) => {
+    if(msg && msg.type === 'popup') {
+      sendPopupMessage(msg.action)
     }
   })
 }
 
-
+export interface ExtensionMessage {
+  type: 'popup',
+  action: PopupMessage
+}
 
 export default registerEvents
