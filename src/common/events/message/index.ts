@@ -1,8 +1,8 @@
 import { message } from 'antd'
+import { store } from '../../rematch'
 const events: Record<string, (...args: Array<any>) => void> = {}
 
 events["message"] = (event, info) => {
-  console.log(info)
   switch(info.icon) {
     case 'normal':
       message.info(info.content)
@@ -21,4 +21,16 @@ events["message"] = (event, info) => {
       break
   }
 }
+
+const hideLoading = message.loading({ content: 'Loading extensions...', duration: 0 })
+const unsubscribeLoading = store.subscribe(() => {
+  const state = store.getState()
+  if(state.extension.loaded) {
+    hideLoading()
+    unsubscribeLoading()
+    window.electron.extension.updateExtensions()
+    window.electron.extension.updateSources()
+  }
+})
+
 export default events

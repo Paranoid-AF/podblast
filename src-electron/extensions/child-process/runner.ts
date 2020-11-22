@@ -2,7 +2,7 @@ import path from 'path'
 import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
 import type { PopupMessage } from '../../windows/main'
-import type { ExtensionMessage } from '../../ipc-main/events/message'
+import type { ExtensionMessage } from '../'
 
 const allowedModules = [
   "axios",

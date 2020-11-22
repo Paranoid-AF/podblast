@@ -9,6 +9,10 @@ declare global {
         restore: () => void,
         isMaximized: () => Promise<boolean>
       },
+      extension: {
+        updateExtensions: () => void,
+        updateSources: () => void
+      },
       on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     }
   }

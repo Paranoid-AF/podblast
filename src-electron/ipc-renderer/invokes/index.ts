@@ -1,7 +1,9 @@
 import { appWindow } from './window'
+import { extension } from './extension'
 
 const invokes = {
-  appWindow
+  appWindow,
+  extension
 }
 
 export default invokes

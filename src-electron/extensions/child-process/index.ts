@@ -1,8 +1,9 @@
 import path from 'path'
 import fs from 'fs'
+import './listener'
 import { runInVM } from './runner'
 import type { PopupMessage } from '../../windows/main'
-import type { ExtensionMessage } from '../../ipc-main/events/message'
+import type { ExtensionMessage } from '../'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
@@ -12,13 +13,9 @@ let extensionLoaded = 0
 
 const checkExtension = () => {
   if(extensionCount > 0 && extensionLoaded >= extensionCount) {
-    if(process.send && process.env.dev === 'true') {
+    if(process.send) {
       process.send({
-        type: 'popup',
-        action: {
-          icon: 'success',
-          content: `Loaded ${extensions.length} extension(s), with ${sources.length} source(s).`
-        } as PopupMessage
+        type: 'extensionReady'
       } as ExtensionMessage)
     }
   }
@@ -69,12 +66,15 @@ export interface ExtensionInfo {
   id: string,
   name: string,
   version: string,
+  description?: string,
+  author?: string,
+  homepage?: string
 }
 
 export interface SourceInfo {
   id: string,
   name: string,
-  version: string,
+  description?: string,
   preForm: () => Promise<Array<FormItem>>,
   postForm: (data: Record<string, any>) => string, // Key is form item ID, while value is value.
   provider: string
