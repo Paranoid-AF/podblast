@@ -12,7 +12,7 @@ let extensionCount = -1
 let extensionLoaded = 0
 
 const checkExtension = () => {
-  if(extensionCount > 0 && extensionLoaded >= extensionCount) {
+  if(extensionCount >= 0 && extensionLoaded >= extensionCount) {
     if(process.send) {
       process.send({
         type: 'extensionReady'
@@ -39,6 +39,8 @@ export const loadExtensions = () => {
     }
   }
   
+  checkExtension()
+
   fileList.forEach((val) => {
     const extensionPath = path.join(extensionDirPath, val)
     fs.readFile(extensionPath, { encoding: 'utf8' }, (err, data) => {
