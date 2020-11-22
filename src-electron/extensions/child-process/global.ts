@@ -1,14 +1,16 @@
 import { getLocale } from './utils'
 import { extensions, sources, ExtensionInfo, SourceInfo } from './'
 
-const init = (extensionInfo: ExtensionInfo) => {
-  const innerThis = (this as any).runnerGlobal
-  if(typeof innerThis === 'undefined') {
-    console.error("Extension ERROR: Unable to access ID while trying to initialize plugin.")
-    return
+export const initFactory = (fileName: string) => {
+  return (extensionInfo: ExtensionInfo) => {
+    const innerThis = (this as any).runnerGlobal
+    if(typeof innerThis === 'undefined') {
+      console.error("Extension ERROR: Unable to access ID while trying to initialize plugin.")
+      return
+    }
+    innerThis.extensionInfo = { ...extensionInfo, file: fileName }
+    extensions.push(innerThis.extensionInfo)
   }
-  innerThis.extensionInfo = extensionInfo
-  extensions.push(extensionInfo)
 }
 
 const registerSource = (sourceInfo: SourceInfo) => {
@@ -25,7 +27,7 @@ const registerSource = (sourceInfo: SourceInfo) => {
 }
 
 export const runnerGlobal = {
-  init,
+  init: null as ((extensionInfo: ExtensionInfo) => void) | null,
   registerSource,
   getLocale,
   extensionInfo: null as null | ExtensionInfo

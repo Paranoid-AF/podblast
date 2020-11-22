@@ -36,9 +36,10 @@ export interface ExtensionInfo {
   id: string,
   name: string,
   version: string,
-  description: string,
-  author: string,
-  homepage: string
+  file: string,
+  description?: string,
+  author?: string,
+  homepage?: string
 }
 
 export interface SourceInfo {
@@ -46,7 +47,7 @@ export interface SourceInfo {
   name: string,
   version: string,
   provider: string,
-  description: string
+  description?: string
 }
 
 export interface ExtensionState {

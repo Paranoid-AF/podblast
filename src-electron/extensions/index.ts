@@ -20,6 +20,7 @@ export interface ExtensionInfo {
   id: string,
   name: string,
   version: string,
+  file: string,
   description?: string,
   author?: string,
   homepage?: string
