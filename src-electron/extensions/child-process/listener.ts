@@ -1,7 +1,8 @@
 import { sources, extensions } from './'
-import type { ExtensionMessage, ReqBody, ResBody } from '../'
+import type { ExtensionMessage } from '../'
+import { resolver as resolverInit } from 'ipc-promise-invoke'
 
-const signature = "extension_call_recv"
+const resolver = resolverInit()
 
 process.on('message', (msg) => {
   if(typeof process === 'undefined' || typeof process.send === 'undefined') {
@@ -34,25 +35,7 @@ process.on('message', (msg) => {
 })
 
 /* Handle Promisified requests */
-process.on('message', async (msg: ReqBody) => {
-  if(msg.ipcSignature === signature && msg.uuid) {
-    let status: ResBody['status'] = 'success'
-    let payload: any = null
-    
-    switch(msg.action) {
-      case 'ping':
-        await new Promise((resolve) => { setTimeout(resolve, 2000) })
-        payload = msg.payload + ` Pong!`
-        break
-    }
-
-    if(process.send) {
-      process.send({
-        status,
-        payload,
-        uuid: msg.uuid,
-        ipcSignature: signature
-      } as ResBody)
-    }
-  }
+resolver.addChannel('ping', async (payload) => {
+  await new Promise((resolve) => { setTimeout(resolve, 2000) })
+  return payload + ` Pong!`
 })

@@ -1884,11 +1884,6 @@
     "@types/testing-library__dom" "*"
     pretty-format "^25.1.0"
 
-"@types/uuid@^8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
-  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
-
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"
@@ -6336,6 +6331,13 @@ ipaddr.js@1.9.1, ipaddr.js@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
+
+ipc-promise-invoke@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ipc-promise-invoke/-/ipc-promise-invoke-1.0.0.tgz#957f1a19498a55cc1ed3063eadb7efe44b20b787"
+  integrity sha512-6L5a9ZQGltixTGkFpF9GO9Wfm92FRKt1KeJWQG0pWlHOD0NEpA4HHNEfMAn9DVucGZujB6BsQSuc+BSbWDKTwg==
+  dependencies:
+    uuid "^8.3.1"
 
 is-absolute-url@^2.0.0:
   version "2.1.0"
