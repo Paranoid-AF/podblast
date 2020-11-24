@@ -30,7 +30,7 @@ const getExtensionMeta = (packageName: string) => {
     name: packageJson['displayName'] || packageJson['name'],
     version: packageJson['version'],
     file: packageName,
-    entry: packageJson['main']
+    entry: packageJson['main'] || 'index.js'
   }
   for(let key in extensionMeta) {
     if(typeof extensionMeta[key as keyof typeof extensionMeta] !== 'string') {
