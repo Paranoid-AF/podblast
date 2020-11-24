@@ -1,6 +1,6 @@
-import path from 'path'
 import { NodeVM } from 'vm2'
-import { runnerGlobal, initFactory } from './global'
+import { runnerGlobal } from './global'
+import { ExtensionInfo } from './'
 import type { PopupMessage } from '../../windows/main'
 import type { ExtensionMessage } from '../'
 
@@ -21,10 +21,9 @@ process.on('uncaughtException', (err) => {
   }
 })
 
-export const runInVM = (scriptCode: string, fileName: string) => {
+export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
   // Reset addtional info
-  runnerGlobal.extensionInfo = null
-  runnerGlobal.init = initFactory(fileName)
+  runnerGlobal.extensionInfo = scriptMeta
   const vm = new NodeVM({
     require: {
       external: {
@@ -34,7 +33,7 @@ export const runInVM = (scriptCode: string, fileName: string) => {
     },
     sandbox: Object.assign({ }, runnerGlobal)
   })
-  return vm.run('window = global;' + scriptCode, path.join(process.cwd(), '/node_modules'))
+  return vm.runFile(scriptPath)
 }
 
 /*

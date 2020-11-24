@@ -1,0 +1,8 @@
+{
+  "name": "gcores",
+  "displayName": "机核网",
+  "version": "1.0.0",
+  "description": "Podchat extension for gcores.com",
+  "main": "index.js",
+  "license": "MIT"
+}

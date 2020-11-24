@@ -8,25 +8,58 @@ import type { ExtensionMessage } from '../'
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
 
-let extensionCount = -1
-let extensionLoaded = 0
-
-const checkExtension = () => {
-  if(extensionCount >= 0 && extensionLoaded >= extensionCount) {
-    if(process.send) {
-      process.send({
-        type: 'extensionReady'
-      } as ExtensionMessage)
-    }
+const extensionReady = () => {
+  if(process.send) {
+    process.send({
+      type: 'extensionReady'
+    } as ExtensionMessage)
   }
 }
 
-export const loadExtensions = () => {
+const getExtensionMeta = (packageName: string) => {
+  const packageJsonPath = path.join(process.cwd(), '/extensions/' + packageName + '/package.json')
+  let packageJsonRaw = ''
+  try {
+    packageJsonRaw = fs.readFileSync(packageJsonPath, { encoding: 'utf8' })
+  } catch (e) {
+    throw new Error("No meta data file detected.")
+  }
+  const packageJson = JSON.parse(packageJsonRaw)
+  const extensionMeta: ExtensionInfo = {
+    id: packageJson['name'],
+    name: packageJson['displayName'] || packageJson['name'],
+    version: packageJson['version'],
+    file: packageName,
+    entry: packageJson['main']
+  }
+  for(let key in extensionMeta) {
+    if(typeof extensionMeta[key as keyof typeof extensionMeta] !== 'string') {
+      throw new Error("Missing required meta key: " + key)
+    }
+  }
+  if(packageJson['author']) {
+    extensionMeta.author = packageJson['author']
+  }
+  if(packageJson['description']) {
+    extensionMeta.description = packageJson['description']
+  }
+  if(packageJson['homepage']) {
+    extensionMeta.homepage = packageJson['homepage']
+  }
+  return extensionMeta
+}
+
+const loadExtensions = () => {
   const extensionDirPath = path.join(process.cwd(), '/extensions')
   let fileList: Array<string> = []
   try {
     fileList = fs.readdirSync(extensionDirPath)
-    extensionCount = fileList.length
+    fileList = fileList.filter((val) => {
+      const dirPath = path.join(process.cwd(), '/extensions/' + val)
+      const isDirectory = fs.lstatSync(dirPath).isDirectory()
+      const hasMetaData = fs.existsSync(dirPath + '/package.json')
+      return isDirectory && hasMetaData
+    })
   } catch (e) {
     if(process.send) {
       process.send({
@@ -37,29 +70,29 @@ export const loadExtensions = () => {
         } as PopupMessage
       } as ExtensionMessage)
     }
-    extensionCount = 0
   }
-  
-  checkExtension()
 
-  fileList.forEach((val) => {
-    const extensionPath = path.join(extensionDirPath, val)
-    fs.readFile(extensionPath, { encoding: 'utf8' }, (err, data) => {
-      extensionLoaded++
-      if(err) {
-        if(process.send) {
-          process.send({
-            type: 'popup',
-            action: {
-              icon: 'error',
-              content: 'Unable to read extension file: ' + extensionPath
-            } as PopupMessage
-          } as ExtensionMessage)
-        }
+  fileList.forEach((val, index, arr) => {
+    try {
+      const extensionInfo = getExtensionMeta(val)
+      const extensionEntry = path.join(extensionDirPath, val + '/' + extensionInfo.entry)
+      runInVM(extensionEntry, extensionInfo)
+      extensions.push(extensionInfo)
+    } catch (e) {
+      if(process.send) {
+        process.send({
+          type: 'popup',
+          action: {
+            icon: 'error',
+            content: 'Unable to read extension: ' + val
+          } as PopupMessage
+        } as ExtensionMessage)
+        console.error(e)
       }
-      runInVM(data, val)
-      checkExtension()
-    })
+    }
+    if(arr.length - 1 <= index) {
+      extensionReady()
+    }
   })
 }
 
@@ -70,6 +103,7 @@ export interface ExtensionInfo {
   name: string,
   version: string,
   file: string,
+  entry: string,
   description?: string,
   author?: string,
   homepage?: string
@@ -80,7 +114,7 @@ export interface SourceInfo {
   name: string,
   description?: string,
   preForm: () => Promise<Array<FormItem>>,
-  postForm: (data: Record<string, any>) => string, // Key is form item ID, while value is value.
+  postForm: (data: Record<string, any>) => string, // Key is form item ID, while value is value. Returns a token to fetch content.
   provider: string
 }
 
