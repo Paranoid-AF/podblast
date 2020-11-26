@@ -11,7 +11,8 @@ resolver.addChannel('getExtensionList', () => {
     version: val.version,
     description: val.description,
     author: val.author,
-    homepage: val.homepage
+    homepage: val.homepage,
+    file: val.file
   })))
 })
 
