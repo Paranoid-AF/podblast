@@ -1,12 +1,12 @@
 @import "../App.less";
 @naviWidth: 85px;
 .navi {
-  top: @windowTopBottomBorder;
-  left: @windowLeftRightBorder;
+  top: 0;
+  left: 0;
   padding-top: 10px;
   position: fixed;
   width: calc(@naviWidth + @naviExtensionWidth);
-  height: calc(100% - @windowTopBottomBorder * 3);
+  height: 100%;
   background: #232527;
   color: #fff;
   -webkit-app-region: drag;
@@ -16,11 +16,4 @@
 
 .navi::-webkit-scrollbar {
   display: none;
-}
-
-.navi-borderless {
-  border-radius: 0;
-  height: 100%;
-  top: 0;
-  left: 0;
 }

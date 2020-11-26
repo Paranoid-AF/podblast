@@ -62,7 +62,7 @@ const bruh = [
   }
 ]
 
-class Navi extends Component <StateProps, State> {
+class Navi extends Component {
   state = {
     borderless: false,
     itemList: bruh,
@@ -90,7 +90,7 @@ class Navi extends Component <StateProps, State> {
 
   render() {
     return (
-      <div className={ this.props.maximized ? "navi navi-borderless" : "navi" }>
+      <div className="navi">
         <Panel
          items={this.state.itemList}
          current={this.state.currentItemKey}
@@ -102,15 +102,7 @@ class Navi extends Component <StateProps, State> {
   }
 }
 
-type State = {
-  itemList: Array<ItemList>,
-  currentItemKey: string
-}
 
-const mapState = (state: RootState) => ({
-  maximized: state.appWindow.maximized
-})
 
-type StateProps = ReturnType<typeof mapState>
 
-export default connect(mapState)(Navi)
+export default Navi

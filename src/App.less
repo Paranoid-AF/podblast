@@ -1,17 +1,12 @@
 @import "./Navi";
-@containerBackground: #eee;
-@windowBorderColor: #585858;
-@windowLeftRightBorder: 1px;
-@windowTopBottomBorder: 1px;
-@windowRadius: 6px;
+@containerBackground: #fff;
 @naviExtensionWidth: 6px; // To make radius work
+@containerRadius: 6px;
 .app-wrapper {
     position: relative;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    margin-top: calc(@windowTopBottomBorder);
-    margin-bottom: calc(@windowTopBottomBorder);
 }
 
 .app-wrapper-borderless {
@@ -20,23 +15,16 @@
 
 .container {
     position: relative;
-    margin-left: calc(@windowLeftRightBorder + @naviWidth);
-    margin-right: @windowLeftRightBorder;
-    width: calc(100% - @naviWidth - @windowLeftRightBorder * 3);
-    height: calc(100% - @windowTopBottomBorder * 3);
-    background-color: @containerBackground;
-    padding-left: @windowRadius;
-    border-top-left-radius: @windowRadius;
-    border-bottom-left-radius: @windowRadius;
-}
-
-.container-borderless {
-    margin: 0;
     margin-left: @naviWidth;
     width: calc(100% - @naviWidth);
     height: 100%;
+    background-color: @containerBackground;
+    padding-left: @containerRadius;
+    border-top-left-radius: @containerRadius;
+    border-bottom-left-radius: @containerRadius;
 }
 
+
 body {
-    background-color: @windowBorderColor; /* App border */
+    background-color: @containerBackground; /* App border */
 }
