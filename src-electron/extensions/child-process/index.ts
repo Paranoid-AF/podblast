@@ -87,7 +87,11 @@ export const loadExtension = (packageName: string) => {
   }
 }
 
-listExtensions().forEach((packageName: string, index, arr) => {
+const extensionList = listExtensions()
+if(extensionList.length === 0) {
+  extensionReady()
+}
+extensionList.forEach((packageName: string, index, arr) => {
   loadExtension(packageName)
   if(arr.length - 1 <= index) {
     extensionReady()
