@@ -2,7 +2,9 @@ import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
 import { ExtensionInfo } from './'
 import type { PopupMessage } from '../../windows/main'
-import type { ExtensionMessage } from '../'
+import { sender as senderInit } from 'ipc-promise-invoke'
+
+const sender = senderInit(process)
 
 const allowedModules = [
   "axios",
@@ -10,15 +12,10 @@ const allowedModules = [
 ]
 
 process.on('uncaughtException', (err) => {
-  if(process.send) {
-    process.send({
-      type: 'popup',
-      action: {
-        icon: 'error',
-        content: 'An unknown error occurred in an extension.'
-      } as PopupMessage
-    } as ExtensionMessage)
-  }
+  sender('popup', {
+    icon: 'error',
+    content: 'An unknown error occurred in an extension.'
+  } as PopupMessage)
 })
 
 export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {

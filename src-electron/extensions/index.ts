@@ -2,7 +2,6 @@ import { app } from 'electron'
 import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
-import { sender as senderCreator } from 'ipc-promise-invoke'
 
 export let extensionProcess: ChildProcess | null = null
 export let sources: Array<SourceInfo> = []
@@ -17,11 +16,6 @@ export const startExtensionProcess = () => {
       dev: isDev.toString()
     }
   })
-  const sender = senderCreator(extensionProcess)
-  sender('ping', 'bruh')
-    .then((payload) => {
-      console.log(payload)
-    })
 }
 
 export interface ExtensionInfo {
@@ -39,9 +33,4 @@ export interface SourceInfo {
   name: string,
   description?: string,
   provider: string
-}
-
-export interface ExtensionMessage {
-  type: 'popup' | 'extensionReady' | 'extensionList' | 'sourceList',
-  action?: any
 }

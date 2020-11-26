@@ -1,40 +1,41 @@
-import { extensionProcess, ExtensionMessage } from '../../../extensions'
+import { extensionProcess } from '../../../extensions'
 import { sendPopupMessage, PopupMessage } from '../../../windows/main'
 import mainWindow from '../../../windows/main'
+import { resolver as resolverInit } from 'ipc-promise-invoke'
 
 const registerEvents = () => {
   if(!extensionProcess) {
     return
   }
-  extensionProcess.on('message', (msg: ExtensionMessage) => {
-    if(!mainWindow.target) {
-      return
-    }
+  const resolver = resolverInit(extensionProcess)
 
-    if(msg.type === 'popup') {
-      sendPopupMessage(msg.action as PopupMessage)
-    }
-
-    if(msg.type === 'extensionReady') {
-      if(mainWindow.target !== null) {
-        mainWindow.target.on('ready-to-show', () => {
-          if(mainWindow.target !== null) {
-            mainWindow.target.webContents.send('extension_ready')
-          }
-        })
-        mainWindow.target.webContents.send('extension_ready')
-      }
-    }
-
-    if(msg.type === 'extensionList') {
-      mainWindow.target.webContents.send('extension_list', msg.action)
-    }
-
-    if(msg.type === 'sourceList') {
-      mainWindow.target.webContents.send('source_list', msg.action)
-    }
-
+  resolver.addChannel('popup', (msg: PopupMessage) => {
+    sendPopupMessage(msg)
   })
+
+  resolver.addChannel('extensionReady', () => {
+    if(mainWindow.target !== null) {
+      mainWindow.target.on('ready-to-show', () => {
+        if(mainWindow.target !== null) {
+          mainWindow.target.webContents.send('extension_ready')
+        }
+      })
+      mainWindow.target.webContents.send('extension_ready')
+    }
+  })
+
+  resolver.addChannel('extensionList', (extensionList) => {
+    if(mainWindow.target !== null) {
+      mainWindow.target.webContents.send('extension_list', extensionList)
+    }
+  })
+
+  resolver.addChannel('sourceList', (sourceList) => {
+    if(mainWindow.target !== null) {
+      mainWindow.target.webContents.send('source_list', sourceList)
+    }
+  })
+
 }
 
 export default registerEvents

@@ -3,17 +3,14 @@ import fs from 'fs'
 import './listener'
 import { runInVM } from './runner'
 import type { PopupMessage } from '../../windows/main'
-import type { ExtensionMessage } from '../'
+import { sender as senderInit } from 'ipc-promise-invoke'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
+const sender = senderInit(process)
 
 const extensionReady = () => {
-  if(process.send) {
-    process.send({
-      type: 'extensionReady'
-    } as ExtensionMessage)
-  }
+  sender('extensionReady')
 }
 
 const getExtensionMeta = (packageName: string) => {
@@ -61,15 +58,11 @@ const loadExtensions = () => {
       return isDirectory && hasMetaData
     })
   } catch (e) {
-    if(process.send) {
-      process.send({
-        type: 'popup',
-        action: {
-          icon: 'error',
-          content: 'Unable to read extension directory.'
-        } as PopupMessage
-      } as ExtensionMessage)
-    }
+    sender('popup', {
+      icon: 'error',
+      content: 'Unable to read extension directory.'
+    } as PopupMessage)
+    console.error(e)
   }
 
   fileList.forEach((val, index, arr) => {
@@ -79,16 +72,11 @@ const loadExtensions = () => {
       runInVM(extensionEntry, extensionInfo)
       extensions.push(extensionInfo)
     } catch (e) {
-      if(process.send) {
-        process.send({
-          type: 'popup',
-          action: {
-            icon: 'error',
-            content: 'Unable to read extension: ' + val
-          } as PopupMessage
-        } as ExtensionMessage)
-        console.error(e)
-      }
+      sender('popup', {
+        icon: 'error',
+        content: 'Unable to read extension: ' + val
+      } as PopupMessage)
+      console.error(e)
     }
     if(arr.length - 1 <= index) {
       extensionReady()
