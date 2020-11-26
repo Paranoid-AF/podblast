@@ -5,22 +5,17 @@ const resolver = resolverInit(process)
 const sender = senderInit(process)
 
 resolver.addChannel('getExtensionList', () => {
-  sender('extensionList', extensions.map((val) => ({
-    id: val.id,
-    name: val.name,
-    version: val.version,
-    description: val.description,
-    author: val.author,
-    homepage: val.homepage,
-    file: val.file
-  })))
+  sender('extensionList', extensions)
 })
 
 resolver.addChannel('getSourceList', () => {
-  sender('sourceList', sources.map((val) => ({
-    id: val.id,
-    name: val.name,
-    description: val.description,
-    provider: val.provider
-  })))
+  sender('sourceList', sources.map((val) => {
+    const properties: Record<string, any> = { }
+    for(let key in val) {
+      if(typeof val[key as keyof typeof val] !== 'function') {
+        properties[key] = val[key as keyof typeof val]
+      }
+    }
+    return properties
+  }))
 })
