@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import './listener'
+import { updateExtensionList } from './listener'
 import { runInVM } from './runner'
 import type { PopupMessage } from '../../windows/main'
 import { sender as senderInit } from 'ipc-promise-invoke'
@@ -8,12 +8,13 @@ import { sender as senderInit } from 'ipc-promise-invoke'
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
 const sender = senderInit(process)
+const extensionDirPath = path.join(process.cwd(), '/extensions')
 
 const extensionReady = () => {
   sender('extensionReady')
 }
 
-const getExtensionMeta = (packageName: string) => {
+export const getExtensionMeta = (packageName: string) => {
   const packageJsonPath = path.join(process.cwd(), '/extensions/' + packageName + '/package.json')
   let packageJsonRaw = ''
   try {
@@ -46,8 +47,7 @@ const getExtensionMeta = (packageName: string) => {
   return extensionMeta
 }
 
-const loadExtensions = () => {
-  const extensionDirPath = path.join(process.cwd(), '/extensions')
+export const listExtensions = () => {
   let fileList: Array<string> = []
   try {
     fileList = fs.readdirSync(extensionDirPath)
@@ -64,27 +64,31 @@ const loadExtensions = () => {
     } as PopupMessage)
     console.error(e)
   }
-
-  fileList.forEach((val, index, arr) => {
-    try {
-      const extensionInfo = getExtensionMeta(val)
-      const extensionEntry = path.join(extensionDirPath, val + '/' + extensionInfo.entry)
-      runInVM(extensionEntry, extensionInfo)
-      extensions.push(extensionInfo)
-    } catch (e) {
-      sender('popup', {
-        icon: 'error',
-        content: 'Unable to read extension: ' + val
-      } as PopupMessage)
-      console.error(e)
-    }
-    if(arr.length - 1 <= index) {
-      extensionReady()
-    }
-  })
+  return fileList
 }
 
-loadExtensions()
+export const loadExtension = (packageName: string) => {
+  try {
+    const extensionInfo = getExtensionMeta(packageName)
+    const extensionEntry = path.join(extensionDirPath, packageName + '/' + extensionInfo.entry)
+    runInVM(extensionEntry, extensionInfo)
+    extensions.push(extensionInfo)
+    updateExtensionList()
+  } catch (e) {
+    sender('popup', {
+      icon: 'error',
+      content: 'Unable to read extension: ' + packageName
+    } as PopupMessage)
+    console.error(e)
+  }
+}
+
+listExtensions().forEach((packageName: string, index, arr) => {
+  loadExtension(packageName)
+  if(arr.length - 1 <= index) {
+    extensionReady()
+  }
+})
 
 export interface ExtensionInfo {
   id: string,

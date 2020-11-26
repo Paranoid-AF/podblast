@@ -5,10 +5,18 @@ const resolver = resolverInit(process)
 const sender = senderInit(process)
 
 resolver.addChannel('getExtensionList', () => {
-  sender('extensionList', extensions)
+  updateExtensionList()
 })
 
 resolver.addChannel('getSourceList', () => {
+  updateSourceList()
+})
+
+export const updateExtensionList = () => {
+  sender('extensionList', extensions)
+}
+
+export const updateSourceList = () => {
   sender('sourceList', sources.map((val) => {
     const properties: Record<string, any> = { }
     for(let key in val) {
@@ -18,4 +26,4 @@ resolver.addChannel('getSourceList', () => {
     }
     return properties
   }))
-})
+}

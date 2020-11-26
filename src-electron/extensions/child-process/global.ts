@@ -1,5 +1,6 @@
 import { getLocale } from './utils'
 import { sources, ExtensionInfo, SourceInfo } from './'
+import { updateSourceList } from './listener'
 
 const registerSource = (sourceInfo: SourceInfo) => {
   const innerThis = (this as any).runnerGlobal
@@ -12,6 +13,7 @@ const registerSource = (sourceInfo: SourceInfo) => {
     return
   }
   sources.push({...sourceInfo, provider: innerThis.extensionInfo.id})
+  updateSourceList()
 }
 
 export const runnerGlobal = {
