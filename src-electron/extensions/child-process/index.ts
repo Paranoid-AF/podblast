@@ -49,6 +49,10 @@ export const getExtensionMeta = (packageName: string) => {
 
 export const listExtensions = () => {
   let fileList: Array<string> = []
+  const folderExists = fs.existsSync(extensionDirPath) && fs.lstatSync(extensionDirPath).isDirectory()
+  if(!folderExists) {
+    fs.mkdirSync(extensionDirPath)
+  }
   try {
     fileList = fs.readdirSync(extensionDirPath)
     fileList = fileList.filter((val) => {
