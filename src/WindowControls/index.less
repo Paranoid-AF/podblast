@@ -1,6 +1,8 @@
+@controlButtonWidth: 46px;
+@controlButtonAmount: 3;
 .window-controls {
   display: grid;
-  grid-template-columns: repeat(3, 46px);
+  grid-template-columns: repeat(3, calc(@controlButtonWidth));
   direction: rtl;
   position: absolute;
   top: 0;
@@ -11,7 +13,9 @@
 }
 
 .window-controlbar {
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
   width: 100%;
   height: 30px;
   -webkit-app-region: drag;
