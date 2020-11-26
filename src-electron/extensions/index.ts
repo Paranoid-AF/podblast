@@ -14,7 +14,7 @@ export const startExtensionProcess = () => {
     env: {
       locale,
       dev: isDev.toString()
-    }
+    } as any
   })
 }
 
