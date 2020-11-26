@@ -13,7 +13,7 @@ const windowConf: BrowserWindowConstructorOptions = {
   minWidth: 650,
   minHeight: 400
 }
-if(currentPlatform !== Platforms.MAC) {
+if(currentPlatform === Platforms.WINDOWS) {
   windowConf.frame = false
 } else {
   windowConf.frame = true

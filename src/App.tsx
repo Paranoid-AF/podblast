@@ -3,8 +3,10 @@ import Navi from './Navi'
 import './App.less'
 import WindowControls from './WindowControls'
 import { listenEvents } from './common/events'
-
-class App extends Component {
+import { Platforms } from './common/constants/os'
+import { RootState } from'./common/rematch'
+import { connect } from 'react-redux'
+class App extends Component <StateProps, {}> {
   componentDidMount() {
     listenEvents()
   }
@@ -14,11 +16,15 @@ class App extends Component {
       <div className="app-wrapper">
         <Navi />
         <div className="container">
-          <WindowControls />
+          { this.props.platform === Platforms.WINDOWS && <WindowControls /> }
         </div>
       </div>
     )
   }
 }
+const mapState = (state: RootState) => ({
+  platform: state.appWindow.platform
+})
+type StateProps = ReturnType<typeof mapState>
 
-export default App
+export default connect(mapState)(App)
