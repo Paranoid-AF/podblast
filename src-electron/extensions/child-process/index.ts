@@ -8,14 +8,13 @@ import { sender as senderInit } from 'ipc-promise-invoke'
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
 const sender = senderInit(process)
-const extensionDirPath = path.join(process.cwd(), '/extensions')
-
+const extensionDirPath = path.join(process.env.appPath || process.cwd(), '/extensions')
 const extensionReady = () => {
   sender('extensionReady')
 }
 
 export const getExtensionMeta = (packageName: string) => {
-  const packageJsonPath = path.join(process.cwd(), '/extensions/' + packageName + '/package.json')
+  const packageJsonPath = path.join(extensionDirPath, './' + packageName + '/package.json')
   let packageJsonRaw = ''
   try {
     packageJsonRaw = fs.readFileSync(packageJsonPath, { encoding: 'utf8' })
@@ -56,7 +55,7 @@ export const listExtensions = () => {
   try {
     fileList = fs.readdirSync(extensionDirPath)
     fileList = fileList.filter((val) => {
-      const dirPath = path.join(process.cwd(), '/extensions/' + val)
+      const dirPath = path.join(extensionDirPath, './' + val)
       const isDirectory = fs.lstatSync(dirPath).isDirectory()
       const hasMetaData = fs.existsSync(dirPath + '/package.json')
       return isDirectory && hasMetaData

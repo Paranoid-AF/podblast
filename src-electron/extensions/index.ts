@@ -10,10 +10,12 @@ export let extensions: Array<ExtensionInfo> = []
 
 export const startExtensionProcess = () => {
   const locale = app.getLocale()
+  const appPath = path.join(app.getAppPath(), '..')
   extensionProcess = child_process.fork(path.join(__dirname, './child-process/index.js'), [], {
     env: {
       locale,
-      dev: isDev.toString()
+      dev: isDev.toString(),
+      appPath
     } as any
   })
 }
