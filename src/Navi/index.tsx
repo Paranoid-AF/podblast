@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import './index.less'
-import { RootState } from '../common/rematch'
 import Panel, { ItemList, SortResult } from './Panel'
 
 const bruh = [
