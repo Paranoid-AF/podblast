@@ -7,7 +7,7 @@ import { sender as senderInit } from 'ipc-promise-invoke'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
-const sender = senderInit(process)
+const [ sender, disband ] = senderInit(process)
 const extensionDirPath = path.join(process.env.appPath || process.cwd(), '/extensions')
 const extensionReady = () => {
   sender('extensionReady')

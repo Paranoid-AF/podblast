@@ -4,7 +4,7 @@ import { ExtensionInfo } from './'
 import type { PopupMessage } from '../../windows/main'
 import { sender as senderInit } from 'ipc-promise-invoke'
 
-const sender = senderInit(process)
+const [ send, disband ] = senderInit(process)
 
 const allowedModules = [
   "axios",
@@ -12,7 +12,7 @@ const allowedModules = [
 ]
 
 process.on('uncaughtException', (err) => {
-  sender('popup', {
+  send('popup', {
     icon: 'error',
     content: 'An unknown error occurred in an extension.'
   } as PopupMessage)

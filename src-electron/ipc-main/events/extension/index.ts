@@ -7,13 +7,13 @@ const registerEvents = () => {
   if(!extensionProcess) {
     return
   }
-  const resolver = resolverInit(extensionProcess)
+  const [ addChannel, cancelChannel, disband ] = resolverInit(extensionProcess)
 
-  resolver.addChannel('popup', (msg: PopupMessage) => {
+  addChannel('popup', (msg: PopupMessage) => {
     sendPopupMessage(msg)
   })
 
-  resolver.addChannel('extensionReady', () => {
+  addChannel('extensionReady', () => {
     if(mainWindow.target !== null) {
       mainWindow.target.on('ready-to-show', () => {
         if(mainWindow.target !== null) {
@@ -24,13 +24,13 @@ const registerEvents = () => {
     }
   })
 
-  resolver.addChannel('extensionList', (extensionList) => {
+  addChannel('extensionList', (extensionList) => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('extension_list', extensionList)
     }
   })
 
-  resolver.addChannel('sourceList', (sourceList) => {
+  addChannel('sourceList', (sourceList) => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('source_list', sourceList)
     }

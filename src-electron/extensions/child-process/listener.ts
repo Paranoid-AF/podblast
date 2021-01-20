@@ -2,18 +2,18 @@
 import { sources, extensions, SourceInfo } from './'
 import { resolver as resolverInit, sender as senderInit } from 'ipc-promise-invoke'
 
-const resolver = resolverInit(process)
-const sender = senderInit(process)
+const [ addChannel, cancelChannel, disbandResolver ] = resolverInit(process)
+const [ send, disbandSender ] = senderInit(process)
 
-resolver.addChannel('getExtensionList', () => {
+addChannel('getExtensionList', () => {
   updateExtensionList()
 })
 
-resolver.addChannel('getSourceList', () => {
+addChannel('getSourceList', () => {
   updateSourceList()
 })
 
-resolver.addChannel('getForm', async (payload: {id: string, provider?: string}) => {
+addChannel('getForm', async (payload: {id: string, provider?: string}) => {
   let targetSource = findSource(payload.id, payload.provider)
   if(targetSource) {
     try {
@@ -36,7 +36,7 @@ resolver.addChannel('getForm', async (payload: {id: string, provider?: string}) 
   }
 })
 
-resolver.addChannel('submitForm', async (payload: {id: string, provider?: string, data: Record<string, any>}) => {
+addChannel('submitForm', async (payload: {id: string, provider?: string, data: Record<string, any>}) => {
   let targetSource = findSource(payload.id, payload.provider)
   if(targetSource) {
     try {
@@ -71,11 +71,11 @@ const findSource = (id: string, provider?: string) => {
 }
 
 export const updateExtensionList = () => {
-  sender('extensionList', extensions)
+  send('extensionList', extensions)
 }
 
 export const updateSourceList = () => {
-  sender('sourceList', sources.map((val) => {
+  send('sourceList', sources.map((val) => {
     const properties: Record<string, any> = { }
     for(let key in val) {
       if(typeof val[key as keyof typeof val] !== 'function') {

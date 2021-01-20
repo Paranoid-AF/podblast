@@ -6,7 +6,7 @@
     "axios": "^0.21.0",
     "electron-is-dev": "^1.2.0",
     "got": "^11.8.0",
-    "ipc-promise-invoke": "^1.2.0",
+    "ipc-promise-invoke": "~2.0.0",
     "vm2": "^3.9.2"
   },
   "build": {

@@ -9,13 +9,13 @@ export const extension = (event: Electron.IpcMainInvokeEvent, payload: Extension
   if(!extensionProcess) {
     return
   }
-  const sender = senderInit(extensionProcess)
+  const [ send, disband ] = senderInit(extensionProcess)
   switch(payload.action) {
     case 'updateExtensionList':
-      sender('getExtensionList')
+      send('getExtensionList')
       break
     case 'updateSourceList':
-      sender('getSourceList')
+      send('getSourceList')
       break
   }
 }
