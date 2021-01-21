@@ -13,7 +13,7 @@ const extensionReady = () => {
   send('extensionReady')
 }
 
-export const getExtensionMeta = (packagePath: string) => {
+export const getExtensionMeta = (packagePath: string, type: ExtensionType) => {
   const packageJsonPath = path.join(packagePath, './package.json')
   let packageJsonRaw = ''
   try {
@@ -27,7 +27,8 @@ export const getExtensionMeta = (packagePath: string) => {
     name: packageJson['displayName'] || packageJson['name'],
     version: packageJson['version'],
     file: packagePath,
-    entry: packageJson['main'] || 'index.js'
+    entry: packageJson['main'] || 'index.js',
+    type
   }
   for(let key in extensionMeta) {
     if(typeof extensionMeta[key as keyof typeof extensionMeta] !== 'string') {
@@ -71,9 +72,9 @@ export const listExtensions = (extensionDirPath: string) => {
   return fileList
 }
 
-export const loadExtension = (packagePath: string) => {
+export const loadExtension = (packagePath: string, type: ExtensionType) => {
   try {
-    const extensionInfo = getExtensionMeta(packagePath)
+    const extensionInfo = getExtensionMeta(packagePath, type)
     const extensionEntry = path.join(packagePath, './' + extensionInfo.entry)
     runInVM(extensionEntry, extensionInfo)
     extensions.push(extensionInfo)
@@ -93,15 +94,38 @@ if(!folderExists) {
   fs.mkdirSync(externalExtensionPath)
 }
 const internalExtensionPath = path.join(__dirname, '../../assets/extensions')
-const extensionList = [...listExtensions(externalExtensionPath), ...listExtensions(internalExtensionPath)]
+
+const externalExtensionNames = listExtensions(externalExtensionPath)
+const internalExtensionNames = listExtensions(internalExtensionPath)
+
+const extensionList: Array<{
+  name: string,
+  type: ExtensionType
+}> = [
+  ...externalExtensionNames.map(val => {
+    return {
+      name: val,
+      type: 'EXTERNAL' as ExtensionType
+    }
+  }),
+  ...internalExtensionNames.map(val => {
+    return {
+      name: val,
+      type: 'INTERNAL' as ExtensionType
+    }
+  })
+]
 
 
 if(extensionList.length === 0) {
   extensionReady()
 }
 
-extensionList.forEach((packageName: string, index, arr) => {
-  loadExtension(packageName)
+extensionList.forEach((packageInfo, index, arr) => {
+  loadExtension(
+    packageInfo.name,
+    packageInfo.type
+  )
   if(arr.length - 1 <= index) {
     extensionReady()
   }
@@ -115,7 +139,8 @@ export interface ExtensionInfo {
   entry: string,
   description?: string,
   author?: string,
-  homepage?: string
+  homepage?: string,
+  type: 'INTERNAL' | 'EXTERNAL'
 }
 
 export interface SourceInfo {
@@ -138,3 +163,5 @@ interface FormItem {
   type: 'SELECT' | 'INPUT' | 'RADIO' | 'CHECK',
   field?: Array<FormField> // Field could be undefined when type is INPUT
 }
+
+type ExtensionType = 'INTERNAL' | 'EXTERNAL'
