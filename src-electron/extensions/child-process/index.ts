@@ -7,14 +7,14 @@ import { sender as senderInit } from 'ipc-promise-invoke'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
-const [ sender, disband ] = senderInit(process)
-const extensionDirPath = path.join(process.env.appPath || process.cwd(), '/extensions')
+const [ send, disband ] = senderInit(process)
+
 const extensionReady = () => {
-  sender('extensionReady')
+  send('extensionReady')
 }
 
-export const getExtensionMeta = (packageName: string) => {
-  const packageJsonPath = path.join(extensionDirPath, './' + packageName + '/package.json')
+export const getExtensionMeta = (packagePath: string) => {
+  const packageJsonPath = path.join(packagePath, './package.json')
   let packageJsonRaw = ''
   try {
     packageJsonRaw = fs.readFileSync(packageJsonPath, { encoding: 'utf8' })
@@ -26,7 +26,7 @@ export const getExtensionMeta = (packageName: string) => {
     id: packageJson['name'],
     name: packageJson['displayName'] || packageJson['name'],
     version: packageJson['version'],
-    file: packageName,
+    file: packagePath,
     entry: packageJson['main'] || 'index.js'
   }
   for(let key in extensionMeta) {
@@ -46,22 +46,23 @@ export const getExtensionMeta = (packageName: string) => {
   return extensionMeta
 }
 
-export const listExtensions = () => {
+export const listExtensions = (extensionDirPath: string) => {
   let fileList: Array<string> = []
-  const folderExists = fs.existsSync(extensionDirPath) && fs.lstatSync(extensionDirPath).isDirectory()
-  if(!folderExists) {
-    fs.mkdirSync(extensionDirPath)
-  }
   try {
     fileList = fs.readdirSync(extensionDirPath)
-    fileList = fileList.filter((val) => {
-      const dirPath = path.join(extensionDirPath, './' + val)
+    fileList = fileList.filter((packageName) => {
+      // Check if the directory is a valid extension directory.
+      const dirPath = path.join(extensionDirPath, './' + packageName)
       const isDirectory = fs.lstatSync(dirPath).isDirectory()
-      const hasMetaData = fs.existsSync(dirPath + '/package.json')
+      const hasMetaData = fs.existsSync(path.join(dirPath, './package.json'))
       return isDirectory && hasMetaData
     })
+    // Provide full path.
+    fileList.forEach((packageName, index, arr) => {
+      arr[index] = path.join(extensionDirPath, './' + packageName)
+    })
   } catch (e) {
-    sender('popup', {
+    send('popup', {
       icon: 'error',
       content: 'Unable to read extension directory.'
     } as PopupMessage)
@@ -70,26 +71,35 @@ export const listExtensions = () => {
   return fileList
 }
 
-export const loadExtension = (packageName: string) => {
+export const loadExtension = (packagePath: string) => {
   try {
-    const extensionInfo = getExtensionMeta(packageName)
-    const extensionEntry = path.join(extensionDirPath, packageName + '/' + extensionInfo.entry)
+    const extensionInfo = getExtensionMeta(packagePath)
+    const extensionEntry = path.join(packagePath, './' + extensionInfo.entry)
     runInVM(extensionEntry, extensionInfo)
     extensions.push(extensionInfo)
     updateExtensionList()
   } catch (e) {
-    sender('popup', {
+    send('popup', {
       icon: 'error',
-      content: 'Unable to read extension: ' + packageName
+      content: 'Unable to read extension: ' +  packagePath
     } as PopupMessage)
     console.error(e)
   }
 }
 
-const extensionList = listExtensions()
+const externalExtensionPath = path.join(process.env.appPath || process.cwd(), './extensions')
+const folderExists = fs.existsSync(externalExtensionPath) && fs.lstatSync(externalExtensionPath).isDirectory()
+if(!folderExists) {
+  fs.mkdirSync(externalExtensionPath)
+}
+const internalExtensionPath = path.join(__dirname, '../../assets/extensions')
+const extensionList = [...listExtensions(externalExtensionPath), ...listExtensions(internalExtensionPath)]
+
+
 if(extensionList.length === 0) {
   extensionReady()
 }
+
 extensionList.forEach((packageName: string, index, arr) => {
   loadExtension(packageName)
   if(arr.length - 1 <= index) {

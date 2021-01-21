@@ -1,0 +1,8 @@
+{
+  "name": "rss",
+  "displayName": "RSS",
+  "version": "1.0.0",
+  "description": "Built-in support for RSS.",
+  "main": "index.js",
+  "license": "MIT"
+}

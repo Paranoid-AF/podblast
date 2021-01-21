@@ -23,4 +23,7 @@
   "include": [
     "./src-electron"
   ],
+  "exclude": [
+    "./src-electron/assets"
+  ]
 }
