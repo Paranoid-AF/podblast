@@ -21,7 +21,7 @@ export const initMainWindow = () => {
   win.target.on('ready-to-show', () => {
     if(win.target !== null) {
       win.target.show()
-      win.target.setSize(800, 600) // Set this to make the window always resizable on Linux.
+      win.target.setSize(1130, 680)
     }
   })
   win.target.on('closed', () => {
