@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './index.less'
 import ControlButton from './Button'
-import { RootState, Dispatch } from'../common/rematch'
+import { RootState, Dispatch } from'../../common/rematch'
 import { connect } from 'react-redux'
 
 class WindowControls extends Component <StateProps & DispatchProps> {

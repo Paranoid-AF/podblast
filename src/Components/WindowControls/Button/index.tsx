@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import './index.less'
-import iconCloseDark from '../../common/res/window-controls/close-k-30.png'
-import iconMaxDark from '../../common/res/window-controls/max-k-30.png'
-import iconMinDark from '../../common/res/window-controls/min-k-30.png'
-import iconRestoreDark from '../../common/res/window-controls/restore-k-30.png'
-import iconCloseLight from '../../common/res/window-controls/close-w-30.png'
-import iconMaxLight from '../../common/res/window-controls/max-w-30.png'
-import iconMinLight from '../../common/res/window-controls/min-w-30.png'
-import iconRestoreLight from '../../common/res/window-controls/restore-w-30.png'
+import iconCloseDark from '../../../common/res/window-controls/close-k-30.png'
+import iconMaxDark from '../../../common/res/window-controls/max-k-30.png'
+import iconMinDark from '../../../common/res/window-controls/min-k-30.png'
+import iconRestoreDark from '../../../common/res/window-controls/restore-k-30.png'
+import iconCloseLight from '../../../common/res/window-controls/close-w-30.png'
+import iconMaxLight from '../../../common/res/window-controls/max-w-30.png'
+import iconMinLight from '../../../common/res/window-controls/min-w-30.png'
+import iconRestoreLight from '../../../common/res/window-controls/restore-w-30.png'
 
 class Button extends Component <Props, {}> {
   static defaultProps = {
