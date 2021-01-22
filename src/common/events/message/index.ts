@@ -3,7 +3,7 @@ import type { MessageType } from 'antd/lib/message'
 import { store } from '../../rematch'
 const events: Record<string, (...args: Array<any>) => void> = {}
 
-events["message"] = (event, info) => {
+events["popup"] = (event, info) => {
   switch(info.icon) {
     case 'normal':
       message.info(info.content)

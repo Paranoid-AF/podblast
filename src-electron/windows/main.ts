@@ -35,10 +35,10 @@ export const sendPopupMessage = (msg: PopupMessage) => {
   if(win.target) {
     win.target.webContents.once('dom-ready', () => {
       if(win.target) {
-        win.target.webContents.send('message', msg)
+        win.target.webContents.send('popup', msg)
       }
     })
-    win.target.webContents.send('message', msg)
+    win.target.webContents.send('popup', msg)
   }
 }
 
