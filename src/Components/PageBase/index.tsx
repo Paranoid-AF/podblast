@@ -11,8 +11,10 @@ const initTitleStyle: TitleStyle = {
 const finalTitleStyle: TitleStyle = {
   fontSize: 13,
   top: 6,
-  left: 3
+  left: 6
 }
+
+const targetTitleBarOpacity = 0.8
 
 function PageBase(props: Props) {
   const [titleStyle, setTitleStye] = useState<TitleStyle>(initTitleStyle)
@@ -21,7 +23,7 @@ function PageBase(props: Props) {
   const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
   const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
   const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
-  const titleBarScaler = scaleLinear().domain([0, 1]).range([0, collapseThreshold]).invert
+  const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
 
   const calcTitleStyle = (target: number) => {
     return {

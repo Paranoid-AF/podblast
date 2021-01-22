@@ -1,4 +1,5 @@
 @import '../../App.less';
+@scrollbarWidth: 3px;
 .pagebase {
   position: relative;
   height: 100%;
@@ -20,7 +21,7 @@
 }
 
 .pagebase-container::-webkit-scrollbar {
-  width: 2px;
+  width: @scrollbarWidth;
 }
 
 .pagebase-container::-webkit-scrollbar-track {
@@ -28,7 +29,7 @@
 }
  
 .pagebase-container::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 .pagebase-container::-webkit-scrollbar-thumb:hover {
@@ -39,7 +40,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: calc(100% - @scrollbarWidth);
   height: 30px;
   background: @containerBackground;
   z-index: 98;
