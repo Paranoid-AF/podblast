@@ -9,54 +9,57 @@ import iconMaxLight from '../../../common/res/window-controls/max-w-30.png'
 import iconMinLight from '../../../common/res/window-controls/min-w-30.png'
 import iconRestoreLight from '../../../common/res/window-controls/restore-w-30.png'
 
-class Button extends Component <Props, {}> {
-  static defaultProps = {
-    color: "dark",
-    focused: true
-  }
-  iconSetDark: IconSet = {
-    close: iconCloseDark,
-    maximize: iconMaxDark,
-    minimize: iconMinDark,
-    restore: iconRestoreDark
-  }
-  iconSetLight: IconSet = {
-    close: iconCloseLight,
-    maximize: iconMaxLight,
-    minimize: iconMinLight,
-    restore: iconRestoreLight
-  }
-  render() {
-    let currentIconSet = this.props.color === 'dark' ? this.iconSetDark : this.iconSetLight
-    let icon = ""
-    switch(this.props.type) {
-      case 'close':
-        icon = currentIconSet.close
-        break
-      case 'maximize':
-        icon = currentIconSet.maximize
-        break
-      case 'minimize':
-        icon = currentIconSet.minimize
-        break
-      case 'restore':
-        icon = currentIconSet.restore
-    }
+const defaultProps = {
+  color: "dark",
+  focused: true
+}
+const iconSetDark: IconSet = {
+  close: iconCloseDark,
+  maximize: iconMaxDark,
+  minimize: iconMinDark,
+  restore: iconRestoreDark
+}
+const iconSetLight: IconSet = {
+  close: iconCloseLight,
+  maximize: iconMaxLight,
+  minimize: iconMinLight,
+  restore: iconRestoreLight
+}
 
-    const title = this.props.type.toUpperCase().substring(0, 1) + this.props.type.substring(1)
+function Button(props: Props) {
+  const mixedProps = {
+    ...defaultProps,
+    ...props
+  }
+  let currentIconSet = mixedProps.color === 'dark' ? iconSetDark : iconSetLight
+  let icon = ""
+  switch(mixedProps.type) {
+    case 'close':
+      icon = currentIconSet.close
+      break
+    case 'maximize':
+      icon = currentIconSet.maximize
+      break
+    case 'minimize':
+      icon = currentIconSet.minimize
+      break
+    case 'restore':
+      icon = currentIconSet.restore
+  }
 
-    return (
-      <div title={title} className={`window-controll-button window-controll-button-${this.props.type}${this.props.focused ? "" : " window-controll-button-defocused"}`} onClick={this.props.onClick}>
-        <div className="window-controll-icon">
-          <img
-            src={icon}
-            draggable="false"
-            alt={title}
-          />
-        </div>
+  const title = mixedProps.type.toUpperCase().substring(0, 1) + mixedProps.type.substring(1)
+
+  return (
+    <div title={title} className={`window-controll-button window-controll-button-${mixedProps.type}${mixedProps.focused ? "" : " window-controll-button-defocused"}`} onClick={props.onClick}>
+      <div className="window-controll-icon">
+        <img
+          src={icon}
+          draggable="false"
+          alt={title}
+        />
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 type Props = {

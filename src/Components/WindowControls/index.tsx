@@ -1,25 +1,23 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './index.less'
 import ControlButton from './Button'
 import { RootState, Dispatch } from'../../common/rematch'
 import { connect } from 'react-redux'
 
-class WindowControls extends Component <StateProps & DispatchProps> {
-  render() {
-    return (
-      <div className="window-controlbar">
-        <div className="window-controls">
-          <ControlButton type="close" focused={this.props.isFocused} onClick={this.props.windowControls.close}/>
-          {
-            this.props.isMaximized ?
-            <ControlButton type="restore" focused={this.props.isFocused} onClick={this.props.windowControls.restore}/> :
-            <ControlButton type="maximize" focused={this.props.isFocused} onClick={this.props.windowControls.maximize}/>
-          }
-          <ControlButton type="minimize" focused={this.props.isFocused} onClick={this.props.windowControls.minimize}/>
-        </div>
+function WindowControls(props: StateProps & DispatchProps) {
+  return (
+    <div className="window-controlbar">
+      <div className="window-controls">
+        <ControlButton type="close" focused={props.isFocused} onClick={props.windowControls.close}/>
+        {
+          props.isMaximized ?
+          <ControlButton type="restore" focused={props.isFocused} onClick={props.windowControls.restore}/> :
+          <ControlButton type="maximize" focused={props.isFocused} onClick={props.windowControls.maximize}/>
+        }
+        <ControlButton type="minimize" focused={props.isFocused} onClick={props.windowControls.minimize}/>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 const mapState = (state: RootState) => ({
