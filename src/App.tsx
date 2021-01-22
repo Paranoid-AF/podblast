@@ -6,6 +6,9 @@ import { listenEvents } from './common/events'
 import { Platforms } from './common/constants/os'
 import { RootState } from'./common/rematch'
 import { connect } from 'react-redux'
+
+import Extensions from './Pages/Extensions'
+
 class App extends Component <StateProps, {}> {
   componentDidMount() {
     listenEvents()
@@ -17,6 +20,7 @@ class App extends Component <StateProps, {}> {
         <Navi />
         <div className="container">
           { this.props.platform === Platforms.WINDOWS && <WindowControls /> }
+          <Extensions />
         </div>
       </div>
     )
