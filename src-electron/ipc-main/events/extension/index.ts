@@ -1,5 +1,5 @@
 import { extensionProcess } from '../../../extensions'
-import { sendPopupMessage, PopupMessage } from '../../../windows/main'
+import { sendPopupMessage, PopupMessage, sendNotification, NotificationMessage } from '../../../windows/main'
 import mainWindow from '../../../windows/main'
 import { resolver as resolverInit } from 'ipc-promise-invoke'
 
@@ -11,6 +11,10 @@ const registerEvents = () => {
 
   addChannel('popup', (msg: PopupMessage) => {
     sendPopupMessage(msg)
+  })
+
+  addChannel('notification', (msg: NotificationMessage) => {
+    sendNotification(msg)
   })
 
   addChannel('extensionReady', () => {

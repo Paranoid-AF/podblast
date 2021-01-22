@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { updateExtensionList, updateSourceList } from './listener'
 import { runInVM } from './runner'
-import type { PopupMessage } from '../../windows/main'
+import type { PopupMessage, NotificationMessage } from '../../windows/main'
 import { sender as senderInit } from 'ipc-promise-invoke'
 
 export const extensions: Array<ExtensionInfo> = []
@@ -73,10 +73,10 @@ export const listExtensions = (extensionDirPath: string) => {
       arr[index] = path.join(extensionDirPath, './' + packageName)
     })
   } catch (e) {
-    send('popup', {
-      icon: 'error',
-      content: 'Unable to read extension directory.'
-    } as PopupMessage)
+    send('notification', {
+      title: 'Extension Error',
+      content: 'Unable to read extension directory: ' + extensionDirPath
+    } as NotificationMessage)
     console.error(e)
   }
   return fileList
@@ -90,10 +90,10 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
     extensions.push(extensionInfo)
     updateExtensionList()
   } catch (e) {
-    send('popup', {
-      icon: 'error',
-      content: 'Unable to read extension: ' +  packagePath
-    } as PopupMessage)
+    send('notification', {
+      title: 'Extension Error',
+      content: 'Unable to load extension: ' +  packagePath
+    } as NotificationMessage)
     console.error(e)
   }
 }

@@ -1,7 +1,7 @@
 import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
 import { ExtensionInfo } from './'
-import type { PopupMessage } from '../../windows/main'
+import type { NotificationMessage } from '../../windows/main'
 import { sender as senderInit } from 'ipc-promise-invoke'
 
 const [ send, disband ] = senderInit(process)
@@ -12,10 +12,11 @@ const allowedModules = [
 ]
 
 process.on('uncaughtException', (err) => {
-  send('popup', {
-    icon: 'error',
+  send('notification', {
+    title: 'Extension Runtime Error',
     content: 'An unknown error occurred in an extension.'
-  } as PopupMessage)
+  } as NotificationMessage)
+  console.error(err)
 })
 
 export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {

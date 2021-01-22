@@ -42,9 +42,26 @@ export const sendPopupMessage = (msg: PopupMessage) => {
   }
 }
 
+export const sendNotification = (msg: NotificationMessage) => {
+  if(win.target) {
+    win.target.webContents.once('dom-ready', () => {
+      if(win.target) {
+        win.target.webContents.send('notification', msg)
+      }
+    })
+    win.target.webContents.send('notification', msg)
+  }
+}
+
 export interface PopupMessage {
   icon: 'info' | 'success' | 'warning' | 'normal' | 'error',
   content: string
+}
+
+export interface NotificationMessage {
+  title?: string,
+  content: string,
+  duration?: number
 }
 
 export default win

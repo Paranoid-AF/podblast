@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { message, notification } from 'antd'
 import type { MessageType } from 'antd/lib/message'
 import { store } from '../../rematch'
 const events: Record<string, (...args: Array<any>) => void> = {}
@@ -21,6 +21,14 @@ events["popup"] = (event, info) => {
       message.info(info.content)
       break
   }
+}
+
+events["notification"] = (event, info) => {
+  notification.open({
+    message: info.title ?? '提示',
+    description: info.content ?? '',
+    duration: info.duration ?? 0
+  })
 }
 
 let hideLoading: null | MessageType = null
