@@ -3,5 +3,6 @@ global.registerSource({
   name: 'RSS',
   preForm: function() {
     return 'bruh'
-  }
+  },
+  icon: 'icon.png'
 });

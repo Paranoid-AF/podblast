@@ -9,6 +9,13 @@ export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
 const [ send, disband ] = senderInit(process)
 
+export const readIconFile = (filePath: string) => {
+  const base64Result = fs.readFileSync(filePath).toString('base64')
+  const fileNameSegs = filePath.split('.')
+  const fileExtensionName = fileNameSegs[fileNameSegs.length - 1]
+  return 'data:image/' + fileExtensionName +';base64,' + base64Result
+}
+
 const extensionReady = () => {
   send('extensionReady')
 }
@@ -43,6 +50,9 @@ export const getExtensionMeta = (packagePath: string, type: ExtensionType) => {
   }
   if(packageJson['homepage']) {
     extensionMeta.homepage = packageJson['homepage']
+  }
+  if(packageJson['icon']) {
+    extensionMeta.icon = readIconFile(path.join(packagePath, packageJson['icon']))
   }
   return extensionMeta
 }
@@ -140,7 +150,8 @@ export interface ExtensionInfo {
   description?: string,
   author?: string,
   homepage?: string,
-  type: 'INTERNAL' | 'EXTERNAL'
+  type: 'INTERNAL' | 'EXTERNAL',
+  icon?: string
 }
 
 export interface SourceInfo {
@@ -149,7 +160,8 @@ export interface SourceInfo {
   description?: string,
   preForm: () => Promise<Array<FormItem>>,
   postForm: (data: Record<string, any>) => string, // Key is form item ID, while value is value. Returns a token to fetch content.
-  provider: string
+  provider: string,
+  icon?: string
 }
 
 interface FormField {

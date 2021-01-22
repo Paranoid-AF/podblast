@@ -1,5 +1,6 @@
+import path from 'path'
 import { getLocale } from './utils'
-import { sources, ExtensionInfo, SourceInfo } from './'
+import { sources, ExtensionInfo, SourceInfo, readIconFile } from './'
 import { updateSourceList } from './listener'
 
 const registerSource = (sourceInfo: SourceInfo) => {
@@ -11,6 +12,10 @@ const registerSource = (sourceInfo: SourceInfo) => {
   if(innerThis.extensionInfo === null) {
     console.error("Extension ERROR: Initialization with global.init() is required before registering a source!")
     return
+  }
+  if(sourceInfo['icon']) {
+    const fileBase = innerThis.extensionInfo.file
+    sourceInfo['icon'] = readIconFile(path.join(fileBase, sourceInfo['icon']))
   }
   sources.push({...sourceInfo, provider: innerThis.extensionInfo.id})
   updateSourceList()
