@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { updateExtensionList } from './listener'
+import { updateExtensionList, updateSourceList } from './listener'
 import { runInVM } from './runner'
 import type { PopupMessage } from '../../windows/main'
 import { sender as senderInit } from 'ipc-promise-invoke'
@@ -96,6 +96,29 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
     } as PopupMessage)
     console.error(e)
   }
+}
+
+export const unloadExtension = (extensionId: string) => {
+  for(let i=0; i<sources.length; i++) {
+    if(i >= sources.length) {
+      break
+    }
+    if(sources[i].provider === extensionId) {
+      sources.splice(i, 1)
+      i--
+    }
+  }
+  updateSourceList()
+  for(let i=0; i<extensions.length; i++) {
+    if(i >= extensions.length) {
+      break
+    }
+    if(extensions[i].id === extensionId) {
+      extensions.splice(i, 1)
+      i--
+    }
+  }
+  updateExtensionList()
 }
 
 const externalExtensionPath = path.join(process.env.appPath || process.cwd(), './extensions')
