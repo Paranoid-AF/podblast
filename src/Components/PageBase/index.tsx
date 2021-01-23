@@ -15,10 +15,12 @@ const finalTitleStyle: TitleStyle = {
 }
 
 const targetTitleBarOpacity = 0.8
+const scrollBarHideTimeout = 3000 // ms
 
 function PageBase(props: Props) {
   const [titleStyle, setTitleStyle] = useState<TitleStyle>(initTitleStyle)
   const [titleBarOpacity, setTitleBarOpacity] = useState(0)
+  const [ showScrollBar, setShowScrollBar ] = useState(true)
   const collapseThreshold = 40 // px
   const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
   const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
@@ -33,9 +35,21 @@ function PageBase(props: Props) {
     } as TitleStyle
   }
 
+  let hideScrollBarTimeout: null | NodeJS.Timeout = null
+
   const handleScroll = (event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
+
+    if(hideScrollBarTimeout) {
+      clearTimeout(hideScrollBarTimeout)
+      hideScrollBarTimeout = null
+    }
+    hideScrollBarTimeout = setTimeout(() => {
+      setShowScrollBar(false)
+    }, scrollBarHideTimeout)
+    setShowScrollBar(true)
+
     if(target <= 0) {
       setTitleStyle(finalTitleStyle)
       setTitleBarOpacity(targetTitleBarOpacity)
@@ -54,7 +68,7 @@ function PageBase(props: Props) {
     <div className="pagebase">
       <h1 className="pagebase-title" style={titleStyle}>{props.title}</h1>
       <div className="pagebase-titlebar" style={ { opacity: titleBarOpacity } }></div>
-      <div className="pagebase-container" onScroll={handleScroll}>
+      <div className={ showScrollBar ? "pagebase-container" : "pagebase-container unscrollable" } onScroll={handleScroll}>
         {props.children}
       </div>
     </div>
