@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Button } from 'antd'
-import { Dispatch } from'../../../common/rematch'
 
+import { Dispatch } from'../../../common/rematch'
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
 
 import iconPlaceholder from '../../../common/res/extension-icons/extension-placeholder.png'
 import './index.less'
-import { connect } from 'react-redux'
 
-function ExtensionItem(props: { extension: ExtensionInfo } & DispatchProps) {
+function ExtensionItem(props: Props & DispatchProps) {
   const icon = props.extension.icon ?? iconPlaceholder
 
   let authorLink: JSX.Element | string | null = null
@@ -28,12 +28,10 @@ function ExtensionItem(props: { extension: ExtensionInfo } & DispatchProps) {
   if(props.extension.type === 'EXTERNAL') {
     operations = (
       <Fragment>
-        <Button onClick={() => { window.electron.utils.openExplorer(props.extension.file) }}>Show Files</Button>
         <Button onClick={() => { props.removeExtension(props.extension.id) }}>Remove</Button>
       </Fragment>
     )
   }
-
 
   return (
     <div className="extension-item">
@@ -44,11 +42,17 @@ function ExtensionItem(props: { extension: ExtensionInfo } & DispatchProps) {
         <p className="extension-description">{props.extension.description}</p>
         <p className="extension-version">Version: {props.extension.version}</p>
         <div className="extension-control">
+          <Button onClick={() => { props.showExtensionDetail(props.extension) }}>Detail</Button>
           {operations}
         </div>
       </div>
     </div>
   )
+}
+
+interface Props {
+  extension: ExtensionInfo,
+  showExtensionDetail: (target: ExtensionInfo) => void
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({

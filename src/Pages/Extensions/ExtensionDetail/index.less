@@ -1,0 +1,21 @@
+.extension-info {
+  p {
+    display: flex;
+    min-height: 28px;
+    margin: 0;
+    .type {
+      display: inline-block;
+      margin-right: 8px;
+      font-weight: 600;
+      min-width: 80px;
+    }
+    .type::after {
+      content: ':';
+    }
+    .content {
+      a {
+        margin-left: 5px;
+      }
+    }
+  }
+}
