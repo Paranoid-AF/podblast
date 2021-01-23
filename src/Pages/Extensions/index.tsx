@@ -8,49 +8,7 @@ function Extensions(props: StateProps & DispatchProps) {
   console.log(props)
   return (
     <PageBase title="Extensions">
-      <div style={{ display: 'block', height: 1000}}>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      <p>aaa</p>
-      </div>
+      
     </PageBase>
   )
 }
