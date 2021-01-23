@@ -2,9 +2,10 @@ import { NodeVM } from 'vm2'
 import { runnerGlobal } from './global'
 import { ExtensionInfo } from './'
 import type { NotificationMessage } from '../../windows/main'
-import { sender as senderInit } from 'ipc-promise-invoke'
 
-const [ send, disband ] = senderInit(process)
+import { sender } from './ipc'
+
+const [ send, disband ] = sender
 
 const allowedModules = [
   "axios",

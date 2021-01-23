@@ -3,11 +3,13 @@ import fs from 'fs'
 import { updateExtensionList, updateSourceList } from './listener'
 import { runInVM } from './runner'
 import type { PopupMessage, NotificationMessage } from '../../windows/main'
-import { sender as senderInit } from 'ipc-promise-invoke'
+
+import { sender } from './ipc'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
-const [ send, disband ] = senderInit(process)
+
+const [ send, disband ] = sender
 
 export const readIconFile = (filePath: string) => {
   const base64Result = fs.readFileSync(filePath).toString('base64')

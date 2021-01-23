@@ -1,9 +1,9 @@
 /* eslint-disable no-throw-literal */
 import { sources, extensions, SourceInfo } from './'
-import { resolver as resolverInit, sender as senderInit } from 'ipc-promise-invoke'
+import { sender, resolver } from './ipc'
 
-const [ addChannel, cancelChannel, disbandResolver ] = resolverInit(process)
-const [ send, disbandSender ] = senderInit(process)
+const [ addChannel, cancelChannel, disbandResolver ] = resolver
+const [ send, disbandSender ] = sender
 
 addChannel('getExtensionList', () => {
   updateExtensionList()
