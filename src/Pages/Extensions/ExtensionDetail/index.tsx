@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Modal } from 'antd'
 
-import { ExtensionInfo, SourceInfo } from '../../../common/rematch/models/extension'
+import { ExtensionInfo } from '../../../common/rematch/models/extension'
 import './index.less'
 import { connect } from 'react-redux'
 import { RootState } from '../../../common/rematch'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './index.less'
 import iconCloseDark from '../../../common/res/window-controls/close-k-30.png'
 import iconMaxDark from '../../../common/res/window-controls/max-k-30.png'

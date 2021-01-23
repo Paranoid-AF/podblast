@@ -43,7 +43,7 @@ function ExtensionItem(props: Props & DispatchProps) {
 
   return (
     <div className="extension-item">
-      <img className="extension-icon" src={icon} />
+      <img className="extension-icon" src={icon} alt={"Extension icon of " + props.extension.name} />
       <div className="extension-detail">
         <p className="extension-name">{props.extension.name}</p>
         <p className="extension-author">{authorLink}</p>
