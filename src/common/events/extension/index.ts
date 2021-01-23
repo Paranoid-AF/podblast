@@ -1,8 +1,12 @@
 import { store } from '../../rematch'
 const events: Record<string, (...args: Array<any>) => void> = {}
 
-events['extension_ready'] = (event) => {
-  store.dispatch.extension.toggleLoading(true)
+events['extension_ready'] = (event, lists) => {
+  store.dispatch.extension.toggleLoaded({
+    state: true,
+    extensionList: lists[0],
+    sourceList: lists[1]
+  })
 }
 
 events['extension_list'] = (event, extensionList) => {

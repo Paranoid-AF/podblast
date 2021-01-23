@@ -44,8 +44,6 @@ const unsubscribeLoading = store.subscribe(() => {
     }
     clearTimeout(loadingPopup)
     unsubscribeLoading()
-    window.electron.extension.updateExtensions()
-    window.electron.extension.updateSources()
   }
 })
 

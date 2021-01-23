@@ -19,7 +19,7 @@ export const readIconFile = (filePath: string) => {
 }
 
 const extensionReady = () => {
-  send('extensionReady')
+  send('extensionReady', [extensions, sources])
 }
 
 export const getExtensionMeta = (packagePath: string, type: ExtensionType) => {
@@ -91,6 +91,7 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
     runInVM(extensionEntry, extensionInfo)
     extensions.push(extensionInfo)
     updateExtensionList()
+    updateSourceList()
   } catch (e) {
     send('notification', {
       title: 'Extension Error',
@@ -162,6 +163,7 @@ extensionList.forEach((packageInfo, index, arr) => {
     packageInfo.type
   )
   if(arr.length - 1 <= index) {
+    updateSourceList()
     extensionReady()
   }
 })

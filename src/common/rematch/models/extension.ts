@@ -8,10 +8,16 @@ export const extension = createModel<RootModel>()({
     sourceList: []
   } as ExtensionState,
   reducers: {
-      toggleLoading(state: ExtensionState, payload: boolean) {
+      toggleLoaded(state: ExtensionState, payload: {
+        state: boolean,
+        extensionList?: Array<ExtensionInfo>,
+        sourceList?: Array<SourceInfo>
+      }) {
         return {
           ...state,
-          loaded: payload
+          loaded: payload.state,
+          extensionList: payload.extensionList ?? state.extensionList,
+          sourceList: payload.sourceList ?? state.sourceList
         }
       },
       setExtensionList(state: ExtensionState, payload: Array<ExtensionInfo>) {

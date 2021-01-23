@@ -18,13 +18,11 @@ const registerEvents = () => {
     sendNotification(msg)
   })
 
-  addChannel('extensionReady', (list: any) => {
+  addChannel('extensionReady', (lists: any) => {
     if(mainWindow.target !== null) {
       mainWindow.target.on('ready-to-show', () => {
         if(mainWindow.target !== null) {
-          mainWindow.target.webContents.send('extension_list', list[0])
-          mainWindow.target.webContents.send('source_list', list[1])
-          mainWindow.target.webContents.send('extension_ready')
+          mainWindow.target.webContents.send('extension_ready', lists)
         }
       })
     }
