@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Button } from 'antd'
+import { Button, Popconfirm } from 'antd'
 
 import { Dispatch } from'../../../common/rematch'
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
@@ -28,7 +28,14 @@ function ExtensionItem(props: Props & DispatchProps) {
   if(props.extension.type === 'EXTERNAL') {
     operations = (
       <Fragment>
-        <Button onClick={() => { props.removeExtension(props.extension.id) }}>Remove</Button>
+        <Popconfirm
+          title={`Remove extension "${props.extension.name}" from Podchat?`}
+          onConfirm={() => { props.removeExtension(props.extension.id) }}
+          okText="Remove"
+          cancelText="Cancel"
+        >
+          <Button>Remove</Button>
+        </Popconfirm>
       </Fragment>
     )
   }
