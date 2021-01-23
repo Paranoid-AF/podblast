@@ -45,7 +45,9 @@ export interface ExtensionInfo {
   file: string,
   description?: string,
   author?: string,
-  homepage?: string
+  homepage?: string,
+  icon?: string,
+  type: 'INTERNAL' | 'EXTERNAL'
 }
 
 export interface SourceInfo {
@@ -53,7 +55,8 @@ export interface SourceInfo {
   name: string,
   version: string,
   provider: string,
-  description?: string
+  description?: string,
+  icon?: string
 }
 
 export interface ExtensionState {

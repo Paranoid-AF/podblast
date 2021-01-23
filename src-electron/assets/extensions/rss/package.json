@@ -4,5 +4,6 @@
   "version": "1.0.0",
   "description": "Built-in support for RSS.",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "author": "The Podchat Project"
 }
