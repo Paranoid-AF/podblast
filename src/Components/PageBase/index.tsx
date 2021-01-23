@@ -17,7 +17,7 @@ const finalTitleStyle: TitleStyle = {
 const targetTitleBarOpacity = 0.8
 
 function PageBase(props: Props) {
-  const [titleStyle, setTitleStye] = useState<TitleStyle>(initTitleStyle)
+  const [titleStyle, setTitleStyle] = useState<TitleStyle>(initTitleStyle)
   const [titleBarOpacity, setTitleBarOpacity] = useState(0)
   const collapseThreshold = 40 // px
   const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
@@ -36,13 +36,17 @@ function PageBase(props: Props) {
   const handleScroll = (event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
-    if(target < 0) {
-      target = 0
+    if(target <= 0) {
+      setTitleStyle(finalTitleStyle)
+      setTitleBarOpacity(targetTitleBarOpacity)
+      return
     }
-    if(target > collapseThreshold) {
-      target = collapseThreshold
+    if(target >= collapseThreshold) {
+      setTitleStyle(initTitleStyle)
+      setTitleBarOpacity(0)
+      return
     }
-    setTitleStye(calcTitleStyle(target))
+    setTitleStyle(calcTitleStyle(target))
     setTitleBarOpacity(titleBarScaler(collapseThreshold - target))
   }
 
