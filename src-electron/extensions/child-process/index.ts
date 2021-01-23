@@ -102,6 +102,7 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
 }
 
 export const unloadExtension = (extensionId: string) => {
+  console.log('unloading ' + extensionId)
   for(let i=0; i<sources.length; i++) {
     if(i >= sources.length) {
       break

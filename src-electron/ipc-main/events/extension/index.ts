@@ -9,6 +9,7 @@ const registerEvents = () => {
   }
 
   const [ addChannel, cancelChannel, disband ] = resolver
+  const cachedLists = [ [] , [] ]
 
   addChannel('popup', (msg: PopupMessage) => {
     sendPopupMessage(msg)
@@ -19,22 +20,26 @@ const registerEvents = () => {
   })
 
   addChannel('extensionReady', (lists: any) => {
+    cachedLists[0] = lists[0]
+    cachedLists[1] = lists[1]
     if(mainWindow.target !== null) {
       mainWindow.target.on('ready-to-show', () => {
         if(mainWindow.target !== null) {
-          mainWindow.target.webContents.send('extension_ready', lists)
+          mainWindow.target.webContents.send('extension_ready', cachedLists)
         }
       })
     }
   })
 
   addChannel('extensionList', (extensionList: any) => {
+    cachedLists[0] = extensionList
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('extension_list', extensionList)
     }
   })
 
   addChannel('sourceList', (sourceList: any) => {
+    cachedLists[1] = sourceList
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('source_list', sourceList)
     }

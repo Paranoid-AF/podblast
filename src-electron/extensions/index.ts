@@ -3,12 +3,11 @@ import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
 
-import { buildIpcBridge } from './ipc'
+import { buildIpcBridge, sender } from './ipc'
 
 export let extensionProcess: ChildProcess | null = null
 export let sources: Array<SourceInfo> = []
 export let extensions: Array<ExtensionInfo> = []
-
 
 export const startExtensionProcess = () => {
   const locale = app.getLocale()
@@ -21,6 +20,11 @@ export const startExtensionProcess = () => {
     } as any
   })
   buildIpcBridge()
+}
+
+export const unloadExtension = (id: string) => {
+  const [ send, disband ] = sender
+  send('unload', id)
 }
 
 export interface ExtensionInfo {

@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-import { sources, extensions, SourceInfo } from './'
+import { sources, extensions, SourceInfo, unloadExtension } from './'
 import { sender, resolver } from './ipc'
 
 const [ addChannel, cancelChannel, disbandResolver ] = resolver
@@ -57,6 +57,10 @@ addChannel('submitForm', async (payload: {id: string, provider?: string, data: R
       info: 'No such source.'
     } as ListenerError
   }
+})
+
+addChannel('unload', async (id: string) => {
+  unloadExtension(id)
 })
 
 const findSource = (id: string, provider?: string) => {
