@@ -13,6 +13,9 @@ declare global {
         updateExtensions: () => void,
         updateSources: () => void
       },
+      utils: {
+        openExplorer: (path: string) => void
+      },
       on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     }
   }

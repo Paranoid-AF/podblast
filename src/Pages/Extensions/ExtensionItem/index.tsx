@@ -26,7 +26,7 @@ function ExtensionItem(props: { extension: ExtensionInfo }) {
   if(props.extension.type === 'EXTERNAL') {
     operations = (
       <Fragment>
-        <Button>Show Files</Button>
+        <Button onClick={() => { window.electron.utils.openExplorer(props.extension.file) }}>Show Files</Button>
         <Button>Remove</Button>
       </Fragment>
     )
