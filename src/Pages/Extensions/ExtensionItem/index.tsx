@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Button, Popconfirm } from 'antd'
+import { DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 import { Dispatch } from'../../../common/rematch'
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
@@ -34,7 +35,7 @@ function ExtensionItem(props: Props & DispatchProps) {
           okText="Remove"
           cancelText="Cancel"
         >
-          <Button>Remove</Button>
+          <Button><DeleteOutlined /> Remove</Button>
         </Popconfirm>
       </Fragment>
     )
@@ -49,7 +50,7 @@ function ExtensionItem(props: Props & DispatchProps) {
         <p className="extension-description">{props.extension.description}</p>
         <p className="extension-version">Version: {props.extension.version}</p>
         <div className="extension-control">
-          <Button onClick={() => { props.showExtensionDetail(props.extension) }}>Detail</Button>
+          <Button onClick={() => { props.showExtensionDetail(props.extension) }}><InfoCircleOutlined /> Detail</Button>
           {operations}
         </div>
       </div>

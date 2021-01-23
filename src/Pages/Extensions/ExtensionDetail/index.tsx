@@ -24,7 +24,7 @@ function ExtensionDetail(props: Props & StateProps) {
   }
 
   return (
-    <Modal title="Extension Info" visible={props.extension !== null} footer={null} onCancel={props.closeDetailView}>
+    <Modal title="Extension Detail" visible={props.extension !== null} footer={null} onCancel={props.closeDetailView}>
       <div className="extension-info">
         <p>
           <span className="type">Name</span>
