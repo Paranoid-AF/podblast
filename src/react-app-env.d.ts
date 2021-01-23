@@ -11,7 +11,8 @@ declare global {
       },
       extension: {
         updateExtensions: () => void,
-        updateSources: () => void
+        updateSources: () => void,
+        removeExtension: (extensionId: string) => Promise<IpcMessage>
       },
       utils: {
         openExplorer: (path: string) => void
@@ -19,6 +20,12 @@ declare global {
       on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     }
   }
+}
+
+interface IpcMessage {
+  status: 'error' | 'success',
+  info?: string,
+  data?: any
 }
 
 export interface appWindowPayload {

@@ -13,7 +13,7 @@ const { TabPane } = Tabs
 function Extensions(props: StateProps & DispatchProps) {
   const externalExtensions = props.extensions.filter(val => val.type === 'EXTERNAL')
   const internalExtensions = props.extensions.filter(val => val.type === 'INTERNAL')
-  console.log(props.extensions)
+
   return (
     <PageBase title="Extensions">
       <div className="extension-container">

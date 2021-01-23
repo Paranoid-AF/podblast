@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react'
-
 import { Button } from 'antd'
+import { Dispatch } from'../../../common/rematch'
 
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
 
 import iconPlaceholder from '../../../common/res/extension-icons/extension-placeholder.png'
 import './index.less'
+import { connect } from 'react-redux'
 
-function ExtensionItem(props: { extension: ExtensionInfo }) {
+function ExtensionItem(props: { extension: ExtensionInfo } & DispatchProps) {
   const icon = props.extension.icon ?? iconPlaceholder
 
   let authorLink: JSX.Element | string | null = null
@@ -28,7 +29,7 @@ function ExtensionItem(props: { extension: ExtensionInfo }) {
     operations = (
       <Fragment>
         <Button onClick={() => { window.electron.utils.openExplorer(props.extension.file) }}>Show Files</Button>
-        <Button>Remove</Button>
+        <Button onClick={() => { props.removeExtension(props.extension.id) }}>Remove</Button>
       </Fragment>
     )
   }
@@ -50,4 +51,10 @@ function ExtensionItem(props: { extension: ExtensionInfo }) {
   )
 }
 
-export default ExtensionItem
+const mapDispatch = (dispatch: Dispatch) => ({
+  removeExtension: dispatch.extension.removeExtension
+})
+
+type DispatchProps = ReturnType<typeof mapDispatch>
+
+export default connect(null, mapDispatch)(ExtensionItem)

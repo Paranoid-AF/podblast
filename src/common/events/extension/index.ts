@@ -10,7 +10,6 @@ events['extension_ready'] = (event, lists) => {
 }
 
 events['extension_list'] = (event, extensionList) => {
-  console.log(extensionList)
   store.dispatch.extension.setExtensionList(extensionList)
 }
 

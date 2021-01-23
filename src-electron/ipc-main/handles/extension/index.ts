@@ -1,8 +1,9 @@
-import { extensionProcess } from '../../../extensions'
+import { extensionProcess, removeExtension } from '../../../extensions'
 import { sender } from '../../../extensions/ipc'
 
 interface ExtensionPayload {
-  action: string
+  action: string,
+  payload?: any
 }
 
 export const extension = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
@@ -14,5 +15,7 @@ export const extension = (event: Electron.IpcMainInvokeEvent, payload: Extension
     case 'updateSourceList':
       send('getSourceList')
       break
+    case 'removeExtension':
+      return removeExtension(payload.payload as string)
   }
 }

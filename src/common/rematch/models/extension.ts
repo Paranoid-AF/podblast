@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core'
+import { message } from 'antd'
 import { RootModel } from './index'
 
 export const extension = createModel<RootModel>()({
@@ -34,7 +35,15 @@ export const extension = createModel<RootModel>()({
       }
   },
   effects: (dispatch: any) => ({
-    
+    async removeExtension (extensionId: string) {
+      const result = await window.electron.extension.removeExtension(extensionId)
+      if(result.status === 'error') {
+        message.error(result.info)
+      }
+      if(result.status === 'success') {
+        message.success(result.info)
+      }
+    } 
   })
 })
 

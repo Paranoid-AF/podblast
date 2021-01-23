@@ -9,5 +9,11 @@ export const extension = {
     ipcRenderer.invoke('extension', {
       action: "updateExtensionList"
     })
+  },
+  removeExtension: async (id: string) => {
+    return await ipcRenderer.invoke('extension', {
+      action: "removeExtension",
+      payload: id
+    })
   }
 }

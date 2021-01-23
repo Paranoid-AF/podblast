@@ -1,7 +1,9 @@
-import { extensionProcess } from '../../../extensions'
+import { ExtensionInfo, SourceInfo, extensionProcess } from '../../../extensions'
 import { sendPopupMessage, PopupMessage, sendNotification, NotificationMessage } from '../../../windows/main'
 import mainWindow from '../../../windows/main'
 import { resolver } from '../../../extensions/ipc'
+
+export const cachedLists: Array< Array<ExtensionInfo> | Array<SourceInfo> > = [ [] , [] ]
 
 const registerEvents = () => {
   if(!extensionProcess) {
@@ -9,7 +11,6 @@ const registerEvents = () => {
   }
 
   const [ addChannel, cancelChannel, disband ] = resolver
-  const cachedLists = [ [] , [] ]
 
   addChannel('popup', (msg: PopupMessage) => {
     sendPopupMessage(msg)
