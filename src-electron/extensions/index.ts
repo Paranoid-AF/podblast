@@ -3,6 +3,8 @@ import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
 
+import { buildIpcBridge } from './ipc'
+
 export let extensionProcess: ChildProcess | null = null
 export let sources: Array<SourceInfo> = []
 export let extensions: Array<ExtensionInfo> = []
@@ -18,6 +20,7 @@ export const startExtensionProcess = () => {
       appPath
     } as any
   })
+  buildIpcBridge()
 }
 
 export interface ExtensionInfo {

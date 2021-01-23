@@ -1,13 +1,14 @@
 import { extensionProcess } from '../../../extensions'
 import { sendPopupMessage, PopupMessage, sendNotification, NotificationMessage } from '../../../windows/main'
 import mainWindow from '../../../windows/main'
-import { resolver as resolverInit } from 'ipc-promise-invoke'
+import { resolver } from '../../../extensions/ipc'
 
 const registerEvents = () => {
   if(!extensionProcess) {
     return
   }
-  const [ addChannel, cancelChannel, disband ] = resolverInit(extensionProcess)
+
+  const [ addChannel, cancelChannel, disband ] = resolver
 
   addChannel('popup', (msg: PopupMessage) => {
     sendPopupMessage(msg)
@@ -17,24 +18,25 @@ const registerEvents = () => {
     sendNotification(msg)
   })
 
-  addChannel('extensionReady', () => {
+  addChannel('extensionReady', (list: any) => {
     if(mainWindow.target !== null) {
       mainWindow.target.on('ready-to-show', () => {
         if(mainWindow.target !== null) {
+          mainWindow.target.webContents.send('extension_list', list[0])
+          mainWindow.target.webContents.send('source_list', list[1])
           mainWindow.target.webContents.send('extension_ready')
         }
       })
-      mainWindow.target.webContents.send('extension_ready')
     }
   })
 
-  addChannel('extensionList', (extensionList) => {
+  addChannel('extensionList', (extensionList: any) => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('extension_list', extensionList)
     }
   })
 
-  addChannel('sourceList', (sourceList) => {
+  addChannel('sourceList', (sourceList: any) => {
     if(mainWindow.target !== null) {
       mainWindow.target.webContents.send('source_list', sourceList)
     }

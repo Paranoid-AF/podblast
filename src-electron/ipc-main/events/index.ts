@@ -2,7 +2,7 @@ import registerWindow from './window'
 import registerExtensionMessage from './extension'
 const eventRegistrars = {
   window: registerWindow,
-  message: registerExtensionMessage
+  extension: registerExtensionMessage
 }
 export const registerEvents = () => {
   Object.keys(eventRegistrars).forEach(val => {

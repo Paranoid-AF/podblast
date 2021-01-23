@@ -1,15 +1,12 @@
 import { extensionProcess } from '../../../extensions'
-import { sender as senderInit } from 'ipc-promise-invoke'
+import { sender } from '../../../extensions/ipc'
 
 interface ExtensionPayload {
   action: string
 }
 
 export const extension = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
-  if(!extensionProcess) {
-    return
-  }
-  const [ send, disband ] = senderInit(extensionProcess)
+  const [ send, disband ] = sender
   switch(payload.action) {
     case 'updateExtensionList':
       send('getExtensionList')
