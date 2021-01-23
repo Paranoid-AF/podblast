@@ -4,10 +4,11 @@ import { Button } from 'antd'
 
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
 
+import iconPlaceholder from '../../../common/res/extension-icons/extension-placeholder.png'
 import './index.less'
 
 function ExtensionItem(props: { extension: ExtensionInfo }) {
-  const icon = props.extension.icon
+  const icon = props.extension.icon ?? iconPlaceholder
 
   let authorLink: JSX.Element | string | null = null
   if(props.extension.author) {
