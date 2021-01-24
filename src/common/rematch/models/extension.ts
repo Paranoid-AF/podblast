@@ -56,7 +56,8 @@ export interface ExtensionInfo {
   author?: string,
   homepage?: string,
   icon?: string,
-  type: 'INTERNAL' | 'EXTERNAL'
+  type: 'INTERNAL' | 'EXTERNAL',
+  entry: string
 }
 
 export interface SourceInfo {

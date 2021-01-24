@@ -58,6 +58,10 @@ function ExtensionDetail(props: Props & StateProps) {
           </span>
         </p>
         <p>
+          <span className="type">Entry Point</span>
+          <span className="content">{props.extension?.entry}</span>
+        </p>
+        <p>
           <span className="type">Sources Provided</span>
           <span className="content">
             {
