@@ -11,7 +11,8 @@ const windowConf: BrowserWindowConstructorOptions = {
     contextIsolation: true
   },
   minWidth: 650,
-  minHeight: 400
+  minHeight: 400,
+  backgroundColor: '#f9f9fa'
 }
 if(currentPlatform === Platforms.WINDOWS) {
   windowConf.frame = false
