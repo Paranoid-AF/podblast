@@ -277,7 +277,6 @@ class Panel extends Component <Props, State> {
         tooltip={(this.state.sortActive || dragged) ? false : undefined}
         dragged={dragged}
         setRef={this.setItemRef(dragged)}
-        onCloseButtonClick={this.handleItemClose}
       />
     )
   }

@@ -117,29 +117,6 @@ class PanelItem extends Component <Props, State> {
     e.stopPropagation()
   }
 
-  onButtonMouseClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation()
-    if(typeof this.props.onCloseButtonClick === "function") {
-      this.props.onCloseButtonClick(e, this.props.id)
-    }
-  }
-
-  renderExtraButton() {
-    if(!this.props.onCloseButtonClick) {
-      return
-    }
-    return (
-    <div className={`panel-item-button${ this.state.showButton ? " panel-item-button-shown" : "" }`}
-         onMouseDown={this.onButtonMouseDown}
-         onClick={this.onButtonMouseClick}
-    >
-      <div className="panel-item-button-inner">
-        <CloseOutlined />
-      </div>
-    </div>
-    )
-  }
-
   renderFinal() {
     const itemStyle: ItemStyle = {
       backgroundColor: this.props.color
@@ -170,7 +147,6 @@ class PanelItem extends Component <Props, State> {
             </div>
           )
         }
-        {this.renderExtraButton()}
       </div>
       { this.renderActiveIndicator() }
     </div>
@@ -222,7 +198,6 @@ type Props = {
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   setRef?: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
   removeRef?: (key: string) => void | null
-  onCloseButtonClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
 }
 
 export default PanelItem
