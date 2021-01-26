@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
 import './index.less'
 
@@ -18,14 +18,15 @@ const targetTitleBarOpacity = 0.8
 const scrollBarHideTimeout = 3000 // ms
 
 function PageBase(props: Props) {
-  const [titleStyle, setTitleStyle] = useState<TitleStyle>(initTitleStyle)
-  const [titleBarOpacity, setTitleBarOpacity] = useState(0)
+  const [ titleStyle, setTitleStyle ] = useState<TitleStyle>(initTitleStyle)
+  const [ titleBarOpacity, setTitleBarOpacity ] = useState(0)
   const [ showScrollBar, setShowScrollBar ] = useState(true)
   const collapseThreshold = 40 // px
   const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
   const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
   const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
   const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
+  const hideScrollBarTimeout = useRef<null | NodeJS.Timeout>(null)
 
   const calcTitleStyle = useCallback((target: number) => {
     return {
@@ -33,19 +34,17 @@ function PageBase(props: Props) {
       top: topScaler(target),
       left: leftScaler(target)
     } as TitleStyle
-  }, [])
-
-  let hideScrollBarTimeout: null | NodeJS.Timeout = null
+  }, [fontSizeScaler, topScaler, leftScaler])
 
   const handleScroll = useCallback((event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
 
-    if(hideScrollBarTimeout) {
-      clearTimeout(hideScrollBarTimeout)
-      hideScrollBarTimeout = null
+    if(hideScrollBarTimeout.current) {
+      clearTimeout(hideScrollBarTimeout.current)
+      hideScrollBarTimeout.current = null
     }
-    hideScrollBarTimeout = setTimeout(() => {
+    hideScrollBarTimeout.current = setTimeout(() => {
       setShowScrollBar(false)
     }, scrollBarHideTimeout)
     setShowScrollBar(true)
@@ -62,7 +61,7 @@ function PageBase(props: Props) {
     }
     setTitleStyle(calcTitleStyle(target))
     setTitleBarOpacity(titleBarScaler(collapseThreshold - target))
-  }, [])
+  }, [titleBarScaler, calcTitleStyle])
 
   return (
     <div className="pagebase">

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Tooltip } from 'antd'
-import { CloseOutlined } from '@ant-design/icons'
 import './index.less'
 
 class PanelItem extends Component <Props, State> {
