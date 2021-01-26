@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Tabs } from 'antd'
 import { RootState } from'../../common/rematch'
 import { connect } from 'react-redux'
@@ -18,13 +18,13 @@ function Extensions(props: StateProps) {
   const externalExtensions = props.extensions.filter(val => val.type === 'EXTERNAL')
   const internalExtensions = props.extensions.filter(val => val.type === 'INTERNAL')
 
-  const showDetail = (target: ExtensionInfo) => {
+  const showDetail = useCallback((target: ExtensionInfo) => {
     setDetailView(target)
-  }
+  }, [])
 
-  const closeDetailView = () => {
+  const closeDetailView = useCallback(() => {
     setDetailView(null)
-  }
+  }, [])
 
   return (
     <PageBase title="Extensions">

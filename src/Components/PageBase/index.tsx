@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
 import './index.less'
 
@@ -27,17 +27,17 @@ function PageBase(props: Props) {
   const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
   const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
 
-  const calcTitleStyle = (target: number) => {
+  const calcTitleStyle = useCallback((target: number) => {
     return {
       fontSize: fontSizeScaler(target),
       top: topScaler(target),
       left: leftScaler(target)
     } as TitleStyle
-  }
+  }, [])
 
   let hideScrollBarTimeout: null | NodeJS.Timeout = null
 
-  const handleScroll = (event: any) => {
+  const handleScroll = useCallback((event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
 
@@ -62,7 +62,7 @@ function PageBase(props: Props) {
     }
     setTitleStyle(calcTitleStyle(target))
     setTitleBarOpacity(titleBarScaler(collapseThreshold - target))
-  }
+  }, [])
 
   return (
     <div className="pagebase">
