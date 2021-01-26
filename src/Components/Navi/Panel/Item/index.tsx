@@ -146,6 +146,7 @@ class PanelItem extends Component <Props, State> {
            onMouseUp={this.onMouseUp}
            onMouseEnter={this.onMouseEnter}
            onMouseLeave={this.onMouseLeave}
+           onContextMenu={this.processClick}
       >
         {
           !this.props.image && 

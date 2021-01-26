@@ -87,7 +87,7 @@ class Navi extends Component {
   }
 
   handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    // console.log('clicked ' + key)
+    // console.log('clicked ' + key, e)
   }
 
   render() {
