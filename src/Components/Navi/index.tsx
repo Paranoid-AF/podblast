@@ -1,78 +1,85 @@
 import React, { Component } from 'react'
+import { RouteChildrenProps, RouterProps, withRouter } from 'react-router-dom'
 import './index.less'
 import Panel, { ItemList, SortResult } from './Panel'
 
 const bruh = [
   {
-    key: "uuid1",
+    key: "channel/uuid1",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid2",
+    key: "channel/uuid2",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid3",
+    key: "channel/uuid3",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid4",
+    key: "channel/uuid4",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid5",
+    key: "channel/uuid5",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid6",
+    key: "channel/uuid6",
     name: "华北浪革",
     color: "#888"
   },
   {
-    key: "uuid7",
+    key: "channel/uuid7",
     name: "捕蛇者说",
     image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
   },
   {
-    key: "uuid8",
+    key: "channel/uuid8",
     name: "捕蛇者说",
     image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
   },
   {
-    key: "uuid9",
+    key: "channel/uuid9",
     name: "捕蛇者说",
     image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
   },
   {
-    key: "uuid10",
+    key: "channel/uuid10",
     name: "捕蛇者说",
     image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
   },
   {
-    key: "uuid11",
+    key: "channel/uuid11",
     name: "内核恐慌",
     image: "https://pan.icu/assets/icon@2x.png"
   }
 ]
 
-class Navi extends Component {
+const routes = [
+  {
+    key: "home",
+    name: "首页",
+    link: "/"
+  },
+  {
+    key: "extensions",
+    name: "扩展程序",
+    link: "/extensions"
+  }
+]
+
+class Navi extends Component<Props> {
   state = {
     borderless: false,
-    itemList: bruh,
-    currentItemKey: ""
+    itemList: bruh
   }
   nextList: Array<ItemList> | null = null
-  componentDidMount() {
-    this.setState({
-      itemList: bruh,
-      currentItemKey: "uuid1"
-    })
-  }
 
   handlePanelSort = (newList: Array<ItemList>) => {
     this.nextList = newList
@@ -88,24 +95,50 @@ class Navi extends Component {
 
   handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
     // console.log('clicked ' + key, e)
+    routes.forEach(val => {
+      if(val.key === key) {
+        this.props.router.history.push(val.link)
+      }
+    })
   }
 
   render() {
+    let currentItemKey = ''
+    routes.forEach(val => {
+      if(val.link === this.props.router.location.pathname) {
+        currentItemKey = val.key
+      }
+    })
+
     return (
       <div className="navi">
         <Panel
-         items={this.state.itemList}
-         current={this.state.currentItemKey}
-         onSort={this.handlePanelSort}
-         onSortDone={this.handleSortDone}
-         onClick={this.handleClick}
+          items={routes}
+          current={currentItemKey}
+          onClick={this.handleClick}
+        />
+        <Panel
+          items={this.state.itemList}
+          current={currentItemKey}
+          onSort={this.handlePanelSort}
+          onSortDone={this.handleSortDone}
+          onClick={this.handleClick}
+          withDivider={false}
         />
       </div>
     )
   }
 }
 
+interface Props {
+  router: RouteChildrenProps
+}
+
+const mapRouter = (props: any) => {
+  return (
+    <Navi router={props} />
+  )
+}
 
 
-
-export default Navi
+export default withRouter(mapRouter)
