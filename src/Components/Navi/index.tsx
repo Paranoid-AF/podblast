@@ -74,16 +74,20 @@ class Navi extends Component {
     })
   }
 
-  onPanelSort = (newList: Array<ItemList>) => {
+  handlePanelSort = (newList: Array<ItemList>) => {
     this.nextList = newList
   }
 
-  onSortDone = (result: SortResult) => {
+  handleSortDone = (result: SortResult) => {
     if(this.nextList !== null) {
       this.setState({
         itemList: this.nextList
       })
     }
+  }
+
+  handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
+    // console.log('clicked ' + key)
   }
 
   render() {
@@ -92,8 +96,9 @@ class Navi extends Component {
         <Panel
          items={this.state.itemList}
          current={this.state.currentItemKey}
-         handleSort={this.onPanelSort}
-         handleSortDone={this.onSortDone}
+         onSort={this.handlePanelSort}
+         onSortDone={this.handleSortDone}
+         onClick={this.handleClick}
         />
       </div>
     )

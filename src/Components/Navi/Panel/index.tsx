@@ -79,7 +79,9 @@ class Panel extends Component <Props, State> {
   }
 
   handleItemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    console.warn(key)
+    if(this.props.onClick) {
+      this.props.onClick(e, key)
+    }
   }
 
   /* Set drag icon to mouse position. */
@@ -193,8 +195,8 @@ class Panel extends Component <Props, State> {
           }
         })
         this.setState({ items: items })
-        if(typeof this.props.handleSort === "function") {
-          this.props.handleSort(items)
+        if(typeof this.props.onSort === "function") {
+          this.props.onSort(items)
         }
         this.posMap = this.buildPosMap()
       }
@@ -218,8 +220,8 @@ class Panel extends Component <Props, State> {
       this.setState({
         sortActive: false
       })
-      if(typeof this.props.handleSortDone === "function" && this.sortTarget !== null) {
-        this.props.handleSortDone({
+      if(typeof this.props.onSortDone === "function" && this.sortTarget !== null) {
+        this.props.onSortDone({
           key: this.sortTarget.key,
           fromIndex: this.sortInitPos,
           toIndex: this.sortCurrentPos
@@ -241,10 +243,6 @@ class Panel extends Component <Props, State> {
     if(this.state.sortActive) {
       this.handleMouseUp(e)
     }
-  }
-
-  handleItemClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    console.log("closed " + key)
   }
 
   renderDivider() {
@@ -271,7 +269,7 @@ class Panel extends Component <Props, State> {
         color={item.color}
         image={item.image}
         active={item.key === this.props.current}
-        onMouseDown={typeof this.props.handleSort === "function" ? this.handleItemMouseDown : undefined}
+        onMouseDown={typeof this.props.onSort === "function" ? this.handleItemMouseDown : undefined}
         onClick={this.handleItemClick}
         hidden={shouldHide}
         tooltip={(this.state.sortActive || dragged) ? false : undefined}
@@ -315,8 +313,9 @@ type Props = {
   items: Array<ItemList>,
   current: string,
   withDivider: boolean,
-  handleSort?: (newList: Array<ItemList>) => void,
-  handleSortDone?: (result :SortResult) => void
+  onSort?: (newList: Array<ItemList>) => void,
+  onSortDone?: (result :SortResult) => void,
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
 }
 
 Panel.defaultProps = {

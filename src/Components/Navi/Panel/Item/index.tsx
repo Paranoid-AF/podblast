@@ -5,7 +5,9 @@ import './index.less'
 
 class PanelItem extends Component <Props, State> {
   static defaultProps = {
-    color: "#0074aa",
+    color: "transparent",
+    opacityOnInactive: 1,
+    useRoundedCorners: true,
     hidden: false,
     tooltip: true,
     active: false,
@@ -124,9 +126,15 @@ class PanelItem extends Component <Props, State> {
     if("image" in this.props && this.props.image !== undefined) {
       itemStyle.backgroundImage = `url(${this.props.image})`
     }
+    if(this.props.opacityOnInactive < 1 && !this.props.active) {
+      itemStyle.opacity = this.props.opacityOnInactive
+    }
     let itemClassName = this.props.dragged ? "panel-item panel-item-drag" : "panel-item panel-item-visible"
     if(this.state.pressed) {
       itemClassName += " panel-item-pressed"
+    }
+    if(!this.props.useRoundedCorners) {
+      itemClassName += " no-rounded-corners"
     }
     return (
     <div className="panel-item-wrapper">
@@ -176,7 +184,8 @@ class PanelItem extends Component <Props, State> {
 
 interface ItemStyle {
   backgroundColor: string,
-  backgroundImage?: string
+  backgroundImage?: string,
+  opacity?: number
 }
 
 type State = {
@@ -189,6 +198,8 @@ type Props = {
   name: string,
   id: string,
   color: string,
+  opacityOnInactive: number,
+  useRoundedCorners: boolean,
   image?: string,
   hidden?: boolean,
   tooltip?: boolean,
