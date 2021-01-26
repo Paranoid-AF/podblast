@@ -103,7 +103,7 @@ class Navi extends Component<Props> {
   }
 
   render() {
-    let currentItemKey = ''
+    let currentItemKey = 'home'
     routes.forEach(val => {
       if(val.link === this.props.router.location.pathname) {
         currentItemKey = val.key
