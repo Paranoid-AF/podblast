@@ -1,10 +1,10 @@
 import path from 'path'
 import { getLocale } from './utils'
-import { sources, ExtensionInfo, SourceInfo, readIconFile } from './'
+import { sources, ExtensionInfo, SourceInfo, readIconFile } from '.'
 import { updateSourceList } from './listener'
 
 const registerSource = (sourceInfo: SourceInfo) => {
-  const innerThis = (this as any).runnerGlobal
+  const innerThis = (this as any).extensionKit
   if(typeof innerThis === 'undefined') {
     console.error("Extension ERROR: Unable to access ID while trying to initialize plugin.")
     return
@@ -21,7 +21,7 @@ const registerSource = (sourceInfo: SourceInfo) => {
   updateSourceList()
 }
 
-export const runnerGlobal = {
+export const extensionKit = {
   registerSource,
   getLocale,
   extensionInfo: null as null | ExtensionInfo

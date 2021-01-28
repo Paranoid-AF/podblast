@@ -1,16 +1,12 @@
+import { extensionKitName } from '../../constants/name'
 import { NodeVM } from 'vm2'
-import { runnerGlobal } from './global'
+import { extensionKit } from './extensionKit'
 import { ExtensionInfo } from './'
 import type { NotificationMessage } from '../../windows/main'
 
 import { sender } from './ipc'
 
 const [ send, disband ] = sender
-
-const allowedModules = [
-  "axios",
-  "got"
-]
 
 process.on('uncaughtException', (err) => {
   send('notification', {
@@ -22,15 +18,18 @@ process.on('uncaughtException', (err) => {
 
 export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
   // Reset addtional info
-  runnerGlobal.extensionInfo = scriptMeta
+  extensionKit.extensionInfo = scriptMeta
   const vm = new NodeVM({
     require: {
       external: {
-        modules: allowedModules,
+        modules: [],
         transitive: true
+      },
+      mock: {
+        [extensionKitName]: extensionKit
       }
     },
-    sandbox: Object.assign({ }, runnerGlobal)
+    sandbox: {}
   })
   return vm.runFile(scriptPath)
 }
