@@ -3,6 +3,7 @@ import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
 
+import { extensionPath } from '../constants/path'
 import { buildIpcBridge, sender } from './ipc'
 import { cachedLists } from '../ipc-main/events/extension'
 import { rmdirSync } from 'fs'
@@ -14,12 +15,12 @@ export let extensions: Array<ExtensionInfo> = []
 
 export const startExtensionProcess = () => {
   const locale = app.getLocale()
-  const appPath = path.join(app.getAppPath(), '..')
+  const extPath = extensionPath
   extensionProcess = child_process.fork(path.join(__dirname, './child-process/index.js'), [], {
     env: {
       locale,
       dev: isDev.toString(),
-      appPath
+      extPath
     } as any
   })
   buildIpcBridge()

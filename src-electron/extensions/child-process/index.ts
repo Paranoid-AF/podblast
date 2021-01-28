@@ -95,7 +95,7 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
   } catch (e) {
     send('notification', {
       title: 'Extension Error',
-      content: 'Unable to load extension: ' +  packagePath
+      content: 'Unable to load extension: ' +  path.basename(packagePath)
     } as NotificationMessage)
     console.error(e)
   }
@@ -125,11 +125,7 @@ export const unloadExtension = (extensionId: string) => {
   updateExtensionList()
 }
 
-const externalExtensionPath = path.join(process.env.appPath || process.cwd(), './extensions')
-const folderExists = fs.existsSync(externalExtensionPath) && fs.lstatSync(externalExtensionPath).isDirectory()
-if(!folderExists) {
-  fs.mkdirSync(externalExtensionPath)
-}
+const externalExtensionPath = process.env.extPath ?? path.join(process.cwd(), './extensions')
 const internalExtensionPath = path.join(__dirname, '../../assets/extensions')
 
 const externalExtensionNames = listExtensions(externalExtensionPath)

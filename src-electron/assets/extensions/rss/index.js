@@ -1,4 +1,5 @@
-global.registerSource({
+const podchat = require('podchat')
+podchat.registerSource({
   id: 'rss',
   name: 'RSS',
   preForm: function() {
