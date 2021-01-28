@@ -1,0 +1,18 @@
+{
+  "synchronize": true,
+  "logging": false,
+  "entities": [
+     "src-electron/data/entity/**/*.ts"
+  ],
+  "migrations": [
+     "src-electron/data/migration/**/*.ts"
+  ],
+  "subscribers": [
+     "src-electron/data/subscriber/**/*.ts"
+  ],
+  "cli": {
+     "entitiesDir": "src-electron/data/entity",
+     "migrationsDir": "src-electron/data/migration",
+     "subscribersDir": "src-electron/data/subscriber"
+  }
+}

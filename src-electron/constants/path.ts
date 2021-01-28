@@ -8,6 +8,8 @@ export const dataPath = createNonExistingDiretory(path.join(appData, appName))
 
 export const extensionPath = createNonExistingDiretory(path.join(dataPath, 'extensions'))
 
+export const profilePath = createNonExistingDiretory(path.join(dataPath, 'userdata'))
+
 function createNonExistingDiretory(pathname: string) {
   const folderExists = fs.existsSync(pathname) && fs.lstatSync(pathname).isDirectory()
   if(!folderExists) {
