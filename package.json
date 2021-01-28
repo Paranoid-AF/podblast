@@ -4,9 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.0",
+    "better-sqlite3": "^7.1.2",
     "electron-is-dev": "^1.2.0",
     "got": "^11.8.0",
     "ipc-promise-invoke": "~2.0.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.30",
     "vm2": "^3.9.2"
   },
   "build": {
@@ -29,7 +32,8 @@
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json && cpy \"./assets\" \"../build-electron\" --cwd=\"./src-electron\" --parents",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
     "test:view": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -54,6 +58,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/better-sqlite3": "^5.4.1",
     "@types/d3-scale": "^3.2.2",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
@@ -69,6 +74,9 @@
     "d3-scale": "^3.2.3",
     "electron": "^10.1.4",
     "electron-builder": "^22.9.1",
+    "electron-rebuild": "^2.3.4",
+    "node-gyp": "^7.1.2",
+    "node-pre-gyp": "^0.17.0",
     "nodemon": "^2.0.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
