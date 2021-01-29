@@ -28,7 +28,7 @@
     "start:view": "craco start",
     "start:core": "nodemon --watch src-electron",
     "start": "concurrently \"cross-env BROWSER=none npm run start:view\" \"wait-on http://localhost:3000 && npm run start:core -s\"",
-    "build:view": "craco build",
+    "build:view": "cross-env GENERATE_SOURCEMAP=false craco build",
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json && cpy \"./assets\" \"../build-electron\" --cwd=\"./src-electron\" --parents",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
     "test:view": "craco test",
