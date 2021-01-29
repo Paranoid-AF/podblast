@@ -1,5 +1,4 @@
 {
-  "synchronize": true,
   "logging": false,
   "entities": [
      "src-electron/data/entity/**/*.ts"

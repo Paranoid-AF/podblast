@@ -19,6 +19,9 @@
     "types": [ "node" ],
     "typeRoots": [ "../node_modules/@types" ],
     "outDir": "./build-electron",
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "./src-electron"
