@@ -4,23 +4,16 @@ import { Button, Modal } from 'antd'
 import { ExtensionInfo } from '../../../common/rematch/models/extension'
 import './index.less'
 import { connect } from 'react-redux'
-import { RootState } from '../../../common/rematch'
+import { RootState, Dispatch } from '../../../common/rematch'
 
-function openExplorer(filePath: string) {
-  window.electron.invoke('utils', {
-    action: "openExplorer",
-    payload: filePath
-  })
-}
-
-function ExtensionDetail(props: Props & StateProps) {
+function ExtensionDetail(props: Props & StateProps & DispatchProps) {
   let viewPathButton: JSX.Element | null = null
   let homepageLink: JSX.Element | null = null
   if(props.extension) {
     if(typeof props.extension.file !== 'undefined' && props.extension.type !== 'INTERNAL') {
       const filePath = props.extension.file
       viewPathButton = (
-        <Button size="small" type="link" onClick={() => { openExplorer(filePath) }}>Show Files</Button>
+        <Button size="small" type="link" onClick={() => { props.openExplorer(filePath) }}>Show Files</Button>
       )
     }
     if(typeof props.extension.homepage !== 'undefined') {
@@ -95,7 +88,13 @@ const mapState = (state: RootState) => ({
   sources: state.extension.sourceList
 })
 
+const mapDispatch = (dispatch: Dispatch) => ({
+  openExplorer: dispatch.appWindow.openExplorer
+})
+
+type DispatchProps = ReturnType<typeof mapDispatch>
 type StateProps = ReturnType<typeof mapState>
+
 
 interface Props {
   extension: ExtensionInfo | null,
@@ -104,4 +103,4 @@ interface Props {
 
 
 
-export default connect(mapState)(ExtensionDetail)
+export default connect(mapState, mapDispatch)(ExtensionDetail)

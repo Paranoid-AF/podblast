@@ -56,6 +56,12 @@ export const appWindow = createModel<RootModel>()({
         platform: initState.platform,
         maximized: initState.maximized
       })
+    },
+    async openExplorer(folderPath: string) {
+      await window.electron.invoke('utils', {
+        action: "openExplorer",
+        payload: folderPath
+      })
     }
   })
 })
