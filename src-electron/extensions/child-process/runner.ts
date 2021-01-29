@@ -1,6 +1,6 @@
 import { extensionKitName } from '../../constants/name'
 import { NodeVM } from 'vm2'
-import { extensionKit } from './extensionKit'
+import { ExtensionKit } from './extensionKit'
 import { ExtensionInfo } from './'
 import type { NotificationMessage } from '../../windows/main'
 
@@ -18,7 +18,7 @@ process.on('uncaughtException', (err) => {
 
 export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
   // Reset addtional info
-  extensionKit.extensionInfo = scriptMeta
+  const extensionKit = new ExtensionKit(scriptMeta)
   const vm = new NodeVM({
     require: {
       external: {
@@ -33,9 +33,3 @@ export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
   })
   return vm.runFile(scriptPath)
 }
-
-/*
-  Context is always resetted.
-  runInVM('global.init = () => {console.log("foo")}; global.init(); global.init = () => {console.log("bar")};')
-  runInVM('global.init()')
-*/
