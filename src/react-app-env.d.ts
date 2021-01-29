@@ -2,21 +2,7 @@
 declare global {
   interface Window {
     electron: {
-      appWindow: {
-        close: () => void,
-        maximize: () => void,
-        minimize: () => void,
-        restore: () => void,
-        isMaximized: () => Promise<boolean>
-      },
-      extension: {
-        updateExtensions: () => void,
-        updateSources: () => void,
-        removeExtension: (extensionId: string) => Promise<IpcMessage>
-      },
-      utils: {
-        openExplorer: (path: string) => void
-      },
+      invoke: (channel: string, content: InvokeContent) => Promise<IpcMessage>,
       on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     }
   }
@@ -30,4 +16,9 @@ interface IpcMessage {
 
 export interface appWindowPayload {
   action: 'close' | 'minimize' | 'maximize' | 'restore'
+}
+
+interface InvokeContent {
+  action: string,
+  payload?: string
 }

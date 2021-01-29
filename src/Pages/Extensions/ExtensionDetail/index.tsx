@@ -6,6 +6,13 @@ import './index.less'
 import { connect } from 'react-redux'
 import { RootState } from '../../../common/rematch'
 
+function openExplorer(filePath: string) {
+  window.electron.invoke('utils', {
+    action: "openExplorer",
+    payload: filePath
+  })
+}
+
 function ExtensionDetail(props: Props & StateProps) {
   let viewPathButton: JSX.Element | null = null
   let homepageLink: JSX.Element | null = null
@@ -13,7 +20,7 @@ function ExtensionDetail(props: Props & StateProps) {
     if(typeof props.extension.file !== 'undefined' && props.extension.type !== 'INTERNAL') {
       const filePath = props.extension.file
       viewPathButton = (
-        <Button size="small" type="link" onClick={() => { window.electron.utils.openExplorer(filePath) }}>Show Files</Button>
+        <Button size="small" type="link" onClick={() => { openExplorer(filePath) }}>Show Files</Button>
       )
     }
     if(typeof props.extension.homepage !== 'undefined') {

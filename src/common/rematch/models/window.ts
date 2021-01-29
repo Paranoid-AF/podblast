@@ -31,17 +31,25 @@ export const appWindow = createModel<RootModel>()({
   },
   effects: (dispatch: any) => ({
     async maximize() {
-      window.electron.appWindow.maximize()
+      window.electron.invoke('appWindow', {
+        action: "maximize"
+      })
       dispatch.appWindow.setMaximizeState(true)
     },
     async minimize() {
-      window.electron.appWindow.minimize()
+      window.electron.invoke('appWindow', {
+        action: "minimize"
+      })
     },
     async close() {
-      window.electron.appWindow.close()
+      window.electron.invoke('appWindow', {
+        action: "close"
+      })
     },
     async restore() {
-      window.electron.appWindow.restore()
+      window.electron.invoke('appWindow', {
+        action: "restore"
+      })
     },
     async init(initState: windowState) {
       dispatch.appWindow.setInitialState({

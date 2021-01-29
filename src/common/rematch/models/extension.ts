@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core'
 import { message } from 'antd'
+import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
 
 export const extension = createModel<RootModel>()({
@@ -36,7 +37,10 @@ export const extension = createModel<RootModel>()({
   },
   effects: (dispatch: any) => ({
     async removeExtension (extensionId: string) {
-      const result = await window.electron.extension.removeExtension(extensionId)
+      const result = await window.electron.invoke('extension', {
+        action: 'removeExtension',
+        payload: extensionId
+      } as InvokeContent)
       if(result.status === 'error') {
         message.error(result.info)
       }
