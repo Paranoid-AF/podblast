@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.21.0",
     "better-sqlite3": "^7.1.2",
     "electron-is-dev": "^1.2.0",
     "got": "^11.8.0",
@@ -33,7 +32,7 @@
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
     "test:view": "craco test",
     "eject": "react-scripts eject",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "postinstall": "electron-builder install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -74,7 +73,6 @@
     "d3-scale": "^3.2.3",
     "electron": "^10.1.4",
     "electron-builder": "^22.9.1",
-    "electron-rebuild": "^2.3.4",
     "node-gyp": "^7.1.2",
     "node-pre-gyp": "^0.17.0",
     "nodemon": "^2.0.6",

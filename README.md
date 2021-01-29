@@ -1,4 +1,4 @@
-## Podchat
+# Podchat
 Podchat is a desktop app for podcasts and various kinds of audio content, with extension support.
 
 This project is still a work in progress, so it's functionalities are not fully implemented yet. In short: it's not even usable.
@@ -13,12 +13,7 @@ npm install
 yarn
 ```
 
-Then you'll need to build native libraries for Electron on your platform.
-```shell
-npm run rebuild
-# OR
-yarn rebuild
-```
+It would also build native libraries for Electron on your platform.
 
 If everything works fine so far, run the app with:
 ```shell
@@ -36,4 +31,4 @@ npm run build
 yarn build
 ```
 
-However, the build program is not completely set-up yet, so it would only build the app and installer for your platform.
+However, the build program is not completely set-up yet, but it would still build the app and its installer for your platform.
