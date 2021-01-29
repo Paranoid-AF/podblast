@@ -8,7 +8,6 @@ const dbConf: ConnectionOptions = {
   database: path.join(profilePath, 'data.db')
 }
 
-export const initDatabase = () => {
-  createConnection(dbConf)
-    .catch(error => console.log(error))
+export const initDatabase = async () => {
+  await createConnection(dbConf)
 }
