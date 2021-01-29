@@ -1,4 +1,4 @@
-const podchat = require('podchat')
+const podchat = require('podchat-extension-kit')
 podchat.registerSource({
   id: 'rss',
   name: 'RSS',
