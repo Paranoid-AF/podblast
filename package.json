@@ -31,7 +31,6 @@
     "build:core": "rimraf ./build-electron/* && tsc --p tsconfig-electron.json && cpy \"./assets\" \"../build-electron\" --cwd=\"./src-electron\" --parents",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
     "test:view": "craco test",
-    "eject": "react-scripts eject",
     "postinstall": "electron-builder install-app-deps"
   },
   "eslintConfig": {
