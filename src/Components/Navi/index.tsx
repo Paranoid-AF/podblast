@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { RouteChildrenProps, RouterProps, withRouter } from 'react-router-dom'
+import { RouteChildrenProps, withRouter } from 'react-router-dom'
 import './index.less'
 import Panel, { ItemList, SortResult } from './Panel'
 
