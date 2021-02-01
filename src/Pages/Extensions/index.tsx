@@ -26,27 +26,42 @@ function Extensions(props: StateProps) {
     setDetailView(null)
   }, [])
 
+  const renderEnabledList = useCallback((val: ExtensionInfo) => {
+    if(val.config.status === 'enabled') {
+      return <ExtensionItem key={val.id} extension={val} showExtensionDetail={showDetail} />
+    } else {
+      return null
+    }
+  }, [])
+
+  const renderDisabledList = useCallback((val: ExtensionInfo) => {
+    if(val.config.status === 'disabled') {
+      return <ExtensionItem key={val.id} extension={val} showExtensionDetail={showDetail} />
+    } else {
+      return null
+    }
+  }, [])
+
+  const renderList = useCallback((rawArray: Array<ExtensionInfo>) => {
+    const disabledList = rawArray.map(renderDisabledList)
+    return (
+      <div className="extension-list">
+        { rawArray.map(renderEnabledList) }
+        { disabledList.filter(val => val !== null).length > 0 && <h3>Disabled</h3> }
+        { disabledList }
+      </div>
+    )
+  }, [])
+
   return (
     <PageBase title="Extensions">
       <div className="extension-container">
         <Tabs>
           <TabPane tab="Installed" key="1">
-            <div className="extension-list">
-              {
-                externalExtensions.map(val => (
-                  <ExtensionItem key={val.id} extension={val} showExtensionDetail={showDetail} />
-                ))
-              }
-            </div>
+            { renderList(externalExtensions) }
           </TabPane>
           <TabPane tab="Internal" key="2">
-            <div className="extension-list">
-              {
-                internalExtensions.map(val => (
-                  <ExtensionItem key={val.id} extension={val} showExtensionDetail={showDetail} />
-                ))
-              }
-            </div>
+            { renderList(internalExtensions) }
           </TabPane>
         </Tabs>
         <ExtensionDetail extension={detailView} closeDetailView={closeDetailView} />

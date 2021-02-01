@@ -62,7 +62,7 @@ function ExtensionDetail(props: Props & StateProps & DispatchProps) {
           <span className="content">{props.extension?.entry}</span>
         </p>
         <p>
-          <span className="type">Sources Provided</span>
+          <span className="type">Active Sources</span>
           <span className="content">
             {
               props.sources.map(val => {
