@@ -17,9 +17,9 @@ export async function fetchConfig() {
   }
   Object.assign(currentConfig, {
     ...defaultConfig,
+    ...dbContent,
     ...globalOverride,
-    ...userOverride,
-    ...dbContent
+    ...userOverride
   }) 
 }
 
