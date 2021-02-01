@@ -23,6 +23,18 @@ function ExtensionDetail(props: Props & StateProps & DispatchProps) {
     }
   }
 
+  const activeSources = props.sources.map(val => {
+    if(val.provider === props.extension?.id) {
+      return (
+        <p key={val.id}>
+          {val.name} ({val.id})
+        </p>
+      )
+    } else {
+      return null
+    }
+  }).filter(val => val !== null)
+
   return (
     <Modal title="Extension Detail" visible={props.extension !== null} footer={null} onCancel={props.closeDetailView}>
       <div className="extension-info">
@@ -65,17 +77,7 @@ function ExtensionDetail(props: Props & StateProps & DispatchProps) {
           <span className="type">Active Sources</span>
           <span className="content">
             {
-              props.sources.map(val => {
-                if(val.provider === props.extension?.id) {
-                  return (
-                    <p key={val.id}>
-                      {val.name} ({val.id})
-                    </p>
-                  )
-                } else {
-                  return null
-                }
-              })
+              activeSources.length > 0 ? activeSources : "<Empty>"
             }
           </span>
         </p>
