@@ -50,10 +50,11 @@ const registerEvents = () => {
     const repo = connection.current.getRepository(Extension)
     let original = await repo.findOne({ extensionId })
     if(typeof original === 'undefined') {
-      original = new Extension()
+      original = new Extension()      
+      original['extensionId'] = extensionId
+      await repo.save(original)
+      original = await repo.findOne({ extensionId })
     }
-    original['extensionId'] = extensionId
-    repo.save(original)
     return original
   })
 

@@ -48,6 +48,19 @@ const toggleExtensionConfig = async (id: string, target: Partial<Extension>) => 
           .execute()
 }
 
+const flushExtensionConfig = async (id: string) => {
+  if(connection.current) {
+    await connection.current
+      .createQueryBuilder()
+      .delete()
+      .from(Extension)
+      .where(
+        "extensionId = :id", { id }
+      )
+      .execute()
+  }
+}
+
 export const disableExtension = async (id: string) => {
   await toggleExtensionConfig(id, { status: 'disabled' })
   const [ send, disband ] = sender
@@ -76,6 +89,7 @@ export const removeExtension = async (id: string) => {
     const removalStatus = shell.moveItemToTrash(filePath, false)
     if(removalStatus) {
       unloadExtension(id)
+      await flushExtensionConfig(id)
       return {
         status: 'success',
         info: 'Successfully moved extension files to trash.'
@@ -91,6 +105,7 @@ export const removeExtension = async (id: string) => {
         }
       }
       unloadExtension(id)
+      await flushExtensionConfig(id)
       return {
         status: 'success',
         info: 'Successfully removed extension files.'
