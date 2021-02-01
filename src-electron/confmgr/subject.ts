@@ -1,10 +1,10 @@
 export const defaultConfig: AllConfig = {
-  'ui.darkMode': 'auto'
+  'network.proxyEnabled': 'disabled'
 }
 
 export type AllConfig = (
   FileConfig &
-  UIConfig
+  ProxyConfig
 )
 
 export interface FileConfig {
@@ -12,6 +12,7 @@ export interface FileConfig {
   'file.userDatabaseName'?: string,
 }
 
-export interface UIConfig {
-  'ui.darkMode': 'auto' | 'light' | 'dark'
+export interface ProxyConfig {
+  'network.proxyEnabled': 'useGlobal' | 'enabled' | 'disabled',
+  'network.proxyAddress'?: string
 }

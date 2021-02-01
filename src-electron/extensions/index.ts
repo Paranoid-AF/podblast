@@ -3,6 +3,8 @@ import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
 
+import { connection } from '../data'
+import { Extension } from '../data/entity/Extension'
 import { extensionPath } from '../constants/path'
 import { buildIpcBridge, sender } from './ipc'
 import { cachedLists } from '../ipc-main/events/extension'
@@ -27,9 +29,44 @@ export const startExtensionProcess = () => {
 }
 
 
-const unloadExtension = (id: string) => {
+const unloadExtension = async (id: string) => {
   const [ send, disband ] = sender
-  send('unload', id)
+  await send('unload', id)
+}
+
+const toggleExtensionConfig = async (id: string, target: Partial<Extension>) => {
+  if(!connection.current) {
+    return
+  }
+  await connection.current
+          .createQueryBuilder()
+          .update(Extension)
+          .set(target)
+          .where(
+            "extensionId = :id", { id }
+          )
+          .execute()
+}
+
+export const disableExtension = async (id: string) => {
+  await toggleExtensionConfig(id, { status: 'disabled' })
+  const [ send, disband ] = sender
+  await send('disable', id)
+}
+
+export const enableExtension = async (id: string) => {
+  await toggleExtensionConfig(id, { status: 'enabled' })
+  const [ send, disband ] = sender
+  await send('enable', id)
+}
+
+export const updateExtensionConfig = async (id: string, target: Partial<Extension>) => {
+  await toggleExtensionConfig(id, target)
+  const [ send, disband ] = sender
+  await send('updateConfig', {
+    ...target,
+    extensionId: id
+  } as Partial<Extension>)
 }
 
 export const removeExtension = async (id: string) => {

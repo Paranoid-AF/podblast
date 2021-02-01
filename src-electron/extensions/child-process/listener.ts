@@ -1,5 +1,5 @@
-/* eslint-disable no-throw-literal */
-import { sources, extensions, SourceInfo, unloadExtension } from './'
+import type { Extension } from '../../data/entity/Extension'
+import { sources, extensions, SourceInfo, unloadExtension, loadExtension } from './'
 import { sender, resolver } from './ipc'
 
 const [ addChannel, cancelChannel, disbandResolver ] = resolver
@@ -60,7 +60,31 @@ addChannel('submitForm', async (payload: {id: string, provider?: string, data: R
 })
 
 addChannel('unload', async (id: string) => {
-  unloadExtension(id)
+  unloadExtension(id, true)
+})
+
+addChannel('disable', async (id: string) => {
+  unloadExtension(id, false)
+})
+
+addChannel('enable', async (id: string) => {
+  const info = extensions.find(val => val.id === id)
+  if(typeof info !== 'undefined') {
+    await loadExtension(info.file, info.type)
+  }
+})
+
+addChannel('updateConfig', async (target: Partial<Extension>) => {
+  if(typeof target.extensionId !== 'undefined') {
+    const info = extensions.find(val => val.id === target.extensionId)
+    if(typeof info?.config !== 'undefined') {
+      info.config = {
+        ...info.config,
+        ...target
+      }
+      updateExtensionList()
+    }
+  }
 })
 
 const findSource = (id: string, provider?: string) => {

@@ -5,6 +5,7 @@ import { runInVM } from './runner'
 import type { PopupMessage, NotificationMessage } from '../../windows/main'
 
 import { sender } from './ipc'
+import type { Extension } from '../../data/entity/Extension'
 
 export const extensions: Array<ExtensionInfo> = []
 export const sources: Array<SourceInfo> = []
@@ -22,7 +23,7 @@ const extensionReady = () => {
   send('extensionReady', [extensions, sources])
 }
 
-export const getExtensionMeta = (packagePath: string, type: ExtensionType) => {
+export const getExtensionMeta = async (packagePath: string, type: ExtensionType) => {
   const packageJsonPath = path.join(packagePath, './package.json')
   let packageJsonRaw = ''
   try {
@@ -31,16 +32,18 @@ export const getExtensionMeta = (packagePath: string, type: ExtensionType) => {
     throw new Error("No meta data file detected.")
   }
   const packageJson = JSON.parse(packageJsonRaw)
+  let extensionConfig = (await send('getExtensionInfo', packageJson['name'])) as Extension
   const extensionMeta: ExtensionInfo = {
     id: packageJson['name'],
     name: packageJson['displayName'] || packageJson['name'],
     version: packageJson['version'],
     file: packagePath,
     entry: packageJson['main'] || 'index.js',
+    config: extensionConfig,
     type
   }
   for(let key in extensionMeta) {
-    if(typeof extensionMeta[key as keyof typeof extensionMeta] !== 'string') {
+    if(typeof extensionMeta[key as keyof typeof extensionMeta] === 'undefined') {
       throw new Error("Missing required meta key: " + key)
     }
   }
@@ -84,13 +87,21 @@ export const listExtensions = (extensionDirPath: string) => {
   return fileList
 }
 
-export const loadExtension = (packagePath: string, type: ExtensionType) => {
+export const loadExtension = async (packagePath: string, type: ExtensionType) => {
   try {
-    const extensionInfo = getExtensionMeta(packagePath, type)
+    const extensionInfo = await getExtensionMeta(packagePath, type)
+    const extensionIndex = extensions.findIndex(val => val.id === extensionInfo.id)
+    if(extensionIndex < 0) {
+      extensions.push(extensionInfo)
+    } else {
+      extensions[extensionIndex] = extensionInfo
+    }
+    updateExtensionList()
+    if(extensionInfo.config.status === 'disabled') {
+      return
+    }
     const extensionEntry = path.join(packagePath, './' + extensionInfo.entry)
     runInVM(extensionEntry, extensionInfo)
-    extensions.push(extensionInfo)
-    updateExtensionList()
     updateSourceList()
   } catch (e) {
     send('notification', {
@@ -101,8 +112,7 @@ export const loadExtension = (packagePath: string, type: ExtensionType) => {
   }
 }
 
-export const unloadExtension = (extensionId: string) => {
-  console.log('unloading ' + extensionId)
+export const unloadExtension = (extensionId: string, removeFromList: boolean = true) => {
   for(let i=0; i<sources.length; i++) {
     if(i >= sources.length) {
       break
@@ -112,16 +122,23 @@ export const unloadExtension = (extensionId: string) => {
       i--
     }
   }
-  updateSourceList()
-  for(let i=0; i<extensions.length; i++) {
-    if(i >= extensions.length) {
-      break
+  if(removeFromList) {
+    for(let i=0; i<extensions.length; i++) {
+      if(i >= extensions.length) {
+        break
+      }
+      if(extensions[i].id === extensionId) {
+        extensions.splice(i, 1)
+        i--
+      }
     }
-    if(extensions[i].id === extensionId) {
-      extensions.splice(i, 1)
-      i--
+  } else {
+    const original = extensions.find(val => val.id === extensionId)
+    if(typeof original !== 'undefined') {
+      original.config.status = 'disabled'
     }
   }
+  updateSourceList()
   updateExtensionList()
 }
 
@@ -149,7 +166,6 @@ const extensionList: Array<{
   })
 ]
 
-
 if(extensionList.length === 0) {
   extensionReady()
 }
@@ -158,11 +174,12 @@ extensionList.forEach((packageInfo, index, arr) => {
   loadExtension(
     packageInfo.name,
     packageInfo.type
-  )
-  if(arr.length - 1 <= index) {
-    updateSourceList()
-    extensionReady()
-  }
+  ).then(() => {
+    if(arr.length - 1 <= index) {
+      updateSourceList()
+      extensionReady()
+    }
+  })
 })
 
 export interface ExtensionInfo {
@@ -175,7 +192,8 @@ export interface ExtensionInfo {
   author?: string,
   homepage?: string,
   type: 'INTERNAL' | 'EXTERNAL',
-  icon?: string
+  icon?: string,
+  config: Extension
 }
 
 export interface SourceInfo {
@@ -201,3 +219,4 @@ interface FormItem {
 }
 
 type ExtensionType = 'INTERNAL' | 'EXTERNAL'
+type valueof<T> = T[keyof T]

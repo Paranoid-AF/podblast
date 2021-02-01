@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import { connect } from 'react-redux'
-import { Button, Popconfirm } from 'antd'
+import { Button, Popconfirm, Switch } from 'antd'
 import { DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 import { Dispatch } from'../../../common/rematch'
@@ -10,6 +10,18 @@ import iconPlaceholder from '../../../common/res/extension-icons/extension-place
 import './index.less'
 
 function ExtensionItem(props: Props & DispatchProps) {
+  const [ toggling, setToggling ] = useState(false)
+  const toggleStatus = useCallback(async () => {
+    setToggling(true)
+    if(props.extension.config.status === 'enabled') {
+      await props.disableExtension(props.extension.id)
+    }
+    if(props.extension.config.status === 'disabled') {
+      await props.enableExtension(props.extension.id)
+    }
+    setToggling(false)
+  }, [ props ])
+
   const icon = props.extension.icon ?? iconPlaceholder
 
   let authorLink: JSX.Element | string | null = null
@@ -49,6 +61,9 @@ function ExtensionItem(props: Props & DispatchProps) {
         <p className="extension-author">{authorLink}</p>
         <p className="extension-description">{props.extension.description}</p>
         <p className="extension-version">Version: {props.extension.version}</p>
+        <div className="extension-switch">
+          <Switch onChange={toggleStatus} checked={props.extension.config.status === 'enabled'} loading={toggling} />
+        </div>
         <div className="extension-control">
           <Button onClick={() => { props.showExtensionDetail(props.extension) }}><InfoCircleOutlined /> Detail</Button>
           {operations}
@@ -64,7 +79,9 @@ interface Props {
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  removeExtension: dispatch.extension.removeExtension
+  removeExtension: dispatch.extension.removeExtension,
+  enableExtension: dispatch.extension.enableExtension,
+  disableExtension: dispatch.extension.disableExtension
 })
 
 type DispatchProps = ReturnType<typeof mapDispatch>

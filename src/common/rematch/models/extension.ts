@@ -2,6 +2,7 @@ import { createModel } from '@rematch/core'
 import { message } from 'antd'
 import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
+import type { Extension } from '../../../../src-electron/data/entity/Extension'
 
 export const extension = createModel<RootModel>()({
   state: {
@@ -47,7 +48,19 @@ export const extension = createModel<RootModel>()({
       if(result.status === 'success') {
         message.success(result.info)
       }
-    } 
+    },
+    async enableExtension (extensionId: string) {
+      await window.electron.invoke('extension', {
+        action: 'enableExtension',
+        payload: extensionId
+      })
+    },
+    async disableExtension (extensionId: string) {
+      await window.electron.invoke('extension', {
+        action: 'disableExtension',
+        payload: extensionId
+      })
+    }
   })
 })
 
@@ -61,7 +74,8 @@ export interface ExtensionInfo {
   homepage?: string,
   icon?: string,
   type: 'INTERNAL' | 'EXTERNAL',
-  entry: string
+  entry: string,
+  config: Extension
 }
 
 export interface SourceInfo {
