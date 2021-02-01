@@ -1,11 +1,13 @@
 import appWindow from './window'
 import message from './message'
 import extension from './extension'
+import app from './app'
 
 const eventListenerSets = [
   appWindow,
   message,
-  extension
+  extension,
+  app
 ]
 
 export const listenEvents = () => {

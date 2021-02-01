@@ -1,10 +1,8 @@
 import path from 'path'
 import fs from 'fs'
-import { app } from 'electron'
-import { appName } from './name'
-const appData = app.getPath('appData')
+import { getOverrideValue, defaultDataPath } from '../confmgr/override'
 
-export const dataPath = createNonExistingDiretory(path.join(appData, appName))
+export const dataPath = createNonExistingDiretory(getOverrideValue('file.profileLocation') ?? defaultDataPath)
 
 export const extensionPath = createNonExistingDiretory(path.join(dataPath, 'extensions'))
 
