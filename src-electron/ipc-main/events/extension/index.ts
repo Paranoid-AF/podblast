@@ -2,6 +2,7 @@ import { ExtensionInfo, SourceInfo, extensionProcess } from '../../../extensions
 import { sendPopupMessage, PopupMessage, sendNotification, NotificationMessage } from '../../../windows/main'
 import mainWindow from '../../../windows/main'
 import { resolver } from '../../../extensions/ipc'
+import { sendMessage } from '../common'
 
 export const cachedLists: Array< Array<ExtensionInfo> | Array<SourceInfo> > = [ [] , [] ]
 
@@ -25,25 +26,19 @@ const registerEvents = () => {
     cachedLists[1] = lists[1]
     if(mainWindow.target !== null) {
       mainWindow.target.on('ready-to-show', () => {
-        if(mainWindow.target !== null) {
-          mainWindow.target.webContents.send('extension_ready', cachedLists)
-        }
+        sendMessage('extension_ready', cachedLists)
       })
     }
   })
 
   addChannel('extensionList', (extensionList: any) => {
     cachedLists[0] = extensionList
-    if(mainWindow.target !== null) {
-      mainWindow.target.webContents.send('extension_list', extensionList)
-    }
+    sendMessage('extension_list', extensionList)
   })
 
   addChannel('sourceList', (sourceList: any) => {
     cachedLists[1] = sourceList
-    if(mainWindow.target !== null) {
-      mainWindow.target.webContents.send('source_list', sourceList)
-    }
+    sendMessage('source_list', sourceList)
   })
 
 }

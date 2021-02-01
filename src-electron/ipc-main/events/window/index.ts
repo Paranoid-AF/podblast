@@ -1,10 +1,6 @@
 import mainWindow from '../../../windows/main'
 import { getPlatform } from '../../../constants/os'
-const sendMessage = (type: string) => {
-  if(mainWindow.target !== null) {
-    mainWindow.target.webContents.send(type)
-  }
-}
+import { sendMessage } from '../common'
 
 const registerEvents = () => {
   if(mainWindow.target === null) {
@@ -37,7 +33,7 @@ const registerEvents = () => {
 
   mainWindow.target.on('ready-to-show', () => {
     if(mainWindow.target !== null) {
-      mainWindow.target.webContents.send('ready_main', {
+      sendMessage("ready_main", {
         platform: getPlatform(),
         isMaximized: mainWindow.target.isMaximized(),
         isFocused: mainWindow.target.isFocused()
