@@ -1,5 +1,4 @@
 import { createModel } from '@rematch/core'
-import { message } from 'antd'
 import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
 
