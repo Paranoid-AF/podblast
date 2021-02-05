@@ -3,7 +3,7 @@ import { NodeVM } from 'vm2'
 import { ExtensionKit } from './extensionKit'
 import { ExtensionInfo } from './'
 import type { NotificationMessage } from '../../windows/main'
-
+import { wrappedGot } from './network'
 import { sender } from './ipc'
 
 const [ send, disband ] = sender
@@ -26,10 +26,13 @@ export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
         transitive: true
       },
       mock: {
-        [extensionKitName]: extensionKit
+        [extensionKitName]: extensionKit,
+        'got': wrappedGot(scriptMeta.id)
       }
     },
-    sandbox: {}
+    sandbox: {
+      console: console
+    }
   })
   return vm.runFile(scriptPath)
 }

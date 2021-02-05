@@ -3,6 +3,7 @@ import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
 
+import { config } from '../confmgr'
 import { connection } from '../data'
 import { Extension } from '../data/entity/Extension'
 import { extensionPath } from '../constants/path'
@@ -22,7 +23,8 @@ export const startExtensionProcess = () => {
     env: {
       locale,
       dev: isDev.toString(),
-      extPath
+      extPath,
+      globalProxyAddress: config['network.proxyAddress'] ?? ''
     } as any
   })
   buildIpcBridge()

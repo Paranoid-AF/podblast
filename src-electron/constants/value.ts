@@ -1,0 +1,1 @@
+export const requestTimeout = 5000
