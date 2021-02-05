@@ -23,7 +23,7 @@ yarn start
 ```
 
 ## Building the App
-To building the app, run the following command.
+To build the app, run the following command.
 
 ```shell
 npm run build
