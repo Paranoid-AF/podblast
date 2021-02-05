@@ -17,7 +17,6 @@ process.on('uncaughtException', (err) => {
 })
 
 export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
-  // Reset addtional info
   const extensionKit = new ExtensionKit(scriptMeta)
   const vm = new NodeVM({
     require: {
