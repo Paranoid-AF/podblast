@@ -6,6 +6,8 @@ function Home() {
     <PageBase title="Podchat">
       <React.Fragment>
         Welcome back home!
+        <button onClick={() => { window.electron.invoke('player', { action: 'togglePlayerWindow', payload: true }) }}>Show PIP</button>
+        <button onClick={() => { window.electron.invoke('player', { action: 'togglePlayerWindow', payload: false }) }}>Hide PIP</button>
       </React.Fragment>
     </PageBase>
   )

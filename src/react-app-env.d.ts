@@ -3,7 +3,8 @@ declare global {
   interface Window {
     electron: {
       invoke: (channel: string, content: InvokeContent) => Promise<IpcMessage>,
-      on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+      on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void,
+      isDummy?: boolean
     }
   }
 }
@@ -20,5 +21,5 @@ export interface appWindowPayload {
 
 interface InvokeContent {
   action: string,
-  payload?: string
+  payload?: string | boolean
 }

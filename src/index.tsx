@@ -2,17 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { Provider } from 'react-redux'
+import { renderPlayer } from './common/player'
 import { ConfigProvider } from 'antd'
-import { store } from './common/rematch'
 
-ReactDOM.render(
-  <Provider store={store}>
+if(typeof window.electron === 'undefined') {
+  window.electron = {
+    on: (() => {}) as any,
+    invoke: (() => {}) as any,
+    isDummy: true
+  }
+}
+
+if(window.location.hash === '#/player-embedded') {
+  renderPlayer()
+} else {
+  ReactDOM.render(
     <React.StrictMode>
       <ConfigProvider autoInsertSpaceInButton={false}>
         <App />
       </ConfigProvider>
-    </React.StrictMode>
-  </Provider>,
-  document.getElementById('root')
-);
+    </React.StrictMode>,
+    document.getElementById('root')
+  )
+}
+

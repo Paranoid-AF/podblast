@@ -8,6 +8,7 @@
     "got": "^11.8.0",
     "ipc-promise-invoke": "^2.1.0",
     "proxy-agent": "^4.0.1",
+    "react-player": "^2.8.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.30",
     "vm2": "^3.9.2"

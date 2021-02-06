@@ -1,5 +1,6 @@
 import { app, dialog } from 'electron'
 import { initMainWindow } from './windows/main'
+import { initPlayerWindow } from './windows/player'
 import { startExtensionProcess } from './extensions'
 import { registerEvents } from './ipc-main'
 import { initDatabase } from './data'
@@ -9,6 +10,7 @@ app.on('ready', () => {
   initDatabase()
     .then(() => {
       initMainWindow()
+      initPlayerWindow()
       startExtensionProcess()
       registerEvents()
     })
