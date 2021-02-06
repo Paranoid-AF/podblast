@@ -4,14 +4,18 @@ import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
 import type { Extension } from '../../../../src-electron/data/entity/Extension'
 
+const initState = {
+  loaded: false,
+  extensionList: [] as Array<ExtensionInfo>,
+  sourceList: [] as Array<SourceInfo>
+}
+
 export const extension = createModel<RootModel>()({
   state: {
-    loaded: false,
-    extensionList: [],
-    sourceList: []
-  } as ExtensionState,
+    ...initState
+  },
   reducers: {
-      toggleLoaded(state: ExtensionState, payload: {
+      toggleLoaded(state: typeof initState, payload: {
         state: boolean,
         extensionList?: Array<ExtensionInfo>,
         sourceList?: Array<SourceInfo>
@@ -23,13 +27,13 @@ export const extension = createModel<RootModel>()({
           sourceList: payload.sourceList ?? state.sourceList
         }
       },
-      setExtensionList(state: ExtensionState, payload: Array<ExtensionInfo>) {
+      setExtensionList(state: typeof initState, payload: Array<ExtensionInfo>) {
         return {
           ...state,
           extensionList: payload
         }
       },
-      setSourceList(state: ExtensionState, payload: Array<SourceInfo>) {
+      setSourceList(state: typeof initState, payload: Array<SourceInfo>) {
         return {
           ...state,
           sourceList: payload
@@ -85,10 +89,4 @@ export interface SourceInfo {
   provider: string,
   description?: string,
   icon?: string
-}
-
-export interface ExtensionState {
-  loaded: boolean,
-  extensionList: Array<ExtensionInfo>,
-  sourceList: Array<SourceInfo>
 }

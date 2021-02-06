@@ -2,15 +2,19 @@ import { createModel } from '@rematch/core'
 import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
 
+const initState = {
+  config: {
+    data: {} as Record<string, any>,
+    override: [] as Array<string>
+  }
+}
+
 export const app = createModel<RootModel>()({
   state: {
-    config: {
-      data: {},
-      override: []
-    }
-  } as AppState,
+    ...initState
+  },
   reducers: {
-    refreshConfig(state: AppState, payload: Config) {
+    refreshConfig(state: typeof initState, payload: typeof initState['config']) {
       return {
         ...state,
         config: payload
@@ -29,12 +33,3 @@ export const app = createModel<RootModel>()({
     }
   })
 })
-
-interface Config {
-  data: Record<string, any>,
-  override: Array<string>
-}
-
-export interface AppState {
-  config: Config
-}

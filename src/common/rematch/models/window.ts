@@ -3,26 +3,30 @@ import { RootModel } from './index'
 
 import { Platforms } from '../../constants/os'
 
+const initState = {
+  platform: Platforms.LINUX as Platforms,
+  maximized: false,
+  focused: true
+}
+
 export const appWindow = createModel<RootModel>()({
   state: {
-    platform: Platforms.LINUX,
-    maximized: false,
-    focused: true
-  } as windowState,
+    ...initState
+  },
   reducers: {
-      setInitialState(state: windowState, payload: windowState) {
+      setInitialState(state: typeof initState, payload: typeof initState) {
         return {
           ...state,
           ...payload
         }
       },
-      setMaximizeState(state: windowState, payload: boolean) {
+      setMaximizeState(state: typeof initState, payload: boolean) {
         return {
           ...state,
           maximized: payload
         }
       },
-      setFocusState(state: windowState, payload: boolean) {
+      setFocusState(state: typeof initState, payload: boolean) {
         return {
           ...state,
           focused: payload
@@ -51,10 +55,10 @@ export const appWindow = createModel<RootModel>()({
         action: "restore"
       })
     },
-    async init(initState: windowState) {
+    async init(payload: typeof initState) {
       dispatch.appWindow.setInitialState({
-        platform: initState.platform,
-        maximized: initState.maximized
+        ...initState,
+        ...payload
       })
     },
     async openExplorer(folderPath: string) {
@@ -65,9 +69,3 @@ export const appWindow = createModel<RootModel>()({
     }
   })
 })
-
-export interface windowState {
-  platform?: Platforms,
-  maximized?: boolean,
-  focused?: boolean
-}
