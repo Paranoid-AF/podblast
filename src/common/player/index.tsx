@@ -1,20 +1,26 @@
 import React from 'react'
 import type { Props } from '../../../src-electron/ipc-main/handles/player'
+import type { EventTypes } from './component'
 import Player from './component'
 import ReactDOM from 'react-dom'
-
-const playState: Props = {
-  url: 'https://www.youtube.com/watch?v=DLzxrzFCyOs'
-}
 
 let playerUpdater: ((props: Props) => void) | null = null
 
 window.electron.on('update_props', (event, param) => {
-  console.log(param)
   if(playerUpdater !== null) {
     playerUpdater(param)
   }
 })
+
+const handleEvents = (type: EventTypes, payload?: any) => {
+  window.electron.invoke('playerComponent', {
+    action: 'event',
+    payload: {
+      type,
+      payload
+    }
+  })
+}
 
 export function renderPlayer() {
   ReactDOM.render(
@@ -24,6 +30,7 @@ export function renderPlayer() {
           playerUpdater = updater
         }
       }
+      handleEvents={handleEvents}
     />,
     document.getElementById('root')
   )

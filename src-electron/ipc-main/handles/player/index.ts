@@ -1,6 +1,7 @@
 import { screen } from 'electron'
 import { sendMessage } from './sendMessage'
 import playerWindow from '../../../windows/player'
+import { EventTypes } from './enums'
 
 const windowMargin = 50
 
@@ -58,3 +59,12 @@ export const player = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPay
     break
   }
 }
+
+export const playerComponent = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
+  switch(payload.action) {
+    case 'event':
+      console.log(payload.payload)
+    break
+  }
+}
+
