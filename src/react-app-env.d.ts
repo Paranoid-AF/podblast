@@ -21,5 +21,5 @@ export interface appWindowPayload {
 
 interface InvokeContent {
   action: string,
-  payload?: string | boolean
+  payload?: any
 }

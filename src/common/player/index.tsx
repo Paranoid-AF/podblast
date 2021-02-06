@@ -9,6 +9,13 @@ const playState: Props = {
 
 let playerUpdater: ((props: Props) => void) | null = null
 
+window.electron.on('update_props', (event, param) => {
+  console.log(param)
+  if(playerUpdater !== null) {
+    playerUpdater(param)
+  }
+})
+
 export function renderPlayer() {
   ReactDOM.render(
     <Player

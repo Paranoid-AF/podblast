@@ -1,4 +1,5 @@
 import { screen } from 'electron'
+import { sendMessage } from './sendMessage'
 import playerWindow from '../../../windows/player'
 
 const windowMargin = 50
@@ -20,6 +21,8 @@ interface PlayerProps {
 
 export type Props = Partial<PlayerProps>
 
+let current: Props = { }
+
 function togglePlayerWindow(state: boolean) {
   if(playerWindow.target !== null) {
     if(state) {
@@ -36,14 +39,22 @@ function togglePlayerWindow(state: boolean) {
   }
 }
 
+function setPlayParams(params: Props) {
+  current = {
+    ...current,
+    ...params
+  }
+  sendMessage('update_props', current)
+}
+
 export const player = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
   switch(payload.action) {
     case 'togglePlayerWindow':
       const state = payload.payload as boolean
       togglePlayerWindow(state)
     break
-    case 'play':
-      
+    case 'setParams':
+      setPlayParams(payload.payload)
     break
   }
 }

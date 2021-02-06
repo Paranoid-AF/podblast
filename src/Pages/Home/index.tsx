@@ -8,6 +8,22 @@ function Home() {
         Welcome back home!
         <button onClick={() => { window.electron.invoke('player', { action: 'togglePlayerWindow', payload: true }) }}>Show PIP</button>
         <button onClick={() => { window.electron.invoke('player', { action: 'togglePlayerWindow', payload: false }) }}>Hide PIP</button>
+        <p>
+        <button
+          onClick={
+            () => {
+              window.electron.invoke('player', {
+                action: 'setParams',
+                payload: {
+                  url: 'https://www.youtube.com/watch?v=DLzxrzFCyOs'
+                }
+              })
+            }
+          }
+        >
+          Rickroll
+        </button>
+        </p>
       </React.Fragment>
     </PageBase>
   )
