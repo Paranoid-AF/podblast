@@ -1,4 +1,4 @@
-import { BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, shell } from 'electron'
 import windowConf from './config'
 import path from 'path'
 import isDev from 'electron-is-dev'
@@ -27,6 +27,7 @@ export const initMainWindow = () => {
   win.target.on('closed', () => {
     if(win.target !== null) {
       win.target.destroy()
+      app.quit()
     }
   })
   win.target.webContents.on('new-window', (event: Electron.Event, url: string) => {
