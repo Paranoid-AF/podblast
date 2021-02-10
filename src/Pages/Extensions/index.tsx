@@ -32,7 +32,7 @@ function Extensions(props: StateProps) {
     } else {
       return null
     }
-  }, [])
+  }, [showDetail])
 
   const renderDisabledList = useCallback((val: ExtensionInfo) => {
     if(val.config.status === 'disabled') {
@@ -40,7 +40,7 @@ function Extensions(props: StateProps) {
     } else {
       return null
     }
-  }, [])
+  }, [showDetail])
 
   const renderList = useCallback((rawArray: Array<ExtensionInfo>) => {
     const disabledList = rawArray.map(renderDisabledList)
@@ -51,7 +51,7 @@ function Extensions(props: StateProps) {
         { disabledList }
       </div>
     )
-  }, [])
+  }, [renderDisabledList, renderEnabledList])
 
   return (
     <PageBase title="Extensions">
