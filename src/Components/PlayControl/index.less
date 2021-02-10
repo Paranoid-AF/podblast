@@ -20,7 +20,9 @@
   -webkit-app-region: no-drag;
   color: #fff;
   background: #323232;
-
+  will-change: width, height, opacity, box-shadow, border-radius, left, bottom;
+  transform: translateZ(0);
+  
   &.expanded {
     width: 180px;
     height: 76px;
@@ -40,15 +42,16 @@
 }
 
 .control-spin {
-  transform: scale(1.2);
+  transform: scale(1.2) translateZ(0);
   margin-bottom: 10px;
   transition: transform .1s, opacity .2s;
+  will-change: transform, opacity;
 
   &.expanded {
-    transform: scale(1.6);
+    transform: scale(1.6) translateZ(0);
   }
   &.hidden {
-    transform: scale(2);
+    transform: scale(2) translateZ(0);
     pointer-events: none;
     opacity: 0;
   }

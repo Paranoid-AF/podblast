@@ -6,7 +6,7 @@ const initState = {
   showNowPlaying: false,
   playing: {
     url: "ww",
-    cover: "https://is4-ssl.mzstatic.com/image/thumb/Podcasts124/v4/02/b0/58/02b0588c-242f-c403-1877-2ec3ac9c91bd/mza_17810596149436768499.png/400x400bb.jpg"
+    cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3"
   }
 }
 
