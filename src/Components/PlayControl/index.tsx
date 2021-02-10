@@ -12,9 +12,16 @@ function PlayControl(props: StateProps & DispatchProps) {
   const handleLeave = useCallback((e: React.MouseEvent) => {
     setExpanded(false)
   }, [setExpanded])
-  const renderSpin = useCallback(() => {
+  const renderSpin = useCallback((hidden = false) => {
+    let spinClassName = 'control-spin'
+    if(isExpanded) {
+      spinClassName = 'control-spin expanded'
+    }
+    if(hidden) {
+      spinClassName = 'control-spin hidden'
+    }
     return (
-      <div className={isExpanded ? "control-spin expanded" : "control-spin"} onMouseEnter={handleHover}>
+      <div className={spinClassName} onMouseEnter={handleHover}>
         <Item id="nowplaying"
           name="正在播放"
           image={props.contentPlaying.cover}
@@ -40,10 +47,10 @@ function PlayControl(props: StateProps & DispatchProps) {
 
   return (
     <div className="control-container" onMouseLeave={handleLeave}>
-      { !props.showNowPlaying ? renderSpin() : null }
+      { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
         <div className="control-buttons">
-          
+          <button style={{color: '#000'}} onClick={() => {props.toggleNowPlaying(false)}}>Take me back!</button>
         </div>
       </div>
     </div>
