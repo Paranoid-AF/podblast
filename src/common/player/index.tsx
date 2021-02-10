@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Props } from '../../../src-electron/ipc-main/handles/player'
-import type { EventTypes } from './component'
+import { EventTypes } from '../constants/enum'
 import Player from './component'
 import ReactDOM from 'react-dom'
 
