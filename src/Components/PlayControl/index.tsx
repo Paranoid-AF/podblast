@@ -32,7 +32,7 @@ function PlayControl(props: StateProps & DispatchProps) {
         />
       </div>
     )
-  }, [isExpanded, handleHover, props.contentPlaying.cover])
+  }, [isExpanded, handleHover, props])
   if(props.contentPlaying.url === '') {
     return null
   }
