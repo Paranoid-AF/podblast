@@ -28,13 +28,20 @@
   border-radius: 0;
 }
 
-.panel-item-visible:hover {
+.panel-item-visible.with-hover-animation:hover {
   border: none;
   border-radius: 5px;
 }
 
 .panel-item-visible.no-rounded-corners:hover {
   border-radius: 0;
+}
+
+.panel-item-wrapper > .spinning {
+  animation-name: spinning;
+  animation-timing-function: linear;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
 }
 
 .panel-item.panel-item-drag {
@@ -77,4 +84,14 @@
 
 .panel-item-pressed {
   transform: scale(0.85);
+}
+
+@keyframes spinning {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

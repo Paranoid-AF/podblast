@@ -1,0 +1,49 @@
+@import '../../Components/Navi/index.less';
+
+.control-container {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: @naviActualWidth;
+}
+
+.control-capsule {
+  position: fixed;
+  width: 58px;
+  height: 58px;
+  left: 8px;
+  bottom: 3px;
+  border-radius: 1000px;
+  z-index: -1;
+  opacity: 0;
+  transition: width .2s, opacity .2s, left .2s, bottom .2s, border-radius .2s;
+  -webkit-app-region: no-drag;
+  color: #fff;
+  background: #323232;
+
+  &.expanded {
+    width: 180px;
+    height: 76px;
+    opacity: 1;
+    box-shadow: 3px 4px 6px rgba(50,50,50,0.6);
+  }
+
+  &.open {
+    opacity: 1;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 64px;
+    border-radius: 0;
+  }
+}
+
+.control-spin {
+  transform: scale(1.2);
+  margin-bottom: 10px;
+  transition: transform .1s;
+
+  &.expanded {
+    transform: scale(1.6);
+  }
+}

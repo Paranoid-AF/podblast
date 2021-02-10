@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { RouteChildrenProps, withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import './index.less'
+import { RootState, Dispatch } from'../../common/rematch'
 import Panel, { ItemList, SortResult } from './Panel'
+import { connect } from 'react-redux'
 
 const bruh = [
   {
@@ -74,7 +76,7 @@ const routes = [
   }
 ]
 
-class Navi extends Component<Props> {
+class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
   state = {
     borderless: false,
     itemList: bruh
@@ -97,21 +99,32 @@ class Navi extends Component<Props> {
     // console.log('clicked ' + key, e)
     routes.forEach(val => {
       if(val.key === key) {
-        this.props.router.history.push(val.link)
+        this.props.history.push(val.link)
       }
     })
+  }
+
+  renderControl = () => {
+    if(this.props.contentPlaying.url !== "") {
+      return (
+        <div className="control-navi-container">
+          <div className="control-gradient"></div>
+        </div>
+      )
+    } else {
+      return null
+    }
   }
 
   render() {
     let currentItemKey = 'home'
     routes.forEach(val => {
-      if(val.link === this.props.router.location.pathname) {
+      if(val.link === this.props.location.pathname) {
         currentItemKey = val.key
       }
     })
-
     return (
-      <div className="navi">
+      <div className={this.props.contentPlaying.url !== "" ? "navi nowplaying" : "navi"}>
         <Panel
           items={routes}
           current={currentItemKey}
@@ -123,22 +136,23 @@ class Navi extends Component<Props> {
           onSort={this.handlePanelSort}
           onSortDone={this.handleSortDone}
           onClick={this.handleClick}
-          withDivider={false}
+          withDivider={this.props.contentPlaying.url !== ''}
         />
+        {this.renderControl()}
       </div>
     )
   }
 }
 
-interface Props {
-  router: RouteChildrenProps
-}
+const mapState = (state: RootState) => ({
+  contentPlaying: state.player.playing
+})
 
-const mapRouter = (props: any) => {
-  return (
-    <Navi router={props} />
-  )
-}
+const mapDispatch = (dispatch: Dispatch) => ({
 
+})
 
-export default withRouter(mapRouter)
+type StateProps = ReturnType<typeof mapState>
+type DispatchProps = ReturnType<typeof mapDispatch>
+
+export default connect(mapState, mapDispatch)(withRouter(Navi))

@@ -12,10 +12,10 @@ class PanelItem extends Component <Props, State> {
     active: false,
     dragged: false,
     onMouseDown: null,
-    extraButtonIcon: null,
-    extraButtonIconStyle: "outlined",
     removeRef: null,
-    setRef: null
+    setRef: null,
+    hoverAnimation: true,
+    spinning: false
   }
   
   state = {
@@ -82,8 +82,7 @@ class PanelItem extends Component <Props, State> {
       })
     }
     this.setState({
-      pressed: true,
-      showButton: false
+      pressed: true
     })
   }
 
@@ -99,17 +98,8 @@ class PanelItem extends Component <Props, State> {
     })
   }
 
-  onMouseEnter = () => {
-    if(!this.props.dragged) {
-      this.setState({
-        showButton: true
-      })
-    }
-  }
-
   onMouseLeave = () => {
     this.setState({
-      showButton: false,
       pressed: false,
     })
   }
@@ -135,26 +125,30 @@ class PanelItem extends Component <Props, State> {
     if(!this.props.useRoundedCorners) {
       itemClassName += " no-rounded-corners"
     }
+    if(this.props.hoverAnimation) {
+      itemClassName += " with-hover-animation"
+    }
     return (
     <div className="panel-item-wrapper">
-      <div ref={this.itemRef}
-           className={itemClassName}
-           style={ itemStyle }
-           onMouseDown={this.processMouseDown}
-           onClick={this.processClick}
-           onMouseUp={this.onMouseUp}
-           onMouseEnter={this.onMouseEnter}
-           onMouseLeave={this.onMouseLeave}
-           onContextMenu={this.processClick}
-      >
-        {
-          !this.props.image && 
-          (
-            <div className="panel-item-text">
-              { this.props.name.substring(0, 1) }
-            </div>
-          )
-        }
+      <div className={ this.props.spinning ? "spinning" : "" }>
+        <div ref={this.itemRef}
+            className={itemClassName}
+            style={ itemStyle }
+            onMouseDown={this.processMouseDown}
+            onClick={this.processClick}
+            onMouseUp={this.onMouseUp}
+            onMouseLeave={this.onMouseLeave}
+            onContextMenu={this.processClick}
+        >
+          {
+            !this.props.image && 
+            (
+              <div className="panel-item-text">
+                { this.props.name.substring(0, 1) }
+              </div>
+            )
+          }
+        </div>
       </div>
       { this.renderActiveIndicator() }
     </div>
@@ -190,8 +184,7 @@ interface ItemStyle {
 
 type State = {
   tooltip?: boolean,
-  pressed: boolean,
-  showButton: boolean
+  pressed: boolean
 }
 
 type Props = {
@@ -205,6 +198,8 @@ type Props = {
   tooltip?: boolean,
   active?: boolean,
   dragged?: boolean,
+  hoverAnimation?: boolean,
+  spinning?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   setRef?: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,

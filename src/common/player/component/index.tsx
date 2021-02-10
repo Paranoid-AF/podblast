@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import type { Props } from '../../../../src-electron/ipc-main/handles/player'
 import './index.less'
+import { EventTypes } from '../../constants/enum'
 import ReactPlayer from 'react-player'
 
 const resizeThreshold = 100
@@ -14,7 +15,7 @@ export default function Player(props: PlayerProps) {
   const [ playerProps, setPlayerProps ] = useState<Props>({})
   useEffect(() => {
     props.getUpdater(setPlayerProps)
-  }, [])
+  }, [props])
   const playEvents = useRef({
     onReady: () => { props.handleEvents(EventTypes.ON_READY) },
     onStart: () => { props.handleEvents(EventTypes.ON_START) },
@@ -70,16 +71,3 @@ interface PlayerProps {
   handleEvents: (type: EventTypes, payload?: any) => void
 }
 
-export enum EventTypes {
-  ON_READY = 'ready',
-  ON_START = 'start',
-  ON_PLAY = 'play',
-  ON_PROGRESS = 'progress',
-  ON_DURATION = 'duration',
-  ON_PAUSE = 'pause',
-  ON_BUFFER = 'buffer',
-  ON_BUFFEREND = 'bufferend',
-  ON_SEEK = 'seek',
-  ON_ENDED = 'ended',
-  ON_ERROR = 'error'
-}

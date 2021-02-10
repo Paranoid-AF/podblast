@@ -1,19 +1,42 @@
 @import "../../App.less";
+@import "./Panel/Item/index.less";
 @naviWidth: 85px;
+@naviActualWidth: calc(@naviWidth + @naviExtensionWidth);
+@naviBackground: #232527;
 .navi {
   top: 0;
   left: 0;
   padding-top: 10px;
   position: fixed;
-  width: calc(@naviWidth + @naviExtensionWidth);
+  width: @naviActualWidth;
   height: 100%;
-  background: #232527;
+  background: @naviBackground;
   color: #fff;
   -webkit-app-region: drag;
   overflow: hidden scroll;
   scrollbar-width: none;
+
+  &.nowplaying {
+    padding-bottom: 75px;
+  }
 }
 
 .navi::-webkit-scrollbar {
   display: none;
+}
+
+.control-navi-container {
+  position: fixed;
+  bottom: 0;
+  width: @naviActualWidth;
+}
+
+.control-gradient {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 72px;
+  z-index: 0;
+  //background: #fff;
+  background: linear-gradient(transparent, @naviBackground);
 }
