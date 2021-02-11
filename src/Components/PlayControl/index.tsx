@@ -50,7 +50,7 @@ function PlayControl(props: StateProps & DispatchProps) {
       { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
         <div className="control-buttons">
-          <button style={{color: '#000'}} onClick={() => {props.toggleNowPlaying(false)}}>Take me back!</button>
+          
         </div>
       </div>
     </div>
