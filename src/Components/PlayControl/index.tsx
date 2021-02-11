@@ -61,7 +61,7 @@ function PlayControl(props: StateProps & DispatchProps) {
       { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
         <div className="capsule-info">
-          <ScrollingText width={110} fullScrollTime={5000} whiteSpaceWidth={10}>
+          <ScrollingText width={132} fullScrollTime={5000} whiteSpaceWidth={10}>
             <span className="info-title">{props.contentPlaying.title}</span>
             <span className="info-channel">{props.contentPlaying.channel}</span>
           </ScrollingText>
