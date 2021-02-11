@@ -3,6 +3,7 @@ import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import isDev from 'electron-is-dev'
 import { Window } from './window'
 import { shell } from 'electron/common'
+import { pipMinimumSize } from '../constants/value'
 
 const windowConf: BrowserWindowConstructorOptions = {
   show: false,
@@ -13,7 +14,9 @@ const windowConf: BrowserWindowConstructorOptions = {
     contextIsolation: true
   },
   frame: false,
-  alwaysOnTop: true
+  alwaysOnTop: true,
+  minWidth: pipMinimumSize.width,
+  minHeight: pipMinimumSize.height
 }
 
 var win: Window = {

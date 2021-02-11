@@ -1,7 +1,8 @@
 import { screen } from 'electron'
 import { sendMessage } from './sendMessage'
 import playerWindow from '../../../windows/player'
-import { EventTypes } from './enums'
+import { pipMinimumSize } from '../../../constants/value'
+// import { EventTypes } from './enums'
 
 const windowMargin = 50
 
@@ -27,7 +28,7 @@ let current: Props = { }
 function togglePlayerWindow(state: boolean) {
   if(playerWindow.target !== null) {
     if(state) {
-      playerWindow.target.setSize(390, 220)
+      playerWindow.target.setSize(pipMinimumSize.width, pipMinimumSize.height)
       const display = screen.getPrimaryDisplay()
       const windowSize = playerWindow.target.getSize()
       const windowX = display.bounds.width - windowSize[0] - windowMargin
