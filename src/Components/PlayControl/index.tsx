@@ -17,10 +17,10 @@ function PlayControl(props: StateProps & DispatchProps) {
     if(e.button === 0) {
       props.toggleNowPlaying(true)
     }
-  }, [props.toggleNowPlaying])
+  }, [props])
   const collapseCapsule = useCallback((e: React.MouseEvent) => {
     props.toggleNowPlaying(false)
-  }, [props.toggleNowPlaying])
+  }, [props])
   const renderSpin = useCallback((hidden = false) => {
     let spinClassName = 'control-spin'
     if(isExpanded) {
@@ -41,7 +41,7 @@ function PlayControl(props: StateProps & DispatchProps) {
         />
       </div>
     )
-  }, [isExpanded, handleHover, props])
+  }, [isExpanded, handleHover, props, expandCapsule])
 
   if(props.contentPlaying.url === '') {
     return null
