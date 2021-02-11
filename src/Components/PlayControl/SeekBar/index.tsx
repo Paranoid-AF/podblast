@@ -9,6 +9,7 @@ function SeekBar(props: Props) {
         <span className="info-channel">{props.channel}</span>
       </div>
       <div className="bar">
+        <div className="played"></div>
         <div className="loaded"></div>
         <div className="dot"></div>
       </div>

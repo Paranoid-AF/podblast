@@ -23,16 +23,27 @@
     }
   }
 
-  .bar, .bar > .loaded {
+  .bar, .bar > .loaded, .bar > .played {
     height: 4px;
     border-radius: 1000px;
   }
+  .bar > .loaded, .bar > .played {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
   >.bar {
     width: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    >.loaded {
+    background: rgba(255, 255, 255, 0.2);
+    >.played {
       width: 30%;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 1);
+    }
+    >.loaded {
+      width: 70%;
+      background: rgba(255, 255, 255, 0.3);
     }
     >.dot {
       position: absolute;
@@ -46,6 +57,7 @@
       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
       cursor: pointer;
       user-select: none;
+      z-index: 10;
     }
   }
 
