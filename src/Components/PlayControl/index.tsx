@@ -1,10 +1,12 @@
-import { BackwardOutlined, ForwardOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
+import { BackwardOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined, SlidersOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
 import Item from '../Navi/Panel/Item'
-import './index.less'
 import ScrollingText from './ScrollingText'
+import SeekBar from './SeekBar'
+import './index.less'
+
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
@@ -73,13 +75,15 @@ function PlayControl(props: StateProps & DispatchProps) {
           <button className="ward"><BackwardOutlined /></button>
           <button className="pause"><PauseOutlined /></button>
           <button className="ward"><ForwardOutlined /></button>
+          <SeekBar episodeTitle={props.contentPlaying.title} channel={props.contentPlaying.channel} />
+          <button className="pip show-when-open"><GatewayOutlined /></button>
         </div>
       </div>
     </div>
   )
 }
 
-const mapState = (state: RootState) => ({
+export const mapState = (state: RootState) => ({
   showNowPlaying: state.player.showNowPlaying,
   contentPlaying: state.player.playing
 })

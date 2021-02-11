@@ -52,9 +52,13 @@
     width: 100vw;
     height: 100%;
     padding-left: 15px;
+    padding-right: 10px;
     
     > * {
       transition: margin-right .1s;
+    }
+    .show-when-open {
+      display: none;
     }
     button {
       color: #fff;
@@ -71,6 +75,12 @@
       &.ward {
         font-size: 24px;
       }
+      &.pip {
+        font-size: 24px;
+      }
+      &.volume {
+        font-size: 24px;
+      }
     }
 
     >.control-collpase {
@@ -82,6 +92,8 @@
       background: #fff;
       margin-left: 8px;
       margin-right: 25px;
+      min-width: 32px;
+      min-height: 32px;
 
       >.collpase {
         color: @capsuleBackground;
@@ -117,6 +129,9 @@
     }
     .capsule-info {
       display: none;
+    }
+    .show-when-open {
+      display: inherit;
     }
   }
 }
