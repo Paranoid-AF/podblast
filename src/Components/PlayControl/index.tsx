@@ -1,4 +1,4 @@
-import { BackwardOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined, SlidersOutlined } from '@ant-design/icons'
+import { BackwardOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
