@@ -24,11 +24,12 @@
   will-change: width, height, opacity, border-radius, left, bottom;
   transform: translateZ(0);
   overflow: hidden;
-  
+  padding-top: 12px;
+
   &.expanded {
     left: 8px;
     bottom: 3px;
-    width: 230px;
+    width: 210px;
     height: 76px;
     opacity: 1;
     box-shadow: 3px 4px 6px rgba(50,50,50,0.6);
@@ -42,6 +43,7 @@
     height: 64px;
     border-radius: 0;
     box-shadow: none;
+    padding-top: 0;
   }
 
   >.control-buttons {
@@ -64,16 +66,14 @@
       cursor: pointer;
 
       &.pause {
-        font-size: 36px;
+        font-size: 32px;
       }
       &.ward {
-        font-size: 30px;
+        font-size: 24px;
       }
     }
 
     >.control-collpase {
-      width: 36px;
-      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -89,10 +89,34 @@
       }
     }
   }
-  
+
+  >.capsule-info {
+    position: absolute;
+    top: 7px;
+    left: 85px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+
+    .info-title {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .info-channel {
+      color: rgba(255, 255, 255, 0.5);
+
+      &::before {
+        content: ' - ';
+      }
+    }
+  }
+
   &.open {
     .control-collpase {
       margin-right: 10px;
+    }
+    .capsule-info {
+      display: none;
     }
   }
 }

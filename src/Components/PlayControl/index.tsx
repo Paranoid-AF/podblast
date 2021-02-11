@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
 import Item from '../Navi/Panel/Item'
 import './index.less'
+import ScrollingText from './ScrollingText'
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
@@ -59,6 +60,12 @@ function PlayControl(props: StateProps & DispatchProps) {
     <div className="control-container" onMouseLeave={handleLeave}>
       { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
+        <div className="capsule-info">
+          <ScrollingText width={110} fullScrollTime={5000} whiteSpaceWidth={10}>
+            <span className="info-title">{props.contentPlaying.title}</span>
+            <span className="info-channel">{props.contentPlaying.channel}</span>
+          </ScrollingText>
+        </div>
         <div className="control-buttons">
           <div className="control-collpase" onClick={collapseCapsule}>
             <button className="collpase"><MenuFoldOutlined /></button>
