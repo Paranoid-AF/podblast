@@ -15,11 +15,11 @@ function ScrollingText(props: Props) {
       const inner = scroller.querySelector('.wrapped')
       if(inner) {
         const childWidth = (inner.querySelector('span')?.getBoundingClientRect().width ?? 0) + props.whiteSpaceWidth
-        currentPos.current += scrollInterval / props.fullScrollTime
-        if(currentPos.current > 1 || !shouldScroll) {
+        currentPos.current += props.pixelsPerSecond * (scrollInterval / 1000)
+        if(currentPos.current > childWidth || !shouldScroll) {
           currentPos.current = 0
         }
-        inner.setAttribute('style', `transform: translateX(-${currentPos.current * childWidth}px);`)
+        inner.setAttribute('style', `transform: translateX(-${currentPos.current}px);`)
       }
     }
   }, [currentPos, props, shouldScroll])
@@ -59,7 +59,7 @@ function ScrollingText(props: Props) {
 interface Props {
   children: any,
   width: number, // px
-  fullScrollTime: number, // ms
+  pixelsPerSecond: number, // px
   whiteSpaceWidth: number
 }
 
