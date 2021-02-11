@@ -1,3 +1,4 @@
+import { BackwardOutlined, ForwardOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
@@ -12,6 +13,14 @@ function PlayControl(props: StateProps & DispatchProps) {
   const handleLeave = useCallback((e: React.MouseEvent) => {
     setExpanded(false)
   }, [setExpanded])
+  const expandCapsule = useCallback((e: React.MouseEvent) => {
+    if(e.button === 0) {
+      props.toggleNowPlaying(true)
+    }
+  }, [props.toggleNowPlaying])
+  const collapseCapsule = useCallback((e: React.MouseEvent) => {
+    props.toggleNowPlaying(false)
+  }, [props.toggleNowPlaying])
   const renderSpin = useCallback((hidden = false) => {
     let spinClassName = 'control-spin'
     if(isExpanded) {
@@ -28,11 +37,12 @@ function PlayControl(props: StateProps & DispatchProps) {
           tooltip={false}
           hoverAnimation={false}
           spinning={true}
-          onClick={() => {props.toggleNowPlaying(true)}}
+          onClick={expandCapsule}
         />
       </div>
     )
   }, [isExpanded, handleHover, props])
+
   if(props.contentPlaying.url === '') {
     return null
   }
@@ -50,7 +60,12 @@ function PlayControl(props: StateProps & DispatchProps) {
       { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
         <div className="control-buttons">
-          
+          <div className="control-collpase" onClick={collapseCapsule}>
+            <button className="collpase"><MenuFoldOutlined /></button>
+          </div>
+          <button className="ward"><BackwardOutlined /></button>
+          <button className="pause"><PauseOutlined /></button>
+          <button className="ward"><ForwardOutlined /></button>
         </div>
       </div>
     </div>
