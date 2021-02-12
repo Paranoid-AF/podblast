@@ -31,6 +31,27 @@ export const player = createModel<RootModel>()({
         ...state,
         showNowPlaying: payload
       }
+    },
+    setSeek(state: typeof initState, payload: number) {
+      let target = state.playing.seekCurrent + payload
+      if(target < 0) {
+        target = 0
+      }
+      if(target > state.playing.seekTotal) {
+        target = state.playing.seekTotal
+      }
+      return {
+        ...state,
+        playing: {
+          ...state.playing,
+          seekCurrent: target
+        }
+      }
     }
-  }
+  },
+  effects: (dispatch: any) => ({
+    async seek(change: number) {
+      dispatch.player.setSeek(change)
+    }
+  })
 })

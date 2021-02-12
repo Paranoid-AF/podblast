@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import './index.less'
 
 const dotSizeNormal = 14
@@ -23,16 +23,35 @@ function SeekBar(props: Props) {
   const playedRatio = (props.seekCurrent / props.seekTotal * 100).toString()
   const loadedRatio = (props.seekLoaded / props.seekTotal * 100).toString()
   const dotSize = seeking ? dotSizeSeeking : dotSizeNormal
+  const barRef = useRef<React.RefObject<HTMLDivElement>>(React.createRef())
+  const barWidth = useRef<number>(-1)
+  const lastX = useRef<number>(-1)
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const dragFactor = 1
+    const deltaX = e.clientX - lastX.current
+    const deltaRatio = deltaX / barWidth.current * dragFactor
+    props.onChange(deltaRatio * props.seekTotal)
+    lastX.current = e.clientX
+  }, [props])
+
+  const handleMouseUp = useCallback((e: MouseEvent) => {
+    document.removeEventListener('mouseup', handleMouseUp)
+    document.removeEventListener('mousemove', handleMouseMove)
+    setSeeking(false)
+  }, [setSeeking, handleMouseMove])
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    document.addEventListener('mouseup', handleMouseUp)
-    setSeeking(true)
-  }, [])
+    const barInfo = barRef.current.current?.getBoundingClientRect()
+    barWidth.current = barInfo?.width ?? -1
+    if(barWidth.current > 0) {
+      lastX.current = e.clientX
+      document.addEventListener('mouseup', handleMouseUp)
+      document.addEventListener('mousemove', handleMouseMove)
+      setSeeking(true)
+    }
+  }, [setSeeking, handleMouseUp, handleMouseMove])
 
-  const handleMouseUp = useCallback((e) => {
-    document.removeEventListener('mouseup', handleMouseUp)
-    setSeeking(false)
-  }, [])
 
   return (
     <div className="control-seekbar show-when-open">
@@ -40,7 +59,7 @@ function SeekBar(props: Props) {
         <span className="info-title">{props.episodeTitle}</span>
         <span className="info-channel">{props.channel}</span>
       </div>
-      <div className="bar">
+      <div className="bar" ref={barRef.current}>
         <div className="played" style={{ width: `${playedRatio}%` }}></div>
         <div className="loaded" style={{ width: `${(loadedRatio).toString()}%` }}></div>
         <div
@@ -66,7 +85,8 @@ interface Props {
   channel: string,
   seekCurrent: number,
   seekTotal: number,
-  seekLoaded: number
+  seekLoaded: number,
+  onChange: (targetSeekCurrent: number) => any
 }
 
 export default SeekBar

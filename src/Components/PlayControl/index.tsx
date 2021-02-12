@@ -45,6 +45,10 @@ function PlayControl(props: StateProps & DispatchProps) {
       </div>
     )
   }, [isExpanded, handleHover, props, expandCapsule])
+  const handleSeek = useCallback((targetSeekCurrent: number) => {
+    props.seek(targetSeekCurrent)
+  }, [props])
+
 
   if(props.contentPlaying.url === '') {
     return null
@@ -87,6 +91,7 @@ function PlayControl(props: StateProps & DispatchProps) {
             seekCurrent={props.contentPlaying.seekCurrent}
             seekTotal={props.contentPlaying.seekTotal}
             seekLoaded={props.contentPlaying.seekLoaded}
+            onChange={handleSeek}
           />
           <button className="pip show-when-open"><GatewayOutlined /></button>
         </div>
@@ -101,7 +106,8 @@ export const mapState = (state: RootState) => ({
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  toggleNowPlaying: dispatch.player.toggleNowPlaying
+  toggleNowPlaying: dispatch.player.toggleNowPlaying,
+  seek: dispatch.player.seek
 })
 
 type StateProps = ReturnType<typeof mapState>
