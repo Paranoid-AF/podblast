@@ -7,14 +7,15 @@
   justify-content: center;
   margin: 0 20px;
   color: #fff;
-  overflow: hidden;
   white-space: nowrap;
 
   >.info {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
     font-size: 13px;
+    overflow: hidden;
 
     >.info-channel {
       color: rgba(255, 255, 255, 0.5);
@@ -25,6 +26,9 @@
     }
   }
 
+  .bar {
+    user-select: none;
+  }
   .bar, .bar > .loaded, .bar > .played {
     height: 4px;
     border-radius: 1000px;
@@ -40,25 +44,21 @@
     width: 100%;
     background: rgba(255, 255, 255, 0.2);
     >.played {
-      width: 30%;
       background: rgba(255, 255, 255, 1);
+      z-index: 9;
     }
     >.loaded {
-      width: 70%;
       background: rgba(255, 255, 255, 0.3);
+      z-index: 8;
     }
     >.dot {
       position: absolute;
-      width: 14px;
-      height: 14px;
-      left: calc(30% - 7px);
       top: 50%;
       transform: translateY(-50%);
       border-radius: 1000px;
       background: #fff;
       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
       cursor: pointer;
-      user-select: none;
       z-index: 10;
     }
   }
@@ -73,12 +73,13 @@
       position: absolute;
       left: 0;
       bottom: 0;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 1);
     }
     >.end {
       position: absolute;
       right: 0;
       bottom: 0;
+      color: rgba(255, 255, 255, 0.7);
     }
   }
 }

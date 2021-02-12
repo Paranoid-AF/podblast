@@ -81,7 +81,13 @@ function PlayControl(props: StateProps & DispatchProps) {
           <button className="ward"><BackwardOutlined /></button>
           <button className="pause"><PauseOutlined /></button>
           <button className="ward"><ForwardOutlined /></button>
-          <SeekBar episodeTitle={props.contentPlaying.title} channel={props.contentPlaying.channel} />
+          <SeekBar
+            episodeTitle={props.contentPlaying.title}
+            channel={props.contentPlaying.channel}
+            seekCurrent={props.contentPlaying.seekCurrent}
+            seekTotal={props.contentPlaying.seekTotal}
+            seekLoaded={props.contentPlaying.seekLoaded}
+          />
           <button className="pip show-when-open"><GatewayOutlined /></button>
         </div>
       </div>
