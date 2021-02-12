@@ -80,15 +80,15 @@ function SeekBar(props: Props) {
     }
     if(currentTime.current !== null) {
       currentTime.current = currentTime.current + deltaSec
+      props.onChange(currentTime.current)
     }
-    props.onChange(deltaSec, 'delta')
     lastX.current = e.clientX
     lastDragFator.current = dragFactor
   }, [props, getDeltaSec])
 
   const handleMouseUp = useCallback((e: MouseEvent) => {
     if(currentTime.current !== null) {
-      props.onChange(currentTime.current, 'target')
+      props.onChange(currentTime.current)
     }
     document.removeEventListener('mouseup', handleMouseUp)
     document.removeEventListener('mousemove', handleMouseMove)
@@ -148,7 +148,7 @@ interface Props {
   seekCurrent: number,
   seekTotal: number,
   seekLoaded: number,
-  onChange: (amount: number, type: 'target' | 'delta') => any
+  onChange: (amount: number) => any
 }
 
 export default SeekBar

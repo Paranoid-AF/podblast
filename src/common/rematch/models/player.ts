@@ -63,23 +63,6 @@ export const player = createModel<RootModel>()({
         }
       }
     },
-    setSeek(state: typeof initState, payload: number) {
-      let target = state.playing.seekCurrent + payload
-      if(target < 0) {
-        target = 0
-      }
-      if(target > state.playing.seekTotal) {
-        target = state.playing.seekTotal
-      }
-      seekTo_Debounced(target)
-      return {
-        ...state,
-        playing: {
-          ...state.playing,
-          seekCurrent: target
-        }
-      }
-    },
     setSeekTo(state: typeof initState, payload: number) {
       let target = payload
       if(target < 0) {
@@ -124,9 +107,6 @@ export const player = createModel<RootModel>()({
     }
   },
   effects: (dispatch: any) => ({
-    async seek(change: number) {
-      dispatch.player.setSeek(change)
-    },
     async seekTo(target: number) {
       dispatch.player.setSeekTo(target)
     },

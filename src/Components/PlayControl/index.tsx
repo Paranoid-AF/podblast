@@ -45,15 +45,9 @@ function PlayControl(props: StateProps & DispatchProps) {
       </div>
     )
   }, [isExpanded, handleHover, props, expandCapsule])
-  const handleSeek = useCallback((amount: number, type: 'target' | 'delta') => {
-    if(type === 'delta') {
-      props.seek(amount)
-      props.forceSetSeekCurrent(amount)
-    }
-    if(type === 'target') {
-      props.seekTo(amount)
-      props.forceSetSeekCurrentTo(amount)
-    }
+  const handleSeek = useCallback((amount: number) => {
+    props.seekTo(amount)
+    props.forceSetSeekCurrentTo(amount)
   }, [props])
   const handlePause = useCallback(() => {
     props.pause(!props.isPaused)
@@ -119,9 +113,7 @@ export const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: Dispatch) => ({
   toggleNowPlaying: dispatch.player.toggleNowPlaying,
-  seek: dispatch.player.seek,
   pause: dispatch.player.togglePause,
-  forceSetSeekCurrent: dispatch.player.setSeek,
   seekTo: dispatch.player.seekTo,
   forceSetSeekCurrentTo: dispatch.player.setSeekTo
 })
