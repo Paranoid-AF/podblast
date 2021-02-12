@@ -105,7 +105,7 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
   }
 
   renderControl = () => {
-    if(this.props.contentPlaying.url !== "") {
+    if(this.props.contentPlaying.ready) {
       return (
         <div className="control-navi-container">
           <div className="control-gradient"></div>
@@ -124,7 +124,7 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
       }
     })
     return (
-      <div className={this.props.contentPlaying.url !== "" ? "navi nowplaying" : "navi"}>
+      <div className={this.props.contentPlaying.ready ? "navi nowplaying" : "navi"}>
         <Panel
           items={routes}
           current={currentItemKey}
@@ -136,7 +136,7 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
           onSort={this.handlePanelSort}
           onSortDone={this.handleSortDone}
           onClick={this.handleClick}
-          withDivider={this.props.contentPlaying.url !== ''}
+          withDivider={this.props.contentPlaying.ready}
         />
         {this.renderControl()}
       </div>

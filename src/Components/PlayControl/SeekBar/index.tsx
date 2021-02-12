@@ -41,7 +41,18 @@ function getDragFactor(posY: number, baseLine: number): number {
 
 function SeekBar(props: Props) {
   const [seeking, setSeeking] = useState(false)
-  const playedRatio = (props.seekCurrent / props.seekTotal * 100).toString()
+  const currentTime = useRef<number | null>(null)
+  let seekCurrent = props.seekCurrent
+  if(currentTime.current !== null) {
+    seekCurrent = currentTime.current
+  }
+  if(seekCurrent < 0) {
+    seekCurrent = 0
+  }
+  if(seekCurrent > props.seekTotal) {
+    seekCurrent = props.seekTotal
+  }
+  const playedRatio = (seekCurrent / props.seekTotal * 100).toString()
   const loadedRatio = (props.seekLoaded / props.seekTotal * 100).toString()
   const dotSize = seeking ? dotSizeSeeking : dotSizeNormal
   const barRef = useRef<React.RefObject<HTMLDivElement>>(React.createRef())
@@ -49,11 +60,17 @@ function SeekBar(props: Props) {
   const baseLine = useRef<number>(-1)
   const lastX = useRef<number>(-1)
   const lastDragFator = useRef<number>(-1)
+  
+  const getDeltaSec = useCallback((clientX: number, dragFactor: number) => {
+    const deltaX = clientX - lastX.current
+    const deltaRatio = deltaX / barWidth.current * dragFactor
+    const deltaSec = deltaRatio * props.seekTotal
+    return deltaSec
+  }, [props.seekTotal])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const dragFactor = getDragFactor(e.clientY, baseLine.current)
-    const deltaX = e.clientX - lastX.current
-    const deltaRatio = deltaX / barWidth.current * dragFactor
+    const deltaSec = getDeltaSec(e.clientX, dragFactor)
     if(dragFactor !== lastDragFator.current) {
       message.info({
         content: `Seeking with ${dragFactor}x factor`,
@@ -61,18 +78,25 @@ function SeekBar(props: Props) {
         duration: 0
       })
     }
-    props.onChange(deltaRatio * props.seekTotal)
+    if(currentTime.current !== null) {
+      currentTime.current = currentTime.current + deltaSec
+    }
+    props.onChange(deltaSec, 'delta')
     lastX.current = e.clientX
     lastDragFator.current = dragFactor
-  }, [props])
+  }, [props, getDeltaSec])
 
   const handleMouseUp = useCallback((e: MouseEvent) => {
+    if(currentTime.current !== null) {
+      props.onChange(currentTime.current, 'target')
+    }
     document.removeEventListener('mouseup', handleMouseUp)
     document.removeEventListener('mousemove', handleMouseMove)
+    currentTime.current = null
     setSeeking(false)
     lastDragFator.current = -1
     message.destroy(messageKey)
-  }, [setSeeking, handleMouseMove])
+  }, [setSeeking, handleMouseMove, props])
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     const barInfo = barRef.current.current?.getBoundingClientRect()
@@ -83,11 +107,12 @@ function SeekBar(props: Props) {
     }
     if(barWidth.current > 0 && baseLine.current > 0) {
       lastX.current = e.clientX
+      currentTime.current = props.seekCurrent
       document.addEventListener('mouseup', handleMouseUp)
       document.addEventListener('mousemove', handleMouseMove)
       setSeeking(true)
     }
-  }, [setSeeking, handleMouseUp, handleMouseMove])
+  }, [setSeeking, handleMouseUp, handleMouseMove, props.seekCurrent])
 
 
   return (
@@ -110,7 +135,7 @@ function SeekBar(props: Props) {
         ></div>
       </div>
       <div className="progress">
-        <span className="start">{convertTimeToString(props.seekCurrent)}</span>
+        <span className="start">{convertTimeToString(seekCurrent)}</span>
         <span className="end">{convertTimeToString(props.seekTotal)}</span>
       </div>
     </div>
@@ -123,7 +148,7 @@ interface Props {
   seekCurrent: number,
   seekTotal: number,
   seekLoaded: number,
-  onChange: (targetSeekCurrent: number) => any
+  onChange: (amount: number, type: 'target' | 'delta') => any
 }
 
 export default SeekBar

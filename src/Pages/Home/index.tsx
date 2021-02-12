@@ -1,7 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { Dispatch } from '../../common/rematch'
 import PageBase from '../../Components/PageBase'
 
-function Home() {
+function Home(props: DispatchProps) {
   return (
     <PageBase title="Podchat">
       <React.Fragment>
@@ -12,12 +14,7 @@ function Home() {
         <button
           onClick={
             () => {
-              window.electron.invoke('player', {
-                action: 'setParams',
-                payload: {
-                  url: 'https://www.youtube.com/watch?v=DLzxrzFCyOs'
-                }
-              })
+              props.startPlaying('https://alioss.gcores.com/uploads/audio/31ef5cc9-e381-4dbb-8c24-da4e8283c2b0.mp3')
             }
           }
         >
@@ -29,4 +26,11 @@ function Home() {
   )
 }
 
-export default Home
+
+const mapDispatch = (dispatch: Dispatch) => ({
+  startPlaying: dispatch.player.startPlaying
+})
+
+type DispatchProps = ReturnType<typeof mapDispatch>
+
+export default connect(null, mapDispatch)(Home)

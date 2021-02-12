@@ -1,4 +1,4 @@
-import { BackwardOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
+import { BackwardOutlined, CaretRightOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
@@ -45,12 +45,21 @@ function PlayControl(props: StateProps & DispatchProps) {
       </div>
     )
   }, [isExpanded, handleHover, props, expandCapsule])
-  const handleSeek = useCallback((targetSeekCurrent: number) => {
-    props.seek(targetSeekCurrent)
+  const handleSeek = useCallback((amount: number, type: 'target' | 'delta') => {
+    if(type === 'delta') {
+      props.seek(amount)
+      props.forceSetSeekCurrent(amount)
+    }
+    if(type === 'target') {
+      props.seekTo(amount)
+      props.forceSetSeekCurrentTo(amount)
+    }
+  }, [props])
+  const handlePause = useCallback(() => {
+    props.pause(!props.isPaused)
   }, [props])
 
-
-  if(props.contentPlaying.url === '') {
+  if(!props.contentPlaying.ready) {
     return null
   }
 
@@ -83,7 +92,9 @@ function PlayControl(props: StateProps & DispatchProps) {
             <button className="collpase"><MenuFoldOutlined /></button>
           </div>
           <button className="ward"><BackwardOutlined /></button>
-          <button className="pause"><PauseOutlined /></button>
+          <button className="pause" onClick={handlePause}>
+            { !props.isPaused ? <PauseOutlined /> : <CaretRightOutlined /> }
+          </button>
           <button className="ward"><ForwardOutlined /></button>
           <SeekBar
             episodeTitle={props.contentPlaying.title}
@@ -102,12 +113,17 @@ function PlayControl(props: StateProps & DispatchProps) {
 
 export const mapState = (state: RootState) => ({
   showNowPlaying: state.player.showNowPlaying,
-  contentPlaying: state.player.playing
+  contentPlaying: state.player.playing,
+  isPaused: state.player.playing.paused
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
   toggleNowPlaying: dispatch.player.toggleNowPlaying,
-  seek: dispatch.player.seek
+  seek: dispatch.player.seek,
+  pause: dispatch.player.togglePause,
+  forceSetSeekCurrent: dispatch.player.setSeek,
+  seekTo: dispatch.player.seekTo,
+  forceSetSeekCurrentTo: dispatch.player.setSeekTo
 })
 
 type StateProps = ReturnType<typeof mapState>
