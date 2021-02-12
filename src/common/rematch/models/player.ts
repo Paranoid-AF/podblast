@@ -53,13 +53,23 @@ export const player = createModel<RootModel>()({
         }
       }
     },
-    setProgress(state: typeof initState, payload: { played: number, loaded: number }) {
+    setProgress(state: typeof initState, payload: { played: number, loaded?: number }) {
+      let result: Partial<(typeof state)['playing']> = {}
+      if(typeof payload.loaded !== 'undefined') {
+        result = {
+          seekLoaded: payload.loaded,
+          seekCurrent: payload.played
+        }
+      } else {
+        result = {
+          seekCurrent: payload.played
+        }
+      }
       return {
         ...state,
         playing: {
           ...state.playing,
-          seekLoaded: payload.loaded,
-          seekCurrent: payload.played
+          ...result
         }
       }
     },
@@ -81,10 +91,10 @@ export const player = createModel<RootModel>()({
         ignoreProgress: true
       }
     },
-    resetIgnorance(state: typeof initState) {
+    setIgnorance(state: typeof initState, payload: boolean) {
       return {
         ...state,
-        ignoreProgress: false
+        ignoreProgress: payload
       }
     },
     setUrl(state: typeof initState, payload: string) {
@@ -144,5 +154,5 @@ function seekTo_Debounced(timeBySec: number) {
       action: 'seekTo',
       payload: timeBySec
     })
-  }, 100)
+  }, 300)
 }

@@ -1,5 +1,6 @@
 import { store } from '../../rematch'
 import { EventTypes } from '../../constants/enum'
+import { message } from 'antd'
 const events: Record<string, (...args: Array<any>) => void> = {}
 
 events['show_state_change'] = (event, payload: boolean) => {
@@ -16,10 +17,17 @@ events['player_event'] = (event, payload: PlayerEvent) => {
         store.dispatch.player.setDuration(payload.payload)
       }
       break
+    case EventTypes.ON_SEEK:
+      if(typeof payload.payload === 'number') {
+        store.dispatch.player.setProgress({
+          played: payload.payload
+        })
+      }
+      break
     case EventTypes.ON_PROGRESS:
       const shouldIgnore = store.getState()['player']['ignoreProgress']
       if(shouldIgnore) {
-        store.dispatch.player.resetIgnorance()
+        store.dispatch.player.setIgnorance(false)
         return
       }
       if(typeof payload.payload === 'object') {
@@ -28,6 +36,18 @@ events['player_event'] = (event, payload: PlayerEvent) => {
           played: payload.payload['playedSeconds']
         })
       }
+      break
+    case EventTypes.ON_PAUSE:
+      store.dispatch.player.setPaused(true)
+      break
+    case EventTypes.ON_PLAY:
+      store.dispatch.player.setPaused(false)
+      break
+    case EventTypes.ON_ENDED:
+      // TODO: Play next episode in playlist.
+      break
+    case EventTypes.ON_ERROR:
+      message.error('Failed to load media source.')
       break
   }
 }
