@@ -49,6 +49,12 @@ events['player_event'] = (event, payload: PlayerEvent) => {
     case EventTypes.ON_ERROR:
       message.error('Failed to load media source.')
       break
+    case EventTypes.ON_BUFFER:
+      store.dispatch.player.setBuffering(true)
+      break
+    case EventTypes.ON_BUFFEREND:
+      store.dispatch.player.setBuffering(false)
+      break
   }
 }
 

@@ -1,3 +1,4 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import React, { useCallback, useRef, useState } from 'react'
 import './index.less'
@@ -132,7 +133,13 @@ function SeekBar(props: Props) {
             height: dotSize
           }}
           onMouseDown={handleMouseDown}
-        ></div>
+        >
+          {
+            props.loading ?
+            <div className="loading-indicator"><LoadingOutlined /></div> :
+            null
+          }
+        </div>
       </div>
       <div className="progress">
         <span className="start">{convertTimeToString(seekCurrent)}</span>
@@ -148,6 +155,7 @@ interface Props {
   seekCurrent: number,
   seekTotal: number,
   seekLoaded: number,
+  loading: boolean,
   onChange: (amount: number) => any
 }
 

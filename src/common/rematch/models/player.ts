@@ -14,7 +14,8 @@ const initState = {
     seekTotal: 7130,
     seekLoaded: 6216,
     cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3",
-    muted: false
+    muted: false,
+    buffering: false
   },
   ignoreProgress: false
 }
@@ -28,6 +29,15 @@ export const player = createModel<RootModel>()({
       return {
         ...state,
         playerVisible: payload
+      }
+    },
+    setBuffering(state: typeof initState, payload: boolean) {
+      return {
+        ...state,
+        playing: {
+          ...state.playing,
+          buffering: payload
+        }
       }
     },
     toggleNowPlaying(state: typeof initState, payload: boolean) {

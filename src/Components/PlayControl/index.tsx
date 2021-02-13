@@ -126,6 +126,7 @@ function PlayControl(props: StateProps & DispatchProps) {
             seekCurrent={props.contentPlaying.seekCurrent}
             seekTotal={props.contentPlaying.seekTotal}
             seekLoaded={props.contentPlaying.seekLoaded}
+            loading={props.contentPlaying.buffering}
             onChange={handleSeek}
           />
           <VolumeHandle 
