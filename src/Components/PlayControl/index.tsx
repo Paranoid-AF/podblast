@@ -1,18 +1,15 @@
 import { BackwardOutlined, CaretRightOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
-import { FaVolumeDown, FaVolumeMute } from 'react-icons/fa'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
 import Item from '../Navi/Panel/Item'
 import ScrollingText from './ScrollingText'
 import SeekBar from './SeekBar'
 import './index.less'
-import { Slider } from 'antd'
-
+import VolumeHandle from './VolumeHandle'
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
-  const [showVolumeHandle, toggleVolumeHandle] = useState(false)
   const handleHover = useCallback((e: React.MouseEvent) => {
     setExpanded(true)
   }, [setExpanded])
@@ -26,6 +23,32 @@ function PlayControl(props: StateProps & DispatchProps) {
   }, [props])
   const collapseCapsule = useCallback((e: React.MouseEvent) => {
     props.toggleNowPlaying(false)
+  }, [props])
+  const handleSeek = useCallback((amount: number) => {
+    props.seekTo(amount)
+    props.forceSetSeekCurrentTo(amount)
+  }, [props])
+  const handlePause = useCallback(() => {
+    props.pause(!props.isPaused)
+  }, [props])
+  const handleTogglePIP = useCallback(() => {
+    props.togglePIP(!props.showingPIP)
+  }, [props])
+  const handleMuteChange = useCallback((value: boolean) => {
+    props.toggleMuted(value)
+  }, [props])
+  const handleVolumeChange = useCallback((value: number) => {
+    props.setVolume(value)
+  }, [props])
+  const handleVolumeAfterChange = useCallback((value: number) => {
+    props.setConfig({
+      key: 'player.volume',
+      value: value
+    })
+    props.setVolume(value)
+  }, [props])
+  useEffect(() => {
+    props.setVolume(props.config['player.volume'])
   }, [props])
   const renderSpin = useCallback((hidden = false) => {
     let spinClassName = 'control-spin'
@@ -48,57 +71,6 @@ function PlayControl(props: StateProps & DispatchProps) {
       </div>
     )
   }, [isExpanded, handleHover, props, expandCapsule])
-  const handleSeek = useCallback((amount: number) => {
-    props.seekTo(amount)
-    props.forceSetSeekCurrentTo(amount)
-  }, [props])
-  const handlePause = useCallback(() => {
-    props.pause(!props.isPaused)
-  }, [props])
-  const handleVolumeMouseUp = useCallback(() => {
-    toggleVolumeHandle(false)
-    document.removeEventListener('mouseup', handleVolumeMouseUp)
-  }, [toggleVolumeHandle])
-  const isChangingVolume = useRef(false)
-  const handleVolumeMouseHover = useCallback((e: React.MouseEvent) => {
-    toggleVolumeHandle(true)
-  }, [toggleVolumeHandle])
-  const handleVolumeMouseLeave = useCallback((e: React.MouseEvent) => {
-    if(!isChangingVolume.current) {
-      toggleVolumeHandle(false)
-    } else {
-      document.addEventListener('mouseup', handleVolumeMouseUp)
-    }
-  }, [toggleVolumeHandle, handleVolumeMouseUp])
-  const handleVolumeMouseDown = useCallback((e: React.MouseEvent) => {
-    isChangingVolume.current = true
-  }, [])
-  const volumeConf: number = props.config['player.volume']
-  const [tempVolume, setTempVolume] = useState(-1)
-  const handleVolumeChange = useCallback((value: number) => {
-    const targetValue = value / 100
-    setTempVolume(targetValue)
-    props.setVolume(targetValue)
-  }, [props])
-  const handleVolumeAfterChange = useCallback((value: number) => {
-    const targetValue = value / 100
-    setTempVolume(-1)
-    props.setConfig({
-      key: 'player.volume',
-      value: targetValue
-    })
-    props.setVolume(targetValue)
-  }, [props])
-  const volume = tempVolume >= 0 ? tempVolume : volumeConf
-  useEffect(() => {
-    props.setVolume(volumeConf)
-  }, [props, volumeConf])
-  const handleMute = useCallback(() => {
-    props.toggleMuted(!props.contentPlaying.muted)
-  }, [props])
-  const handleTogglePIP = useCallback(() => {
-    props.togglePIP(!props.showingPIP)
-  }, [props])
 
   if(!props.contentPlaying.ready) {
     return null
@@ -145,32 +117,13 @@ function PlayControl(props: StateProps & DispatchProps) {
             seekLoaded={props.contentPlaying.seekLoaded}
             onChange={handleSeek}
           />
-          <div className="volume show-when-open"
-            onMouseEnter={handleVolumeMouseHover}
-            onMouseLeave={handleVolumeMouseLeave}
-            onMouseDown={handleVolumeMouseDown}
-          >
-            <div className="volume-control"
-              style={{
-                visibility: showVolumeHandle ? 'visible' : 'hidden'
-              }}
-            >
-              <div className="decoration"></div>
-              <Slider
-                vertical
-                value={volume * 100}
-                onChange={handleVolumeChange}
-                onAfterChange={handleVolumeAfterChange}
-              />
-            </div>
-            <button className="volume-btn" onClick={handleMute}>
-              {
-                props.contentPlaying.muted ?
-                <FaVolumeMute /> :
-                <FaVolumeDown />
-              }
-            </button>
-          </div>
+          <VolumeHandle 
+            volume={props.config['player.volume']}
+            onVolumeChange={handleVolumeChange}
+            onVolumeAfterChange={handleVolumeAfterChange}
+            muted={props.contentPlaying.muted}
+            onMuteChange={handleMuteChange}
+          />
           <button
             className="pip show-when-open"
             style={{
