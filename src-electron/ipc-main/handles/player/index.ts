@@ -1,4 +1,5 @@
 import { screen } from 'electron'
+import { config } from '../../../confmgr'
 import { sendMessage as sendMessage_Player } from './sendMessage'
 import playerWindow from '../../../windows/player'
 import { pipMinimumSize } from '../../../constants/value'
@@ -74,20 +75,21 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
     case 'setProxy':
       const extensionName = payload.payload['extensionName']
       return (async () => {
-        if(extensionName === '') {
-          return
-        }
-        const extensionConf = await getExtensionConfig(extensionName)
-        if(!extensionConf) {
-          return
-        }
-        const proxyType = (extensionConf.proxy ?? 'useGlobal') as 'useGlobal' | 'enabled' | 'disabled'
         let proxyAddress = ''
-        if(proxyType === 'enabled') {
-          proxyAddress = extensionConf.proxyAddress ?? ''
+        if(config['network.proxyEnabled'] === 'enabled') {
+          proxyAddress = config['network.proxyAddress'] ?? ''
         }
-        if(proxyType === 'useGlobal') {
-          proxyAddress = process.env['globalProxyAddress'] ?? ''
+        if(extensionName !== '') {
+          const extensionConf = await getExtensionConfig(extensionName)
+          if(extensionConf) {
+            const proxyType = (extensionConf.proxy ?? 'useGlobal') as 'useGlobal' | 'enabled' | 'disabled'
+            if(proxyType === 'enabled') {
+              proxyAddress = extensionConf.proxyAddress ?? ''
+            }
+            if(proxyType === 'disabled') {
+              proxyAddress = ''
+            }
+          }
         }
         if(proxyAddress !== '') {
           const pacResult = proxyAddress.match(matchPac)

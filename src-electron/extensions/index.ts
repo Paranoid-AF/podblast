@@ -15,12 +15,16 @@ export let extensionProcess: ChildProcess | null = null
 export const startExtensionProcess = () => {
   const locale = app.getLocale()
   const extPath = extensionPath
+  let proxyAddress = ''
+  if(config['network.proxyEnabled'] === 'enabled') {
+    proxyAddress = config['network.proxyAddress'] ?? ''
+  }
   extensionProcess = child_process.fork(path.join(__dirname, './child-process/index.js'), [], {
     env: {
       locale,
       dev: isDev.toString(),
       extPath,
-      globalProxyAddress: config['network.proxyAddress'] ?? ''
+      globalProxyAddress: proxyAddress
     } as any
   })
   buildIpcBridge()

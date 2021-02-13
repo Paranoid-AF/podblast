@@ -19,7 +19,7 @@ app.on('ready', () => {
       dialog.showMessageBoxSync({
         type: 'warning',
         title: 'Database Error',
-        message: 'Unable to establish connection to local database, at: \n' + profilePath
+        message: 'Unable to establish connection to local database or the database is broken, at: \n' + profilePath
       })
       app.quit()
     })
