@@ -9,20 +9,14 @@ function VolumeHandle(props: Props) {
   const [tempVolume, setTempVolume] = useState(-1)
   const volume = tempVolume >= 0 ? tempVolume : props.volume
   const isChangingVolume = useRef(false)
-  const handleVolumeMouseUp = useCallback(() => {
-    toggleVolumeHandle(false)
-    document.removeEventListener('mouseup', handleVolumeMouseUp)
-  }, [toggleVolumeHandle])
   const handleVolumeMouseHover = useCallback((e: React.MouseEvent) => {
     toggleVolumeHandle(true)
   }, [toggleVolumeHandle])
   const handleVolumeMouseLeave = useCallback((e: React.MouseEvent) => {
     if(!isChangingVolume.current) {
       toggleVolumeHandle(false)
-    } else {
-      document.addEventListener('mouseup', handleVolumeMouseUp)
     }
-  }, [toggleVolumeHandle, handleVolumeMouseUp])
+  }, [toggleVolumeHandle])
   const handleVolumeMouseDown = useCallback((e: React.MouseEvent) => {
     isChangingVolume.current = true
   }, [])
@@ -36,6 +30,8 @@ function VolumeHandle(props: Props) {
   const handleVolumeAfterChange = useCallback((value: number) => {
     const targetValue = value / 100
     setTempVolume(-1)
+    toggleVolumeHandle(false)
+    isChangingVolume.current = false
     if(props.onVolumeAfterChange) {
       props.onVolumeAfterChange(targetValue)
     }
