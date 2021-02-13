@@ -73,7 +73,7 @@ function PlayControl(props: StateProps & DispatchProps) {
           {
             isExpanded ?
             (
-              <ScrollingText width={132} pixelsPerSecond={45} whiteSpaceWidth={10}>
+              <ScrollingText width={132} pixelsPerSecond={45} whiteSpaceWidth={15}>
                 <span className="info-title">{props.contentPlaying.title}</span>
                 <span className="info-channel">{props.contentPlaying.channel}</span>
               </ScrollingText>

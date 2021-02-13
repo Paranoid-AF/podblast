@@ -14,7 +14,7 @@ function ScrollingText(props: Props) {
     if(scroller) {
       const inner = scroller.querySelector('.wrapped')
       if(inner) {
-        const childWidth = (inner.querySelector('span')?.getBoundingClientRect().width ?? 0) + props.whiteSpaceWidth
+        const childWidth = (inner.querySelector('span.children')?.getBoundingClientRect().width ?? 0) + props.whiteSpaceWidth
         currentPos.current += props.pixelsPerSecond * (scrollInterval / 1000)
         if(currentPos.current > childWidth || !shouldScroll) {
           currentPos.current = 0
@@ -32,7 +32,7 @@ function ScrollingText(props: Props) {
     if(scroller) {
       const inner = scroller.querySelector('.wrapped')
       if(inner) {
-        const childWidth = (inner.querySelector('span')?.getBoundingClientRect().width ?? 0) + props.whiteSpaceWidth
+        const childWidth = (inner.querySelector('span.children')?.getBoundingClientRect().width ?? 0) + props.whiteSpaceWidth
         setShouldScroll(inner.getBoundingClientRect().width < childWidth)
       }
     }
@@ -40,13 +40,14 @@ function ScrollingText(props: Props) {
   return (
     <div className="scrolling-text" style={{ width: props.width }} ref={boxRef.current}>
       <div className="wrapped">
-        <span>{props.children}</span>
+        <span className="whitespace" style={{ margin: `0 ${props.whiteSpaceWidth / 2}px` }}></span>
+        <span className="children">{props.children}</span>
         {
           shouldScroll ?
           (
             <Fragment>
               <span className="whitespace" style={{ margin: `0 ${props.whiteSpaceWidth / 2}px` }}></span>
-              <span>{props.children}</span>
+              <span className="children">{props.children}</span>
             </Fragment>
           )
           : null
