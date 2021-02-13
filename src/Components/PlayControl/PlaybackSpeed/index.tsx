@@ -8,7 +8,7 @@ function PlaybackSpeed(props: Props) {
   const [visible, setVisibility] = useState(false)
   const handleChange = useCallback((e) => {
     props.onChange(e.key)
-  }, [setVisibility])
+  }, [props])
   const handleVisibleChange = useCallback((flag: boolean) => {
     setVisibility(flag)
   }, [setVisibility])
