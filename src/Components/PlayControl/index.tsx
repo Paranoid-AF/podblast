@@ -92,7 +92,7 @@ function PlayControl(props: StateProps & DispatchProps) {
   const volume = tempVolume >= 0 ? tempVolume : volumeConf
   useEffect(() => {
     props.setVolume(volumeConf)
-  }, [props])
+  }, [props, volumeConf])
   const handleMute = useCallback(() => {
     props.toggleMuted(!props.contentPlaying.muted)
   }, [props])
