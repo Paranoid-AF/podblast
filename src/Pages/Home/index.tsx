@@ -14,6 +14,7 @@ function Home(props: DispatchProps) {
         <button
           onClick={
             () => {
+              props.setUpUserAgent(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15`)
               props.setUpProxy('gcores')
                 .then(() => {
                   props.startPlaying('https://alioss.gcores.com/uploads/audio/f66f9880-d1f8-4166-942c-af8f66383040.mp3')
@@ -32,7 +33,8 @@ function Home(props: DispatchProps) {
 
 const mapDispatch = (dispatch: Dispatch) => ({
   startPlaying: dispatch.player.startPlaying,
-  setUpProxy: dispatch.player.setUpProxy
+  setUpProxy: dispatch.player.setUpProxy,
+  setUpUserAgent: dispatch.player.setUpUserAgent
 })
 
 type DispatchProps = ReturnType<typeof mapDispatch>

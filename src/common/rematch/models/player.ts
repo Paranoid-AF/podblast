@@ -219,6 +219,12 @@ export const player = createModel<RootModel>()({
           extensionName
         }
       })
+    },
+    async setUpUserAgent(userAgent: string) {
+      await window.electron.invoke('player', {
+        action: 'setUserAgent',
+        payload: userAgent
+      })
     }
   })
 })

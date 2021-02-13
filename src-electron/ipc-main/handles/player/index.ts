@@ -1,6 +1,7 @@
 import { screen } from 'electron'
 import { config } from '../../../confmgr'
 import { sendMessage as sendMessage_Player } from './sendMessage'
+import mainWindow from '../../../windows/main'
 import playerWindow from '../../../windows/player'
 import { pipMinimumSize } from '../../../constants/value'
 import  {sendMessage as sendMessage_Main } from '../../events/common'
@@ -115,6 +116,15 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
           }
         }
       })()
+    case 'setUserAgent':
+      if(playerWindow.target) {
+        let userAgent: string = payload.payload
+        if(userAgent === '' && mainWindow.target) {
+          userAgent = mainWindow.target.webContents.getUserAgent()
+        }
+        playerWindow.target.webContents.setUserAgent(userAgent)
+      }
+      break
   }
 }
 
