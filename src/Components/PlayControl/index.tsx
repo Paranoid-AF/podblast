@@ -1,18 +1,16 @@
 import { BackwardOutlined, CaretRightOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
 import Item from '../Navi/Panel/Item'
 import ScrollingText from './ScrollingText'
 import SeekBar from './SeekBar'
-import './index.less'
 import VolumeHandle from './VolumeHandle'
+import PlaybackSpeed from './PlaybackSpeed'
+import './index.less'
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
-  useEffect(() => {
-    props.setVolume(props.config['player.volume'])
-  }, [props])
   const handleHover = useCallback((e: React.MouseEvent) => {
     setExpanded(true)
   }, [setExpanded])
@@ -129,6 +127,7 @@ function PlayControl(props: StateProps & DispatchProps) {
             loading={props.contentPlaying.buffering}
             onChange={handleSeek}
           />
+          <PlaybackSpeed speed={props.config['player.playbackSpeed']} onChange={props.changePlaybackSpeed}/>
           <VolumeHandle 
             volume={props.config['player.volume']}
             onVolumeChange={handleVolumeChange}
@@ -166,7 +165,8 @@ const mapDispatch = (dispatch: Dispatch) => ({
   setConfig: dispatch.app.setConfig,
   setVolume: dispatch.player.setVolume,
   toggleMuted: dispatch.player.toggleMuted,
-  togglePIP: dispatch.player.togglePIP
+  togglePIP: dispatch.player.togglePIP,
+  changePlaybackSpeed: dispatch.player.changePlaybackSpeed
 })
 
 type StateProps = ReturnType<typeof mapState>

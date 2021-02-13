@@ -2,7 +2,8 @@ export const defaultConfig: AllConfig = {
   'network.proxyEnabled': 'disabled',
   'player.volume': 0.6,
   'player.forwardTime': 10,
-  'player.backwardTime': 5
+  'player.backwardTime': 5,
+  'player.playbackSpeed': 1
 }
 
 export type AllConfig = (
@@ -14,7 +15,8 @@ export type AllConfig = (
 export interface PlayerConfig {
   'player.volume': number,
   'player.forwardTime': number,
-  'player.backwardTime': number
+  'player.backwardTime': number,
+  'player.playbackSpeed': number
 }
 
 export interface FileConfig {

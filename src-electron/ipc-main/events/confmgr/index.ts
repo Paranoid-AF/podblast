@@ -13,14 +13,14 @@ const registerEvents = () => {
 export function updateConfig(prop?: keyof AllConfig, val?: valueof<AllConfig>) {
   const result = getConfigSummary()
   result.data = (() => {
-    const temp: Partial<AllConfig> = { }
+    const temp: Record<string, any> = { }
     let i: keyof AllConfig
     for(i in result.data) {
-      temp[i] = result.data[i] as any
+      temp[i]= result.data[i] as any
     }
     return temp
   })()
-  const tempMerge: Partial<AllConfig> = { }
+  const tempMerge: Record<string, any> = { }
   if(typeof prop !== 'undefined' && typeof val !== 'undefined') {
     const value: any = val
     tempMerge[prop] = value

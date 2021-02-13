@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core'
+import { store } from '..'
 import { RootModel } from './index'
 
 const initState = {
@@ -134,6 +135,15 @@ export const player = createModel<RootModel>()({
           muted: payload
         }
       }
+    },
+    resetPlayer(state: typeof initState, payload: Partial<typeof initState['playing']>) {
+      return {
+        ...state,
+        playing: {
+          ...initState.playing,
+          ...payload
+        }
+      }
     }
   },
   effects: (dispatch: any) => ({
@@ -146,12 +156,20 @@ export const player = createModel<RootModel>()({
       dispatch.player.setSeekTo(target)
     },
     async startPlaying(url: string) {
+      const allState = store.getState()
+      const volume = allState.app.config.data['player.volume']
+      const playbackSpeed = allState.app.config.data['player.playbackSpeed']
       await window.electron.invoke('player', {
         action: 'setParams',
         payload: {
           url: url,
-          playing: true
+          playing: true,
+          volume: volume,
+          playbackRate: playbackSpeed
         }
+      })
+      dispatch.player.resetPlayer({
+        url
       })
       dispatch.player.setPaused(false)
       dispatch.player.setUrl(url)
@@ -180,6 +198,18 @@ export const player = createModel<RootModel>()({
         payload: {
           muted: value
         }
+      })
+    },
+    async changePlaybackSpeed(value: number) {
+      window.electron.invoke('player', {
+        action: 'setParams',
+        payload: {
+          playbackRate: value
+        }
+      })
+      store.dispatch.app.setConfig({
+        key: 'player.playbackSpeed',
+        value: value
       })
     }
   })

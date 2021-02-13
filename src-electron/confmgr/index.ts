@@ -7,7 +7,7 @@ import { ConfigStore } from '../data/entity/ConfigStore'
 const currentConfig: Partial<AllConfig> = { }
 
 export async function fetchConfig() {
-  const dbContent: Partial<AllConfig> = { }
+  const dbContent: Record<string, any> = { }
   if(connection.current) {
     const result = await connection.current.getRepository(ConfigStore).find()
     result.forEach(val => {
@@ -29,7 +29,9 @@ export const config = new Proxy(currentConfig,
       if(typeof prop !== 'string' || !connection.current) {
         return false
       }
+      const targetObj: Record<string, any> = obj
       const newConfigSub = new ConfigStore()
+      targetObj[prop] = val
       newConfigSub.key = prop
       newConfigSub.value = JSON.stringify({
         value: val

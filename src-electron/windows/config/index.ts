@@ -10,7 +10,7 @@ const windowConf: BrowserWindowConstructorOptions = {
     preload: path.join(__dirname, '../../ipc-renderer/index.js'),
     contextIsolation: true
   },
-  minWidth: 650,
+  minWidth: 960,
   minHeight: 400,
   backgroundColor: '#f9f9fa'
 }
