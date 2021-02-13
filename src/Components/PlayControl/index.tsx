@@ -10,6 +10,9 @@ import VolumeHandle from './VolumeHandle'
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
+  useEffect(() => {
+    props.setVolume(props.config['player.volume'])
+  }, [props])
   const handleHover = useCallback((e: React.MouseEvent) => {
     setExpanded(true)
   }, [setExpanded])
@@ -26,7 +29,6 @@ function PlayControl(props: StateProps & DispatchProps) {
   }, [props])
   const handleSeek = useCallback((amount: number) => {
     props.seekTo(amount)
-    props.forceSetSeekCurrentTo(amount)
   }, [props])
   const handlePause = useCallback(() => {
     props.pause(!props.isPaused)
@@ -47,8 +49,17 @@ function PlayControl(props: StateProps & DispatchProps) {
     })
     props.setVolume(value)
   }, [props])
-  useEffect(() => {
-    props.setVolume(props.config['player.volume'])
+  const playerSeek = useCallback((amount: number) => {
+    const target = props.contentPlaying.seekCurrent + amount
+    props.seekTo(target)
+  }, [props])
+  const handleFastForward = useCallback(() => {
+    const targetTime = props.config['player.forwardTime']
+    playerSeek(targetTime)
+  }, [props])
+  const handleFastBackward = useCallback(() => {
+    const targetTime = -props.config['player.backwardTime']
+    playerSeek(targetTime)
   }, [props])
   const renderSpin = useCallback((hidden = false) => {
     let spinClassName = 'control-spin'
@@ -104,11 +115,11 @@ function PlayControl(props: StateProps & DispatchProps) {
           <div className="control-collpase" onClick={collapseCapsule}>
             <button className="collpase"><MenuFoldOutlined /></button>
           </div>
-          <button className="ward"><BackwardOutlined /></button>
+          <button className="ward" onClick={handleFastBackward}><BackwardOutlined /></button>
           <button className="pause" onClick={handlePause}>
             { !props.isPaused ? <PauseOutlined /> : <CaretRightOutlined /> }
           </button>
-          <button className="ward"><ForwardOutlined /></button>
+          <button className="ward" onClick={handleFastForward}><ForwardOutlined /></button>
           <SeekBar
             episodeTitle={props.contentPlaying.title}
             channel={props.contentPlaying.channel}
@@ -151,7 +162,6 @@ const mapDispatch = (dispatch: Dispatch) => ({
   toggleNowPlaying: dispatch.player.toggleNowPlaying,
   pause: dispatch.player.togglePause,
   seekTo: dispatch.player.seekTo,
-  forceSetSeekCurrentTo: dispatch.player.setSeekTo,
   setConfig: dispatch.app.setConfig,
   setVolume: dispatch.player.setVolume,
   toggleMuted: dispatch.player.toggleMuted,
