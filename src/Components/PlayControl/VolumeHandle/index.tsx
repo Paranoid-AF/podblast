@@ -2,6 +2,8 @@ import React, { useCallback, useRef, useState } from 'react'
 import { FaVolumeDown, FaVolumeMute } from 'react-icons/fa'
 import { Slider } from 'antd'
 
+import './index.less'
+
 function VolumeHandle(props: Props) {
   const [showVolumeHandle, toggleVolumeHandle] = useState(false)
   const [tempVolume, setTempVolume] = useState(-1)
