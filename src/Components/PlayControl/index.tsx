@@ -96,6 +96,9 @@ function PlayControl(props: StateProps & DispatchProps) {
   const handleMute = useCallback(() => {
     props.toggleMuted(!props.contentPlaying.muted)
   }, [props])
+  const handleTogglePIP = useCallback(() => {
+    props.togglePIP(!props.showingPIP)
+  }, [props])
 
   if(!props.contentPlaying.ready) {
     return null
@@ -168,7 +171,15 @@ function PlayControl(props: StateProps & DispatchProps) {
               }
             </button>
           </div>
-          <button className="pip show-when-open"><GatewayOutlined /></button>
+          <button
+            className="pip show-when-open"
+            style={{
+              opacity: props.showingPIP ? 1 : 0.5
+            }}
+            onClick={handleTogglePIP}
+          >
+            <GatewayOutlined />
+          </button>
         </div>
       </div>
     </div>
@@ -179,7 +190,8 @@ export const mapState = (state: RootState) => ({
   showNowPlaying: state.player.showNowPlaying,
   contentPlaying: state.player.playing,
   isPaused: state.player.playing.paused,
-  config: state.app.config.data
+  config: state.app.config.data,
+  showingPIP: state.player.playerVisible
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
@@ -189,7 +201,8 @@ const mapDispatch = (dispatch: Dispatch) => ({
   forceSetSeekCurrentTo: dispatch.player.setSeekTo,
   setConfig: dispatch.app.setConfig,
   setVolume: dispatch.player.setVolume,
-  toggleMuted: dispatch.player.toggleMuted
+  toggleMuted: dispatch.player.toggleMuted,
+  togglePIP: dispatch.player.togglePIP
 })
 
 type StateProps = ReturnType<typeof mapState>

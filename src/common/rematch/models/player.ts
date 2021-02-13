@@ -127,6 +127,11 @@ export const player = createModel<RootModel>()({
     }
   },
   effects: (dispatch: any) => ({
+    async togglePIP(payload: boolean) {
+      window.electron.invoke('player', {
+        action: 'togglePlayerWindow', payload: payload
+      })
+    },
     async seekTo(target: number) {
       dispatch.player.setSeekTo(target)
     },
