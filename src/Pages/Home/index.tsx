@@ -14,7 +14,7 @@ function Home(props: DispatchProps) {
         <button
           onClick={
             () => {
-              props.startPlaying('https://alioss.gcores.com/uploads/audio/31ef5cc9-e381-4dbb-8c24-da4e8283c2b0.mp3')
+              props.startPlaying('https://www.youtube.com/watch?v=qy_S2i-A7sM')
             }
           }
         >

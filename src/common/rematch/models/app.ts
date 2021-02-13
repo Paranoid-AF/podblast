@@ -22,12 +22,12 @@ export const app = createModel<RootModel>()({
     }
   },
   effects: (dispatch: any) => ({
-    async setConfig(key: string, value: any) {
+    async setConfig(target: { key: string, value: any }) {
       await window.electron.invoke('confmgr', {
         action: 'setConfig',
         payload: {
-          key,
-          value
+          key: target.key,
+          value: target.value
         } as any
       } as InvokeContent)
     }

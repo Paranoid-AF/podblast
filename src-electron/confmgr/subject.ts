@@ -1,11 +1,17 @@
 export const defaultConfig: AllConfig = {
-  'network.proxyEnabled': 'disabled'
+  'network.proxyEnabled': 'disabled',
+  'player.volume': 0.6
 }
 
 export type AllConfig = (
   FileConfig &
-  ProxyConfig
+  ProxyConfig &
+  PlayerConfig
 )
+
+export interface PlayerConfig {
+  'player.volume': number
+}
 
 export interface FileConfig {
   'file.profileLocation'?: string,

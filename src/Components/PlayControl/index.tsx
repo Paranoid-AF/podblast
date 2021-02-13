@@ -1,15 +1,18 @@
 import { BackwardOutlined, CaretRightOutlined, ForwardOutlined, GatewayOutlined, MenuFoldOutlined, PauseOutlined } from '@ant-design/icons'
-import React, { useCallback, useState } from 'react'
+import { FaVolumeDown, FaVolumeMute } from 'react-icons/fa'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../common/rematch'
 import Item from '../Navi/Panel/Item'
 import ScrollingText from './ScrollingText'
 import SeekBar from './SeekBar'
 import './index.less'
+import { Slider } from 'antd'
 
 
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
+  const [showVolumeHandle, toggleVolumeHandle] = useState(false)
   const handleHover = useCallback((e: React.MouseEvent) => {
     setExpanded(true)
   }, [setExpanded])
@@ -51,6 +54,47 @@ function PlayControl(props: StateProps & DispatchProps) {
   }, [props])
   const handlePause = useCallback(() => {
     props.pause(!props.isPaused)
+  }, [props])
+  const handleVolumeMouseUp = useCallback(() => {
+    toggleVolumeHandle(false)
+    document.removeEventListener('mouseup', handleVolumeMouseUp)
+  }, [toggleVolumeHandle])
+  const isChangingVolume = useRef(false)
+  const handleVolumeMouseHover = useCallback((e: React.MouseEvent) => {
+    toggleVolumeHandle(true)
+  }, [toggleVolumeHandle])
+  const handleVolumeMouseLeave = useCallback((e: React.MouseEvent) => {
+    if(!isChangingVolume.current) {
+      toggleVolumeHandle(false)
+    } else {
+      document.addEventListener('mouseup', handleVolumeMouseUp)
+    }
+  }, [toggleVolumeHandle, handleVolumeMouseUp])
+  const handleVolumeMouseDown = useCallback((e: React.MouseEvent) => {
+    isChangingVolume.current = true
+  }, [])
+  const volumeConf: number = props.config['player.volume']
+  const [tempVolume, setTempVolume] = useState(-1)
+  const handleVolumeChange = useCallback((value: number) => {
+    const targetValue = value / 100
+    setTempVolume(targetValue)
+    props.setVolume(targetValue)
+  }, [props])
+  const handleVolumeAfterChange = useCallback((value: number) => {
+    const targetValue = value / 100
+    setTempVolume(-1)
+    props.setConfig({
+      key: 'player.volume',
+      value: targetValue
+    })
+    props.setVolume(targetValue)
+  }, [props])
+  const volume = tempVolume >= 0 ? tempVolume : volumeConf
+  useEffect(() => {
+    props.setVolume(volumeConf)
+  }, [])
+  const handleMute = useCallback(() => {
+    props.toggleMuted(!props.contentPlaying.muted)
   }, [props])
 
   if(!props.contentPlaying.ready) {
@@ -98,6 +142,32 @@ function PlayControl(props: StateProps & DispatchProps) {
             seekLoaded={props.contentPlaying.seekLoaded}
             onChange={handleSeek}
           />
+          <div className="volume show-when-open"
+            onMouseEnter={handleVolumeMouseHover}
+            onMouseLeave={handleVolumeMouseLeave}
+            onMouseDown={handleVolumeMouseDown}
+          >
+            <div className="volume-control"
+              style={{
+                visibility: showVolumeHandle ? 'visible' : 'hidden'
+              }}
+            >
+              <div className="decoration"></div>
+              <Slider
+                vertical
+                value={volume * 100}
+                onChange={handleVolumeChange}
+                onAfterChange={handleVolumeAfterChange}
+              />
+            </div>
+            <button className="volume-btn" onClick={handleMute}>
+              {
+                props.contentPlaying.muted ?
+                <FaVolumeMute /> :
+                <FaVolumeDown />
+              }
+            </button>
+          </div>
           <button className="pip show-when-open"><GatewayOutlined /></button>
         </div>
       </div>
@@ -108,14 +178,18 @@ function PlayControl(props: StateProps & DispatchProps) {
 export const mapState = (state: RootState) => ({
   showNowPlaying: state.player.showNowPlaying,
   contentPlaying: state.player.playing,
-  isPaused: state.player.playing.paused
+  isPaused: state.player.playing.paused,
+  config: state.app.config.data
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
   toggleNowPlaying: dispatch.player.toggleNowPlaying,
   pause: dispatch.player.togglePause,
   seekTo: dispatch.player.seekTo,
-  forceSetSeekCurrentTo: dispatch.player.setSeekTo
+  forceSetSeekCurrentTo: dispatch.player.setSeekTo,
+  setConfig: dispatch.app.setConfig,
+  setVolume: dispatch.player.setVolume,
+  toggleMuted: dispatch.player.toggleMuted
 })
 
 type StateProps = ReturnType<typeof mapState>

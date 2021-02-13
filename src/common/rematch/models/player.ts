@@ -13,7 +13,8 @@ const initState = {
     seekCurrent: 1762,
     seekTotal: 7130,
     seekLoaded: 6216,
-    cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3"
+    cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3",
+    muted: false
   },
   ignoreProgress: false
 }
@@ -114,6 +115,15 @@ export const player = createModel<RootModel>()({
           paused: payload
         }
       }
+    },
+    setMuted(state: typeof initState, payload: boolean) {
+      return {
+        ...state,
+        playing: {
+          ...state.playing,
+          muted: payload
+        }
+      }
     }
   },
   effects: (dispatch: any) => ({
@@ -139,6 +149,23 @@ export const player = createModel<RootModel>()({
         }
       })
       dispatch.player.setPaused(paused)
+    },
+    async setVolume(value: number) {
+      await window.electron.invoke('player', {
+        action: 'setParams',
+        payload: {
+          volume: value
+        }
+      })
+    },
+    async toggleMuted(value: boolean) {
+      dispatch.player.setMuted(value)
+      await window.electron.invoke('player', {
+        action: 'setParams',
+        payload: {
+          muted: value
+        }
+      })
     }
   })
 })

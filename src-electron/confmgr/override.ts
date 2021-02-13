@@ -26,7 +26,7 @@ export const globalOverride = readOverride(path.join(rootPath, overrideConfigFil
 export const userOverride = readOverride(path.join(defaultDataPath, overrideConfigFile))
 
 export function getOverrideValue(configKey: keyof AllConfig) {
-  let result: string | undefined
+  let result: any
 
   if(configKey as keyof AllConfig in globalOverride) {
     result = globalOverride[configKey]
