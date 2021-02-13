@@ -211,6 +211,14 @@ export const player = createModel<RootModel>()({
         key: 'player.playbackSpeed',
         value: value
       })
+    },
+    async setUpProxy(extensionName: string) {
+      await window.electron.invoke('player', {
+        action: 'setProxy',
+        payload: {
+          extensionName
+        }
+      })
     }
   })
 })

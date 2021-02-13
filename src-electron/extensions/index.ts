@@ -2,7 +2,6 @@ import { app, shell } from 'electron'
 import path from 'path'
 import child_process, { ChildProcess } from 'child_process'
 import isDev from 'electron-is-dev'
-
 import { config } from '../confmgr'
 import { connection } from '../data'
 import { Extension } from '../data/entity/Extension'
@@ -12,9 +11,6 @@ import { cachedLists } from '../ipc-main/events/extension'
 import { rmdirSync } from 'fs'
 
 export let extensionProcess: ChildProcess | null = null
-export let sources: Array<SourceInfo> = []
-export let extensions: Array<ExtensionInfo> = []
-
 
 export const startExtensionProcess = () => {
   const locale = app.getLocale()
@@ -119,6 +115,21 @@ export const removeExtension = async (id: string) => {
       info: 'Extension not found.'
     }
   }
+}
+
+export const getExtensionConfig = async (extensionId: string) => {
+  if(!connection.current) {
+    return null
+  }
+  const repo = connection.current.getRepository(Extension)
+  let original = await repo.findOne({ extensionId })
+  if(typeof original === 'undefined') {
+    original = new Extension()      
+    original['extensionId'] = extensionId
+    await repo.save(original)
+    original = await repo.findOne({ extensionId })
+  }
+  return original
 }
 
 export interface ExtensionInfo {

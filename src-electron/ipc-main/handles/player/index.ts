@@ -3,9 +3,11 @@ import { sendMessage as sendMessage_Player } from './sendMessage'
 import playerWindow from '../../../windows/player'
 import { pipMinimumSize } from '../../../constants/value'
 import  {sendMessage as sendMessage_Main } from '../../events/common'
+import { getExtensionConfig } from '../../../extensions'
 // import { EventTypes } from './enums'
 
 const windowMargin = 50
+const matchPac = new RegExp(/pac\+(.*)/)
 
 interface ExtensionPayload {
   action: string,
@@ -57,18 +59,60 @@ function seekTo(amount: number, type: 'seconds' | 'fraction' = 'seconds') {
   })
 }
 
-export const player = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
+export const player = async (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
   switch(payload.action) {
     case 'togglePlayerWindow':
       const state = payload.payload as boolean
       togglePlayerWindow(state)
-    break
+      break
     case 'setParams':
       setPlayParams(payload.payload)
-    break
+      break
     case 'seekTo':
       seekTo(payload.payload)
-    break
+      break
+    case 'setProxy':
+      const extensionName = payload.payload['extensionName']
+      return (async () => {
+        if(extensionName === '') {
+          return
+        }
+        const extensionConf = await getExtensionConfig(extensionName)
+        if(!extensionConf) {
+          return
+        }
+        const proxyType = (extensionConf.proxy ?? 'useGlobal') as 'useGlobal' | 'enabled' | 'disabled'
+        let proxyAddress = ''
+        if(proxyType === 'enabled') {
+          proxyAddress = extensionConf.proxyAddress ?? ''
+        }
+        if(proxyType === 'useGlobal') {
+          proxyAddress = process.env['globalProxyAddress'] ?? ''
+        }
+        if(proxyAddress !== '') {
+          const pacResult = proxyAddress.match(matchPac)
+          const proxyConf: Electron.Config = {}
+          let pacAddress = ''
+          if(pacResult !== null) {
+            pacAddress = pacResult[1]
+          }
+          if(pacAddress === '') {
+            proxyConf.proxyRules = proxyAddress
+          } else {
+            proxyConf.pacScript = pacAddress
+          }
+          if(playerWindow.target) {
+            await playerWindow.target.webContents.session.setProxy(proxyConf)
+          }
+        } else {
+          if(playerWindow.target) {
+            await playerWindow.target.webContents.session.setProxy({
+              pacScript: '',
+              proxyRules: ''
+            })
+          }
+        }
+      })()
   }
 }
 

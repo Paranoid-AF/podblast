@@ -1,10 +1,9 @@
 import { ExtensionInfo, SourceInfo, extensionProcess } from '../../../extensions'
 import { sendPopupMessage, PopupMessage, sendNotification, NotificationMessage } from '../../../windows/main'
+import { getExtensionConfig } from '../../../extensions'
 import mainWindow from '../../../windows/main'
 import { resolver } from '../../../extensions/ipc'
 import { sendMessage } from '../common'
-import { connection } from '../../../data'
-import { Extension } from '../../../data/entity/Extension'
 
 export const cachedLists: Array< Array<ExtensionInfo> | Array<SourceInfo> > = [ [] , [] ]
 
@@ -43,20 +42,7 @@ const registerEvents = () => {
     sendMessage('source_list', sourceList)
   })
 
-  addChannel('getExtensionInfo', async (extensionId: string) => {
-    if(!connection.current) {
-      return null
-    }
-    const repo = connection.current.getRepository(Extension)
-    let original = await repo.findOne({ extensionId })
-    if(typeof original === 'undefined') {
-      original = new Extension()      
-      original['extensionId'] = extensionId
-      await repo.save(original)
-      original = await repo.findOne({ extensionId })
-    }
-    return original
-  })
+  addChannel('getExtensionInfo', getExtensionConfig)
 
 }
 
