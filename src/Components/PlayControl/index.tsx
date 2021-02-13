@@ -76,6 +76,7 @@ function PlayControl(props: StateProps & DispatchProps) {
           hoverAnimation={false}
           spinning={true}
           onClick={expandCapsule}
+          spinPaused={props.contentPlaying.paused}
         />
       </div>
     )

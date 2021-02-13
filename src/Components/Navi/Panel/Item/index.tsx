@@ -15,7 +15,8 @@ class PanelItem extends Component <Props, State> {
     removeRef: null,
     setRef: null,
     hoverAnimation: true,
-    spinning: false
+    spinning: false,
+    spinPaused: false
   }
   
   state = {
@@ -128,9 +129,16 @@ class PanelItem extends Component <Props, State> {
     if(this.props.hoverAnimation) {
       itemClassName += " with-hover-animation"
     }
+    let spinnerClassname = ""
+    if(this.props.spinning) {
+      spinnerClassname = "spinning"
+      if(this.props.spinPaused) {
+        spinnerClassname += " paused"
+      }
+    }
     return (
     <div className="panel-item-wrapper">
-      <div className={ this.props.spinning ? "spinning" : "" }>
+      <div className={spinnerClassname}>
         <div ref={this.itemRef}
             className={itemClassName}
             style={ itemStyle }
@@ -200,6 +208,7 @@ type Props = {
   dragged?: boolean,
   hoverAnimation?: boolean,
   spinning?: boolean,
+  spinPaused?: boolean,
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   setRef?: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
