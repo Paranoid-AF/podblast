@@ -56,11 +56,11 @@ function PlayControl(props: StateProps & DispatchProps) {
   const handleFastForward = useCallback(() => {
     const targetTime = props.config['player.forwardTime']
     playerSeek(targetTime)
-  }, [props])
+  }, [props, playerSeek])
   const handleFastBackward = useCallback(() => {
     const targetTime = -props.config['player.backwardTime']
     playerSeek(targetTime)
-  }, [props])
+  }, [props, playerSeek])
   const renderSpin = useCallback((hidden = false) => {
     let spinClassName = 'control-spin'
     if(isExpanded) {

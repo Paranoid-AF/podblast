@@ -41,8 +41,9 @@ function VolumeHandle(props: Props) {
   const handleMute = useCallback(() => {
     if(props.onMuteChange) {
       props.onMuteChange(!props.muted)
+      toggleVolumeHandle(false)
     }
-  }, [props])
+  }, [props, toggleVolumeHandle])
 
   return (
     <div className="volume show-when-open"
