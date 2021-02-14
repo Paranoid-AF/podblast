@@ -14,6 +14,7 @@ const initState = {
     seekCurrent: 1762,
     seekTotal: 7130,
     seekLoaded: 6216,
+    nowPlayingPage: "",
     cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3",
     muted: false,
     buffering: false
@@ -155,24 +156,25 @@ export const player = createModel<RootModel>()({
     async seekTo(target: number) {
       dispatch.player.setSeekTo(target)
     },
-    async startPlaying(url: string) {
+    async startPlaying(payload: { url: string, nowPlayingPage: string }) {
       const allState = store.getState()
       const volume = allState.app.config.data['player.volume']
       const playbackSpeed = allState.app.config.data['player.playbackSpeed']
       await window.electron.invoke('player', {
         action: 'setParams',
         payload: {
-          url: url,
+          url: payload.url,
           playing: true,
           volume: volume,
           playbackRate: playbackSpeed
         }
       })
       dispatch.player.resetPlayer({
-        url
+        url: payload.url,
+        nowPlayingPage: payload.nowPlayingPage
       })
       dispatch.player.setPaused(false)
-      dispatch.player.setUrl(url)
+      dispatch.player.setUrl(payload.url)
     },
     async togglePause(paused: boolean) {
       await window.electron.invoke('player', {

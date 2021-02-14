@@ -1,0 +1,19 @@
+@import '../../Components/PlayControl/index.less';
+
+.nowplaying {
+  position: fixed;
+  width: 100vw;
+  height: calc(100vh - @playControlHeight);
+  z-index: 120;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+
+  >iframe {
+    border: 0;
+  }
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}

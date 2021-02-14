@@ -1,11 +1,12 @@
 @import '../../Components/Navi/index.less';
 @capsuleBackground: #323232;
-
+@playControlHeight: 64px;
 .control-container {
   position: fixed;
   left: 0;
   bottom: 0;
   width: @naviActualWidth;
+  z-index: 1000;
 }
 
 .control-capsule {
@@ -41,7 +42,7 @@
     left: 0;
     bottom: 0;
     width: 100vw;
-    height: 64px;
+    height: @playControlHeight;
     border-radius: 0;
     box-shadow: none;
     padding-top: 0;

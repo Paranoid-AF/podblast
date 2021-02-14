@@ -124,7 +124,7 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
       }
     })
     return (
-      <div className={this.props.contentPlaying.ready ? "navi nowplaying" : "navi"}>
+      <div className={this.props.contentPlaying.ready ? "navi play" : "navi"}>
         <Panel
           items={routes}
           current={currentItemKey}
