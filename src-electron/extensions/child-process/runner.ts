@@ -4,6 +4,7 @@ import { ExtensionKit } from './extensionKit'
 import { ExtensionInfo } from './'
 import type { NotificationMessage } from '../../windows/main'
 import { wrappedGot } from './network'
+import cheerio from 'cheerio'
 import { sender } from './ipc'
 
 const [ send, disband ] = sender
@@ -26,7 +27,8 @@ export const runInVM = (scriptPath: string, scriptMeta: ExtensionInfo) => {
       },
       mock: {
         [extensionKitName]: extensionKit,
-        'got': wrappedGot(scriptMeta.id)
+        'got': wrappedGot(scriptMeta.id),
+        'cheerio': cheerio
       }
     },
     sandbox: {
