@@ -7,7 +7,9 @@
   z-index: 120;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .2s;
+  transition: opacity .2s, transform .2s;
+  transform: scale(0);
+  transform-origin: bottom left;
 
   >iframe {
     border: 0;
@@ -15,5 +17,6 @@
   &.open {
     opacity: 1;
     pointer-events: all;
+    transform: scale(1);
   }
 }
