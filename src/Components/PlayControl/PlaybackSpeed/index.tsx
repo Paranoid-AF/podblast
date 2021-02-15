@@ -36,7 +36,9 @@ function PlaybackSpeed(props: Props) {
         visible={visible}
         placement="topCenter"
       >
-        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+        {
+          // eslint-disable-next-line
+        }<a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
           {props.speed.toString()}x <UpOutlined />
         </a>
       </Dropdown>
