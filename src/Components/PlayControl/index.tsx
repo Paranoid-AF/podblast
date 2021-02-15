@@ -76,7 +76,7 @@ function PlayControl(props: StateProps & DispatchProps) {
           hoverAnimation={false}
           spinning={true}
           onClick={expandCapsule}
-          spinPaused={props.contentPlaying.paused}
+          spinPaused={props.contentPlaying.paused || props.loading}
         />
       </div>
     )
@@ -156,7 +156,8 @@ export const mapState = (state: RootState) => ({
   contentPlaying: state.player.playing,
   isPaused: state.player.playing.paused,
   config: state.app.config.data,
-  showingPIP: state.player.playerVisible
+  showingPIP: state.player.playerVisible,
+  loading: state.player.playing.buffering
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({

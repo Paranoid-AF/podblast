@@ -9,13 +9,13 @@ const initState = {
     ready: false,
     url: "",
     paused: false,
-    title: "62. 你的电脑不是你的",
-    channel: "内核恐慌",
-    seekCurrent: 1762,
-    seekTotal: 7130,
-    seekLoaded: 6216,
+    title: "",
+    channel: "",
+    seekCurrent: 0,
+    seekTotal: 0,
+    seekLoaded: 0,
     nowPlayingPage: "",
-    cover: "https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3",
+    cover: "",
     muted: false,
     buffering: false
   },
@@ -53,7 +53,7 @@ export const player = createModel<RootModel>()({
         ...state,
         playing: {
           ...state.playing,
-          ready: payload
+          buffering: false
         }
       }
     },
@@ -138,10 +138,23 @@ export const player = createModel<RootModel>()({
       }
     },
     resetPlayer(state: typeof initState, payload: Partial<typeof initState['playing']>) {
+      const originalPlaying = initState.playing
+      const resetContent: Partial<typeof initState['playing']> = {
+        buffering: originalPlaying.buffering,
+        url: originalPlaying.url,
+        title: originalPlaying.title,
+        channel: originalPlaying.channel,
+        seekCurrent: originalPlaying.seekCurrent,
+        seekTotal: originalPlaying.seekTotal,
+        seekLoaded: originalPlaying.seekLoaded,
+        nowPlayingPage: originalPlaying.nowPlayingPage,
+        cover: originalPlaying.cover,
+      }
       return {
         ...state,
         playing: {
-          ...initState.playing,
+          ...state.playing,
+          ...resetContent,
           ...payload
         }
       }
@@ -156,10 +169,19 @@ export const player = createModel<RootModel>()({
     async seekTo(target: number) {
       dispatch.player.setSeekTo(target)
     },
-    async startPlaying(payload: { url: string, nowPlayingPage: string }) {
+    async startPlaying(payload: { url: string, nowPlayingPage: string, coverArt: string, title: string, channel: string }) {
       const allState = store.getState()
       const volume = allState.app.config.data['player.volume']
       const playbackSpeed = allState.app.config.data['player.playbackSpeed']
+      dispatch.player.resetPlayer({
+        ready: true,
+        buffering: true,
+        url: payload.url,
+        nowPlayingPage: payload.nowPlayingPage,
+        cover: payload.coverArt,
+        title: payload.title,
+        channel: payload.channel
+      })
       await window.electron.invoke('player', {
         action: 'setParams',
         payload: {
@@ -168,10 +190,6 @@ export const player = createModel<RootModel>()({
           volume: volume,
           playbackRate: playbackSpeed
         }
-      })
-      dispatch.player.resetPlayer({
-        url: payload.url,
-        nowPlayingPage: payload.nowPlayingPage
       })
       dispatch.player.setPaused(false)
       dispatch.player.setUrl(payload.url)

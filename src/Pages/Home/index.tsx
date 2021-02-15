@@ -18,8 +18,11 @@ function Home(props: DispatchProps) {
               props.setUpProxy('gcores')
                 .then(() => {
                   props.startPlaying({
-                    url: 'https://alioss.gcores.com/uploads/audio/f66f9880-d1f8-4166-942c-af8f66383040.mp3',
-                    nowPlayingPage: 'https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik'
+                    url: 'https://www.youtube.com/watch?v=JQIcUBd-5fk',
+                    nowPlayingPage: 'https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik',
+                    coverArt: 'https://assets.fireside.fm/file/fireside-images/podcasts/images/b/bcdeb9eb-7a8c-4a76-a424-1023c5d280b0/cover_small.jpg?v=3',
+                    title: 'Pessimism is *literally* for losers.',
+                    channel: 'Luke Smith'
                   })
                 })
             }
