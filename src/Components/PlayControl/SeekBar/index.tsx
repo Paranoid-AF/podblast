@@ -98,7 +98,7 @@ function SeekBar(props: Props) {
     lastDragFator.current = -1
     message.destroy(messageKey)
     document.querySelectorAll('iframe').forEach(val => {
-      val.style.pointerEvents = 'all'
+      val.style.pointerEvents = ''
     })
   }, [setSeeking, handleMouseMove, props])
 

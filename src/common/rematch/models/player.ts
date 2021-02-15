@@ -139,6 +139,11 @@ export const player = createModel<RootModel>()({
     },
     resetPlayer(state: typeof initState, payload: Partial<typeof initState['playing']>) {
       const originalPlaying = initState.playing
+      if('url' in payload && payload.url === state.playing.url) {
+        return {
+          ...state
+        }
+      }
       const resetContent: Partial<typeof initState['playing']> = {
         buffering: originalPlaying.buffering,
         url: originalPlaying.url,
