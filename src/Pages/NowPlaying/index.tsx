@@ -7,9 +7,10 @@ function NowPlaying(props: StateProps) {
   return (
     <div className={ props.shouldShow ? "nowplaying open" : "nowplaying" }>
       <iframe
-          width="100%"
-          height="100%"
-          src={props.pageUrl}>
+        title="Now Playing Page"
+        width="100%"
+        height="100%"
+        src={props.pageUrl}>
       </iframe>
     </div>
   )

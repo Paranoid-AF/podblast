@@ -97,6 +97,9 @@ function SeekBar(props: Props) {
     setSeeking(false)
     lastDragFator.current = -1
     message.destroy(messageKey)
+    document.querySelectorAll('iframe').forEach(val => {
+      val.style.pointerEvents = 'all'
+    })
   }, [setSeeking, handleMouseMove, props])
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -112,6 +115,9 @@ function SeekBar(props: Props) {
       document.addEventListener('mouseup', handleMouseUp)
       document.addEventListener('mousemove', handleMouseMove)
       setSeeking(true)
+      document.querySelectorAll('iframe').forEach(val => {
+        val.style.pointerEvents = 'none'
+      })
     }
   }, [setSeeking, handleMouseUp, handleMouseMove, props.seekCurrent])
 
