@@ -5,7 +5,7 @@ import PageBase from '../../Components/PageBase'
 
 function Home(props: DispatchProps) {
   return (
-    <PageBase title="Podchat">
+    <PageBase title="Podblast">
       <React.Fragment>
         <p>
         <button

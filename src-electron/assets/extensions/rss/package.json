@@ -5,5 +5,5 @@
   "description": "Built-in support for RSS.",
   "main": "index.js",
   "license": "MIT",
-  "author": "The Podchat Project"
+  "author": "The Podblast Project"
 }

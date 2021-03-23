@@ -1,5 +1,5 @@
-var podchat = require('podchat-extension-kit')
-podchat.registerSource({
+var podblast = require('podblast-extension-kit')
+podblast.registerSource({
   id: 'rss',
   name: 'RSS',
   preForm: function() {

@@ -42,7 +42,7 @@ function ExtensionItem(props: Props & DispatchProps) {
     operations = (
       <Fragment>
         <Popconfirm
-          title={`Remove extension "${props.extension.name}" and its data from Podchat?`}
+          title={`Remove extension "${props.extension.name}" and its data from Podblast?`}
           onConfirm={() => { props.removeExtension(props.extension.id) }}
           okText="Remove"
           cancelText="Cancel"

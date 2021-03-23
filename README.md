@@ -1,5 +1,5 @@
-# Podchat
-Podchat is a desktop app for podcasts and various kinds of audio content, with extension support.
+# Podblast
+Podblast is a desktop app for podcasts and various kinds of audio content, with extension support.
 
 This project is still a work in progress, so it's functionalities are not fully implemented yet. In short: it's not even usable.
 
