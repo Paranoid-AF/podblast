@@ -13,6 +13,7 @@ import WindowControls from '../Components/WindowControls'
 
 import Home from '../Pages/Home'
 import Extensions from '../Pages/Extensions'
+import Subscriptions from '../Pages/Subscriptions'
 
 function Routes(props: StateProps) {
   return (
@@ -23,6 +24,9 @@ function Routes(props: StateProps) {
         <Switch>
           <Route path="/extensions">
             <Extensions />
+          </Route>
+          <Route path="/subscriptions">
+            <Subscriptions />
           </Route>
           <Route path="/">
             <Home />

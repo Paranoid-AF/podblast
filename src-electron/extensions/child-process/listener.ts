@@ -17,22 +17,25 @@ addChannel('getForm', async (payload: {id: string, provider?: string}) => {
   let targetSource = findSource(payload.id, payload.provider)
   if(targetSource) {
     try {
-      return await Promise.resolve(targetSource.preForm())
+      return {
+        status: 'success',
+        data: await Promise.resolve(targetSource.preForm())
+      }
     } catch(e) {
       let error = e
       if(typeof e === 'object' && Object.keys(e).length === 0) {
         error = 'preForm not found in source, or the extension has uncaught internal error.'
       }
-      throw {
-        type: 'EXTENSION_ERROR',
-        info: error
-      } as ListenerError
+      return {
+        status: 'error',
+        info: 'Extension Error: ' + error
+      }
     }
   } else {
-    throw {
-      type: 'NOT_FOUND',
+    return {
+      status: 'error',
       info: 'No such source.'
-    } as ListenerError
+    }
   }
 })
 
@@ -40,22 +43,25 @@ addChannel('submitForm', async (payload: {id: string, provider?: string, data: R
   let targetSource = findSource(payload.id, payload.provider)
   if(targetSource) {
     try {
-      return await Promise.resolve(targetSource.postForm(payload.data))
+      return {
+        status: 'success',
+        data: await Promise.resolve(targetSource.postForm(payload.data))
+      }
     } catch(e) {
       let error = e
       if(typeof e === 'object' && Object.keys(e).length === 0) {
         error = 'postForm not found in source, or the extension has uncaught internal error.'
       }
-      throw {
-        type: 'EXTENSION_ERROR',
-        info: error
-      } as ListenerError
+      return {
+        status: 'error',
+        info: 'Extension Error: ' + error
+      }
     }
   } else {
-    throw {
-      type: 'NOT_FOUND',
+    return {
+      status: 'error',
       info: 'No such source.'
-    } as ListenerError
+    }
   }
 })
 

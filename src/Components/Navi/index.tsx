@@ -73,6 +73,11 @@ const routes = [
     key: "extensions",
     name: "扩展程序",
     link: "/extensions"
+  },
+  {
+    key: "sub",
+    name: "订阅",
+    link: "/subscriptions"
   }
 ]
 

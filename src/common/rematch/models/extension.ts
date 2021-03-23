@@ -3,6 +3,7 @@ import { message } from 'antd'
 import { InvokeContent } from '../../../react-app-env'
 import { RootModel } from './index'
 import type { Extension } from '../../../../src-electron/data/entity/Extension'
+import type { FormItem, SourceResult } from '../../../../src-electron/extensions/child-process'
 
 const initState = {
   loaded: false,
@@ -64,6 +65,22 @@ export const extension = createModel<RootModel>()({
         action: 'disableExtension',
         payload: extensionId
       })
+    },
+    async getSourceForm (sourceId: string) {
+      const result = (await window.electron.invoke('extension', { action: 'getSourceForm', payload: { id: sourceId } }))
+      if(result.status === 'success') {
+        return (result.data as Array<FormItem>)
+      } else {
+        throw new Error(result.info ?? 'Unknown error.')
+      }
+    },
+    async submitSourceForm (sourceId: string, formContent: Record<string, any>) {
+      const result = (await window.electron.invoke('extension', { action: 'submitSourceForm', payload: { id: sourceId, content: formContent } }))
+      if(result.status === 'success') {
+        return (result.data as SourceResult)
+      } else {
+        throw new Error(result.info ?? 'Unknown error.')
+      }
     }
   })
 })

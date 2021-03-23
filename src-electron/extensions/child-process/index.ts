@@ -201,7 +201,8 @@ export interface SourceInfo {
   name: string,
   description?: string,
   preForm: () => Promise<Array<FormItem>>,
-  postForm: (data: Record<string, any>) => string, // Key is form item ID, while value is value. Returns a token to fetch content.
+  postForm: (data: Record<string, any>) => Promise<SourceResult>, // Key is form item ID, while value is value. Returns a token to fetch content.
+  fetch: (key: string, page: number) => Promise<unknown>,
   provider: string,
   icon?: string
 }
@@ -209,14 +210,21 @@ export interface SourceInfo {
 interface FormField {
   description: string, // Name for display.
   value: any // Actual values that's passed
+  isDefault?: boolean
 }
 
-interface FormItem {
+export interface FormItem {
   id: string,
   name: string,
   type: 'SELECT' | 'INPUT' | 'RADIO' | 'CHECK',
+  optional?: boolean, // Required by default
   field?: Array<FormField> // Field could be undefined when type is INPUT
 }
 
+export interface SourceResult {
+  name: string,
+  icon?: string, // Base64
+  key: string
+}
+
 type ExtensionType = 'INTERNAL' | 'EXTERNAL'
-type valueof<T> = T[keyof T]
