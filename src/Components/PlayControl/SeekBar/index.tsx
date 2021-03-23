@@ -37,7 +37,10 @@ function getDragFactor(posY: number, baseLine: number): number {
   if(deltaY > pageHeight / 1.2) {
     factor = 0.05
   }
-  return posY > baseLine ? (1 / factor) : factor
+  if(deltaY > pageHeight) {
+    factor = 0.01
+  }
+  return factor
 }
 
 function SeekBar(props: Props) {
