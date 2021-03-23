@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Dispatch, RootState } from '../../../common/rematch'
 import type { FormItem, SourceResult } from '../../../../src-electron/extensions/child-process'
-import { Select, Spin } from 'antd';
+import { message, Select, Spin } from 'antd';
 import { connect } from 'react-redux';
 
 import './index.less'
@@ -37,7 +37,7 @@ function NewSubscription(props: DispatchProps & StateProps) {
       const formResult = await props.getForm(value)
       setCurrentForm(formResult)
     } catch(e) {
-      setCurrentForm(null)
+      message.error('An error occurred while fetching form from source.')
     }
     setFormLoading(false)
   }

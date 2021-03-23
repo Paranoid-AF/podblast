@@ -24,7 +24,10 @@ addChannel('getForm', async (payload: {id: string, provider?: string}) => {
     } catch(e) {
       let error = e
       if(typeof e === 'object' && Object.keys(e).length === 0) {
-        error = 'preForm not found in source, or the extension has uncaught internal error.'
+        return {
+          status: 'success',
+          data: null
+        }
       }
       return {
         status: 'error',
