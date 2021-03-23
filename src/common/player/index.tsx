@@ -5,6 +5,8 @@ import Player from './component'
 import ReactDOM from 'react-dom'
 import { SeekTo } from './types'
 
+import './index.less'
+
 let playerUpdater: ((props: Props) => void) | null = null
 let seekTo: SeekTo | null = null
 
