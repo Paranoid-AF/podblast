@@ -13,6 +13,7 @@ podblast.registerSource({
         id: 'test1',
         name: '选项测试',
         type: 'SELECT',
+        optional: true,
         field: [
           {
             description: '我是选项1',
@@ -20,7 +21,8 @@ podblast.registerSource({
           },
           {
             description: '我是选项2',
-            value: 'option2'
+            value: 'option2',
+            isDefault: true
           },
           {
             description: '我是选项3',
@@ -35,7 +37,29 @@ podblast.registerSource({
         field: [
           {
             description: '我是选项1',
-            value: 'option1'
+            value: 'option1',
+            isDefault: true
+          },
+          {
+            description: '我是选项2',
+            value: 'option2'
+          },
+          {
+            description: '我是选项3',
+            value: 'option3',
+            isDefault: true
+          }
+        ]
+      },
+      {
+        id: 'test3',
+        name: '单选测试',
+        type: 'RADIO',
+        field: [
+          {
+            description: '我是选项1',
+            value: 'option1',
+            isDefault: true
           },
           {
             description: '我是选项2',

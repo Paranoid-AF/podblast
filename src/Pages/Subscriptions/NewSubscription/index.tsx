@@ -1,12 +1,116 @@
-import React, { useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import { Dispatch, RootState } from '../../../common/rematch'
 import type { FormItem } from '../../../../src-electron/extensions/child-process'
-import { message, Select, Spin } from 'antd';
+import { Checkbox, Form, Input, message, Radio, Select, Spin } from 'antd';
 import { connect } from 'react-redux';
 
 import './index.less'
 
 const { Option } = Select;
+
+function renderForm(formSchema: Array<FormItem> | null) {
+  console.log(formSchema)
+  function wrapItem(form: FormItem, children: JSX.Element) {
+    return (
+      <Form.Item
+        key={form.id}
+        label={form.name}
+        rules={[{ required: !form.optional }]}
+        required={!form.optional}
+      >
+        {children}
+      </Form.Item>
+    )
+  }
+  if(formSchema !== null) {
+    const result: Array<JSX.Element> = formSchema.map((form) => {
+      if(form.type === 'INPUT') {
+        return (
+          wrapItem(form, 
+            <Input />
+          )
+        )
+      }
+      if(form.type === 'SELECT') {
+        const options: Array<JSX.Element> = []
+        let defaultValue
+        if(form.field) {
+          form.field.forEach(field => {
+            if(field.isDefault) {
+              defaultValue = field.value
+            }
+            options.push(
+              <Option value={field.value} key={field.value}>
+                {field.description}
+              </Option>
+            )
+          })
+        }
+        return (
+          wrapItem(form, 
+            <Select placeholder="Select..." defaultValue={defaultValue}>
+              {options}
+            </Select>
+          )
+        )
+      }
+      if(form.type === 'RADIO') {
+        const options: Array<JSX.Element> = []
+        let defaultValue
+        if(form.field) {
+          form.field.forEach(field => {
+            if(field.isDefault) {
+              defaultValue = field.value
+            }
+            options.push(
+              <Radio key={field.value} value={field.value}>
+                {field.description}
+              </Radio>
+            )
+          })
+        }
+        return (
+          wrapItem(form,
+            <Radio.Group defaultValue={defaultValue}>
+              {options}
+            </Radio.Group>
+          )
+        )
+      }
+      if(form.type === 'CHECK') {
+        const options: Array<JSX.Element> = []
+        const defaultValue: Array<string> = []
+        if(form.field) {
+          form.field.forEach(field => {
+            if(field.isDefault) {
+              defaultValue.push(field.value)
+            }
+            options.push(
+              <Checkbox key={field.value} value={field.value}>
+                {field.description}
+              </Checkbox>
+            )
+          })
+        }
+        return (
+          wrapItem(form,
+            <Checkbox.Group defaultValue={defaultValue}>
+              {options}
+            </Checkbox.Group>
+          )
+        )
+      }
+      return (<Fragment key={form.id} />)
+    })
+    return (
+      <Form requiredMark={true}>
+        {result}
+      </Form>
+    )
+  } else {
+    return []
+  }
+}
 
 function NewSubscription(props: DispatchProps & StateProps) {
   const [currentForm, setCurrentForm] = useState<null | Array<FormItem>>(null)
@@ -51,12 +155,13 @@ function NewSubscription(props: DispatchProps & StateProps) {
           showSearch
           filterOption={sourceFilter}
           onChange={handleChange}
+          disabled={formLoading} // Prevent race when loading form.
         >
           {sourceOptions}
         </Select>
       </div>
       <div className="new-subs-form">
-        {formLoading ? <div className="new-subs-form-loading"><Spin /></div> : JSON.stringify(currentForm)}
+        {formLoading ? <div className="new-subs-form-loading"><Spin tip="Preparing form..." /></div> : renderForm(currentForm)}
       </div>
     </div>
   )
