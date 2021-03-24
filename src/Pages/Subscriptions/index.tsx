@@ -10,6 +10,7 @@ import NewSubscription from './NewSubscription/form'
 export default function Subscriptions() {
   const [newSubModalVisible, setNewSubModalVisible] = useState(false)
   const [form, setForm] = useState<FormInstance<any> | null>(null)
+  const [formSubmitting, setFormSubmitting] = useState(false)
   const handleNewSubShow = useCallback(() => {
     setNewSubModalVisible(true)
   }, [setNewSubModalVisible])
@@ -18,7 +19,19 @@ export default function Subscriptions() {
     setForm(null)
   }, [setNewSubModalVisible])
   const handleSubmit = useCallback(() => {
-    console.log(form?.getFieldsValue())
+    if(form) {
+      setFormSubmitting(true)
+      form.validateFields()
+        .then((val) => {
+          // TODO
+          console.log(val)
+          handleNewSubCancel()
+        })
+        .catch(() => { })
+        .finally(() => {
+          setFormSubmitting(false)
+        })
+    }
   }, [form])
   const handleFormChange = useCallback((sourceId: string, provider: string, currentForm: FormInstance<any>) => {
     setForm(currentForm)
@@ -29,6 +42,7 @@ export default function Subscriptions() {
     onOk: handleSubmit,
     onCancel: handleNewSubCancel,
     destroyOnClose: true,
+    confirmLoading: formSubmitting,
     children: (
       <NewSubscription onFormChange={handleFormChange} />
     )
