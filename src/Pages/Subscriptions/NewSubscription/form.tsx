@@ -181,8 +181,7 @@ interface Props {
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  getForm: dispatch.extension.getSourceForm,
-  submitForm: dispatch.extension.submitSourceForm
+  getForm: dispatch.extension.getSourceForm
 })
 
 type DispatchProps = ReturnType<typeof mapDispatch>
