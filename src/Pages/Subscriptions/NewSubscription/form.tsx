@@ -168,7 +168,13 @@ function NewSubscription(props: DispatchProps & StateProps & Props) {
           formLoading ?
           <div className="new-subs-form-loading"><Spin tip="Preparing form..." /></div> :
           <Form form={form} requiredMark={true}>
-            {typeof currentForm !== 'undefined' && renderForm(currentForm)}
+            {
+              typeof currentForm !== 'undefined' ?
+              renderForm(currentForm) :
+              <div className="new-subs-form-tip">
+                Select a source from above to continue.
+              </div>
+            }
           </Form>
           }
       </div>
