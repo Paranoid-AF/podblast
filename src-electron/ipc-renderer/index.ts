@@ -5,7 +5,7 @@ const registerEventHandler = (channel: string, callback: (event: Electron.IpcRen
 }
 
 const invoke = async (channel: string, content: InvokeContent) => {
-  return await ipcRenderer.invoke(channel, content)
+  return await Promise.resolve(ipcRenderer.invoke(channel, content))
 }
 
 contextBridge.exposeInMainWorld(
