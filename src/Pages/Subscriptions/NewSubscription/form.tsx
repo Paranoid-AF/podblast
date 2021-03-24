@@ -113,7 +113,7 @@ function renderForm(formSchema: Array<FormItem> | null) {
   return result
 }
 
-function NewSubscription(props: DispatchProps & StateProps & Props) {
+function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
   const [form] = Form.useForm()
   const [currentForm, setCurrentForm] = useState<null | Array<FormItem> | undefined>()
   const [formLoading, setFormLoading] = useState(false)
@@ -199,4 +199,4 @@ const mapState = (state: RootState) => ({
 
 type StateProps = ReturnType<typeof mapState>
 
-export default connect(mapState, mapDispatch)(NewSubscription)
+export default connect(mapState, mapDispatch)(NewSubscriptionForm)
