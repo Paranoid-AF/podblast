@@ -22,7 +22,7 @@ function renderForm(formSchema: Array<FormItem> | null) {
       </Form.Item>
     )
   }
-  if(formSchema !== null) {
+  if(formSchema !== null && formSchema instanceof Array) {
     const result: Array<JSX.Element> = formSchema.map((form) => {
       if(form.type === 'INPUT') {
         return (
