@@ -66,16 +66,16 @@ export const extension = createModel<RootModel>()({
         payload: extensionId
       })
     },
-    async getSourceForm (sourceId: string) {
-      const result = (await window.electron.invoke('extension', { action: 'getSourceForm', payload: { id: sourceId } }))
+    async getSourceForm (payload: { sourceId: string, provider?: string }) {
+      const result = (await window.electron.invoke('extension', { action: 'getSourceForm', payload: { id: payload.sourceId, provider: payload.provider } }))
       if(result.status === 'success') {
         return (result.data as Array<FormItem>)
       } else {
         throw new Error(result.info ?? 'Unknown error.')
       }
     },
-    async submitSourceForm (sourceId: string, formContent: Record<string, any>) {
-      const result = (await window.electron.invoke('extension', { action: 'submitSourceForm', payload: { id: sourceId, content: formContent } }))
+    async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
+      const result = (await window.electron.invoke('extension', { action: 'submitSourceForm', payload: { id: payload.sourceId, content: payload.formContent, provider: payload.provider } }))
       if(result.status === 'success') {
         return (result.data as SourceResult)
       } else {

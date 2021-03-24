@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Dispatch, RootState } from '../../../common/rematch'
-import type { FormItem, SourceResult } from '../../../../src-electron/extensions/child-process'
+import type { FormItem } from '../../../../src-electron/extensions/child-process'
 import { message, Select, Spin } from 'antd';
 import { connect } from 'react-redux';
 
@@ -14,8 +14,7 @@ function NewSubscription(props: DispatchProps & StateProps) {
   const sourceFilter = useCallback((inputValue: string, option?: any) => {
     if(
       option.provider.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0 ||
-      option.name.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0 ||
-      option.value.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
+      option.name.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
     ) {
       return true
     }
@@ -23,8 +22,9 @@ function NewSubscription(props: DispatchProps & StateProps) {
   }, [])
   const sourceOptions: Array<any> = props.sources.map(val => {
     const providerName = props.extensions.find(extVal => (extVal.id === val.provider))?.name ?? ''
+    const key = JSON.stringify({ id: val.id, provider: val.provider })
     return (
-      <Option value={val.id} key={val.id} name={val.name} provider={providerName}>
+      <Option value={key} key={key} name={val.name} provider={providerName}>
         { val.icon && <span className="new-subs-icon" style={{ backgroundImage: `url(${val.icon})` }}></span> }
         {val.name}
         {providerName && <span className="new-subs-provider">{providerName}</span>}
@@ -32,9 +32,10 @@ function NewSubscription(props: DispatchProps & StateProps) {
     )
   })
   const handleChange = async (value: string) => {
+    const target = JSON.parse(value)
     setFormLoading(true)
     try {
-      const formResult = await props.getForm(value)
+      const formResult = await props.getForm({ sourceId: target.id, provider: target.provider })
       setCurrentForm(formResult)
     } catch(e) {
       message.error('An error occurred while fetching form from source.')
