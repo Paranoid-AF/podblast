@@ -5,29 +5,33 @@ import { Checkbox, Form, Input, message, Radio, Select, Spin } from 'antd';
 import { connect } from 'react-redux';
 
 import './index.less'
+import { FormInstance } from 'antd/lib/form';
 
 const { Option } = Select;
 
 function renderForm(formSchema: Array<FormItem> | null) {
-  console.log(formSchema)
-  function wrapItem(form: FormItem, children: JSX.Element) {
+  function wrapItem(form: FormItem, children: JSX.Element, defaultValue: any) {
     return (
       <Form.Item
         key={form.id}
+        name={form.id}
         label={form.name}
-        rules={[{ required: !form.optional }]}
+        rules={[{ required: !form.optional, message: `"${form.name}" is required.` }]}
         required={!form.optional}
+        initialValue={defaultValue}
       >
         {children}
       </Form.Item>
     )
   }
-  if(formSchema !== null && formSchema instanceof Array) {
-    const result: Array<JSX.Element> = formSchema.map((form) => {
+  let result: Array<JSX.Element> = []
+  if(formSchema && formSchema instanceof Array) {
+    result = formSchema.map((form) => {
       if(form.type === 'INPUT') {
         return (
           wrapItem(form, 
-            <Input />
+            <Input />,
+          ''
           )
         )
       }
@@ -48,9 +52,10 @@ function renderForm(formSchema: Array<FormItem> | null) {
         }
         return (
           wrapItem(form, 
-            <Select placeholder="Select..." defaultValue={defaultValue}>
+            <Select placeholder="Select...">
               {options}
-            </Select>
+            </Select>,
+          defaultValue
           )
         )
       }
@@ -71,9 +76,10 @@ function renderForm(formSchema: Array<FormItem> | null) {
         }
         return (
           wrapItem(form,
-            <Radio.Group defaultValue={defaultValue}>
+            <Radio.Group>
               {options}
-            </Radio.Group>
+            </Radio.Group>,
+          defaultValue
           )
         )
       }
@@ -94,26 +100,22 @@ function renderForm(formSchema: Array<FormItem> | null) {
         }
         return (
           wrapItem(form,
-            <Checkbox.Group defaultValue={defaultValue}>
+            <Checkbox.Group>
               {options}
-            </Checkbox.Group>
+            </Checkbox.Group>,
+          defaultValue
           )
         )
       }
       return (<Fragment key={form.id} />)
     })
-    return (
-      <Form requiredMark={true}>
-        {result}
-      </Form>
-    )
-  } else {
-    return []
   }
+  return result
 }
 
-function NewSubscription(props: DispatchProps & StateProps) {
-  const [currentForm, setCurrentForm] = useState<null | Array<FormItem>>(null)
+function NewSubscription(props: DispatchProps & StateProps & Props) {
+  const [form] = Form.useForm()
+  const [currentForm, setCurrentForm] = useState<null | Array<FormItem> | undefined>()
   const [formLoading, setFormLoading] = useState(false)
   const sourceFilter = useCallback((inputValue: string, option?: any) => {
     if(
@@ -141,6 +143,7 @@ function NewSubscription(props: DispatchProps & StateProps) {
     try {
       const formResult = await props.getForm({ sourceId: target.id, provider: target.provider })
       setCurrentForm(formResult)
+      props.onFormChange(target.id, target.provider, form)
     } catch(e) {
       message.error('An error occurred while fetching form from source.')
     }
@@ -161,10 +164,20 @@ function NewSubscription(props: DispatchProps & StateProps) {
         </Select>
       </div>
       <div className="new-subs-form">
-        {formLoading ? <div className="new-subs-form-loading"><Spin tip="Preparing form..." /></div> : renderForm(currentForm)}
+        {
+          formLoading ?
+          <div className="new-subs-form-loading"><Spin tip="Preparing form..." /></div> :
+          <Form form={form} requiredMark={true}>
+            {typeof currentForm !== 'undefined' && renderForm(currentForm)}
+          </Form>
+          }
       </div>
     </div>
   )
+}
+
+interface Props {
+  onFormChange: (sourceId: string, provider: string, form: FormInstance<any>) => void
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({
