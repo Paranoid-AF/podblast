@@ -7,7 +7,9 @@ podblast.registerSource({
       {
         id: 'url',
         name: 'Target URL',
-        type: 'INPUT'
+        type: 'INPUT',
+        placeholder: '输入要订阅的 RSS 源地址',
+        defaultValue: 'https://pythonhunter.org/episodes/feed.xml'
       },
       {
         id: 'test1',

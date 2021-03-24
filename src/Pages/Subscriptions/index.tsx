@@ -46,7 +46,7 @@ function Subscriptions(props: DispatchProps) {
         })
         .catch(() => { setFormSubmitting(false) })
     }
-  }, [form])
+  }, [form, handleNewSubCancel, props])
   const handleFormChange = useCallback((sourceId: string, provider: string, currentForm: FormInstance<any>) => {
     sourceInfo.current = {
       id: sourceId,

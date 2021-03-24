@@ -217,6 +217,8 @@ export interface FormItem {
   id: string,
   name: string,
   type: 'SELECT' | 'INPUT' | 'RADIO' | 'CHECK',
+  placeholder?: string, // Only available when type is INPUT
+  defaultValue?: string, // Only available when type is INPUT
   optional?: boolean, // Required by default
   field?: Array<FormField> // Field could be undefined when type is INPUT
 }

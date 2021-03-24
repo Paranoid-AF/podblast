@@ -30,8 +30,8 @@ function renderForm(formSchema: Array<FormItem> | null) {
       if(form.type === 'INPUT') {
         return (
           wrapItem(form, 
-            <Input />,
-          ''
+            <Input placeholder={form.placeholder} />,
+          form.defaultValue ?? ''
           )
         )
       }
