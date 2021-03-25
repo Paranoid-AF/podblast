@@ -141,6 +141,7 @@ function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
     const target = JSON.parse(value)
     setFormLoading(true)
     try {
+      props.onFormChange(target.id, target.provider, null)
       const formResult = await props.getForm({ sourceId: target.id, provider: target.provider })
       setCurrentForm(formResult)
       props.onFormChange(target.id, target.provider, form)
@@ -183,7 +184,7 @@ function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
 }
 
 interface Props {
-  onFormChange: (sourceId: string, provider: string, form: FormInstance<any>) => void
+  onFormChange: (sourceId: string, provider: string, form: FormInstance<any> | null) => void
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({

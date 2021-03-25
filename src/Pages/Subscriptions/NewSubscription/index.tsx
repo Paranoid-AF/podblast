@@ -39,7 +39,7 @@ function NewSubscription(props: Props & DispatchProps) {
         .catch(() => { setFormSubmitting(false) })
     }
   }, [form, props, handleClose])
-  const handleFormChange = useCallback((sourceId: string, provider: string, currentForm: FormInstance<any>) => {
+  const handleFormChange = useCallback((sourceId: string, provider: string, currentForm: FormInstance<any> | null) => {
     sourceInfo.current = {
       id: sourceId,
       provider: provider
