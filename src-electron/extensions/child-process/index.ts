@@ -226,6 +226,7 @@ export interface FormItem {
 export interface SourceResult {
   name: string,
   icon?: string, // Base64
+  params: Record<string, any>,
   key: string
 }
 
