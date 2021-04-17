@@ -53,6 +53,8 @@ function NewSubscription(props: Props & DispatchProps) {
     onCancel: handleClose,
     destroyOnClose: true,
     confirmLoading: formSubmitting,
+    maskClosable: false,
+    keyboard: false,
     children: (
       <NewSubscriptionForm onFormChange={handleFormChange} />
     )
