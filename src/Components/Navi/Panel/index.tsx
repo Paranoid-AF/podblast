@@ -282,7 +282,6 @@ class Panel extends Component <Props, State> {
   render() {
     return (
       <div className="panel" ref={this.panelRef}>
-        <div className="panel-drag-container"></div>
         {this.state.items.map(item => (
           this.renderItem(item)
         ))}
