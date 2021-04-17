@@ -60,7 +60,37 @@ const bruh = [
     key: "channel/uuid11",
     name: "内核恐慌",
     image: "https://pan.icu/assets/icon@2x.png"
-  }
+  },
+  {
+    key: "channel/uuid12",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
+  {
+    key: "channel/uuid13",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
+  {
+    key: "channel/uuid14",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
+  {
+    key: "channel/uuid15",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
+  {
+    key: "channel/uuid16",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
+  {
+    key: "channel/uuid17",
+    name: "内核恐慌",
+    image: "https://pan.icu/assets/icon@2x.png"
+  },
 ]
 
 const routes = [

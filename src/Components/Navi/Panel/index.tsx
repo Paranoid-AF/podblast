@@ -5,7 +5,11 @@ import './index.less'
 import PanelItem from './Item'
 
 const dragThreshold = 15
+const autoScrollThreshold = 60
+const autoScrollStep = 20
+const autoScrollInterval = 50
 
+type AutoScrollState = 'up' | 'down' | 'none'
 class Panel extends Component <Props, State> {
   static defaultProps: Props
   initPos: Position = {
@@ -24,6 +28,9 @@ class Panel extends Component <Props, State> {
   panelRef: React.RefObject<HTMLDivElement> = React.createRef()
   dragContainer: HTMLDivElement | null = null
   posMap: Array<PosMap> = []
+  autoScroll: AutoScrollState = 'none'
+  autoScrollTimer: NodeJS.Timeout
+  currentMouseEvent: React.MouseEvent<HTMLDivElement, MouseEvent> | null = null
 
   static getDerivedStateFromProps(props: Props, state: State) {
     if(!state.sortActive && props.items !== state.items) {
@@ -36,6 +43,12 @@ class Panel extends Component <Props, State> {
 
   componentDidMount() {
     document.addEventListener('mouseleave', this.handleMouseLeave)
+  }
+
+  componentWillUnmount() {
+    if(this.autoScrollTimer) {
+      clearInterval(this.autoScrollTimer)
+    }
   }
 
   setItemRef = (dragged = false) => {
@@ -54,7 +67,60 @@ class Panel extends Component <Props, State> {
     delete this.refSet[key]
   }
 
+  shouldAutoScroll = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if(!this.panelRef.current) {
+      return 'none' as AutoScrollState
+    }
+    const navi = this.panelRef.current.parentNode as HTMLDivElement
+    if(!navi || navi.className !== 'navi') {
+      return 'none' as AutoScrollState
+    }
+    const panelHeight = navi.getBoundingClientRect().height
+    const posY = e.clientY
+
+    const scrollUp = posY < autoScrollThreshold
+    const scrollDown = posY > panelHeight - autoScrollThreshold
+
+    if(scrollUp) {
+      return 'up' as AutoScrollState
+    } else if(scrollDown) {
+      return 'down' as AutoScrollState
+    } else {
+      return 'none' as AutoScrollState
+    }
+  }
+
+  autoScrollTick = () => {
+    if(!this.panelRef.current) {
+      return
+    }
+    const navi = this.panelRef.current.parentNode as HTMLDivElement
+    if(!navi || navi.className !== 'navi') {
+      return
+    }
+
+    if(this.autoScroll !== 'none') {
+      if(this.currentMouseEvent) {
+        this.handleMouseMove(this.currentMouseEvent as any)
+      }
+      const navi: any = this.panelRef.current.parentNode
+      const naviScrollPos = navi.scrollTop
+      if(this.autoScroll === 'up') {
+        navi.scrollTo(0, naviScrollPos - autoScrollStep)
+      }
+      if(this.autoScroll === 'down') {
+        navi.scrollTo(0, naviScrollPos + autoScrollStep)
+      }
+    }
+  }
+
   handleItemMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
+    if(this.autoScrollTimer) {
+      clearInterval(this.autoScrollTimer)
+    }
+    this.autoScrollTimer = setInterval(this.autoScrollTick, autoScrollInterval)
+    this.currentMouseEvent = e
+
     if(this.sortTarget !== null) {
       return
     }
@@ -114,10 +180,12 @@ class Panel extends Component <Props, State> {
   }
 
   handleMouseMove = (e: MouseEvent) => {
+    this.autoScroll = this.shouldAutoScroll(e as any)
+    this.currentMouseEvent = e as any
+    this.posMap = this.buildPosMap()
     /* When sort is not active but should be activated. */
     if(!this.state.sortActive && Math.abs(e.clientY - this.initPos.y) > dragThreshold) {
       /* Set sort to active. */
-      this.posMap = this.buildPosMap()
       this.setState({
         sortActive: true
       })
@@ -198,7 +266,6 @@ class Panel extends Component <Props, State> {
         if(typeof this.props.onSort === "function") {
           this.props.onSort(items)
         }
-        this.posMap = this.buildPosMap()
       }
     }
   }
@@ -216,6 +283,9 @@ class Panel extends Component <Props, State> {
   }
 
   handleMouseUp = (e: MouseEvent) => {
+    if(this.autoScrollTimer) {
+      clearInterval(this.autoScrollTimer)
+    }
     if(this.state.sortActive) {
       this.setState({
         sortActive: false
@@ -237,6 +307,7 @@ class Panel extends Component <Props, State> {
     this.posMap = []
     this.sortInitPos = -1
     this.sortTarget = null
+    this.autoScroll = 'none'
   }
 
   handleMouseLeave = (e: MouseEvent) => {
