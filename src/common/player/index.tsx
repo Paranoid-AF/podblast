@@ -14,6 +14,8 @@ declare const MediaMetadata: (params: Object) => any
 let playerUpdater: ((props: Props) => void) | null = null
 let seekTo: SeekTo | null = null
 
+let currentPos: number = 0
+
 function setUpMediaControlInfo(mediaInfo: ContentInfo['info']) {
   const mediaSession = (navigator as any)?.mediaSession
   if(mediaSession) {
@@ -27,10 +29,27 @@ function setUpMediaControlInfo(mediaInfo: ContentInfo['info']) {
   }
 }
 
+function setUpMediaControlHandlers() {
+  const mediaSession = (navigator as any)?.mediaSession
+  mediaSession.setActionHandler('previoustrack', async () => {
+    const config: any = await window.electron.invoke('player', { action: 'getConfig' })
+    if(seekTo) {
+      seekTo(currentPos - config.backward, 'seconds')
+    }
+  })
+  mediaSession.setActionHandler('nexttrack', async () => {
+    const config: any = await window.electron.invoke('player', { action: 'getConfig' })
+    if(seekTo) {
+      seekTo(currentPos + config.forward, 'seconds')
+    }
+  })
+}
+
 window.electron.on('update_props', (event, param) => {
   if(playerUpdater !== null) {
     playerUpdater(param)
     setUpMediaControlInfo(param.info)
+    setUpMediaControlHandlers()
   }
 })
 
@@ -48,6 +67,9 @@ const handleEvents = (type: EventTypes, payload?: any) => {
       payload
     }
   })
+  if(type === EventTypes.ON_PROGRESS) {
+    currentPos = payload['playedSeconds']
+  }
 }
 
 const getSeekTo = (targetSeekTo: SeekTo) => {

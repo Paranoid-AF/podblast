@@ -81,6 +81,11 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
     case 'seekTo':
       seekTo(payload.payload)
       break
+    case 'getConfig':
+      return {
+        backward: config['player.backwardTime'],
+        forward: config['player.forwardTime']
+      }
     case 'setProxy':
       const extensionName = payload.payload['extensionName']
       return (async () => {
