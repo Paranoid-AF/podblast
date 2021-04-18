@@ -29,7 +29,6 @@ export const player = createModel<RootModel>()({
   },
   reducers: {
     toggleCoverTransparency(state: typeof initState, payload: boolean) {
-      console.log(payload)
       return {
         ...state,
         spinnerTransparent: payload
