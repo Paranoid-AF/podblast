@@ -6,8 +6,8 @@ import PanelItem from './Item'
 
 const dragThreshold = 15
 const autoScrollThreshold = 60
-const autoScrollStep = 20
-const autoScrollInterval = 50
+const autoScrollStep = 4
+const autoScrollInterval = 7
 
 type AutoScrollState = 'up' | 'down' | 'none'
 class Panel extends Component <Props, State> {
