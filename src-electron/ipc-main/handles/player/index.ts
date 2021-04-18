@@ -26,7 +26,15 @@ interface PlayerProps {
   progressInterval: number
 }
 
-export type Props = Partial<PlayerProps>
+export interface ContentInfo {
+  info?: {
+    title: string,
+    coverArt: string,
+    channel: string
+  }
+}
+
+export type Props = Partial<PlayerProps> & ContentInfo
 
 let current: Props = { }
 

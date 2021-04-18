@@ -193,7 +193,12 @@ export const player = createModel<RootModel>()({
           url: payload.url,
           playing: true,
           volume: volume,
-          playbackRate: playbackSpeed
+          playbackRate: playbackSpeed,
+          info: {
+            title: payload.title,
+            coverArt: payload.coverArt,
+            channel: payload.channel
+          }
         }
       })
       dispatch.player.setPaused(false)

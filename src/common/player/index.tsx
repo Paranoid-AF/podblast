@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Props } from '../../../src-electron/ipc-main/handles/player'
+import type { Props, ContentInfo } from '../../../src-electron/ipc-main/handles/player'
 import { EventTypes } from '../constants/enum'
 import Player from './component'
 import ReactDOM from 'react-dom'
@@ -7,12 +7,30 @@ import { SeekTo } from './types'
 
 import './index.less'
 
+const defaultMediaCoverArt = '' // TODO: Make a default cover art.
+
+declare const MediaMetadata: (params: Object) => any
+
 let playerUpdater: ((props: Props) => void) | null = null
 let seekTo: SeekTo | null = null
+
+function setUpMediaControlInfo(mediaInfo: ContentInfo['info']) {
+  const mediaSession = (navigator as any)?.mediaSession
+  if(mediaSession) {
+    mediaSession.metadata = new (MediaMetadata as any)({
+      title: mediaInfo?.title ?? 'Podblast',
+      artist: mediaInfo?.channel ?? 'Podblast',
+      artwork: [
+        { src: mediaInfo?.coverArt ?? defaultMediaCoverArt, sizes: '1024x1024' }
+      ]
+    })
+  }
+}
 
 window.electron.on('update_props', (event, param) => {
   if(playerUpdater !== null) {
     playerUpdater(param)
+    setUpMediaControlInfo(param.info)
   }
 })
 
