@@ -122,7 +122,16 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
     this.nextList = newList
   }
 
+  handleSortStart = () => {
+    if(this.props.toggleCoverTransparency) {
+      this.props.toggleCoverTransparency(true)
+    }
+  }
+
   handleSortDone = (result: SortResult) => {
+    if(this.props.toggleCoverTransparency) {
+      this.props.toggleCoverTransparency(false)
+    }
     if(this.nextList !== null) {
       this.setState({
         itemList: this.nextList
@@ -169,6 +178,7 @@ class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
           items={this.state.itemList}
           current={currentItemKey}
           onSort={this.handlePanelSort}
+          onSortStart={this.handleSortStart}
           onSortDone={this.handleSortDone}
           onClick={this.handleClick}
           withDivider={this.props.contentPlaying.ready}
@@ -184,7 +194,7 @@ const mapState = (state: RootState) => ({
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
-
+  toggleCoverTransparency: dispatch.player.toggleCoverTransparency
 })
 
 type StateProps = ReturnType<typeof mapState>

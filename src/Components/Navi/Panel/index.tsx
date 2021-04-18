@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
-import { Dispatch } from '../../../common/rematch'
 import './index.less'
 
 import PanelItem from './Item'
@@ -121,9 +119,6 @@ class Panel extends Component <Props, State> {
   }
 
   handleItemMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    if(this.props.toggleCoverTransparency) {
-      this.props.toggleCoverTransparency(true)
-    }
     if(this.autoScrollTimer) {
       clearInterval(this.autoScrollTimer)
     }
@@ -198,6 +193,9 @@ class Panel extends Component <Props, State> {
       this.setState({
         sortActive: true
       })
+      if(this.props.onSortStart) {
+        this.props.onSortStart(e)
+      }
       if(this.sortTarget !== null) {
         this.sortInitPos = this.state.items.indexOf(this.sortTarget)
         this.sortCurrentPos = this.sortInitPos
@@ -292,9 +290,6 @@ class Panel extends Component <Props, State> {
   }
 
   handleMouseUp = (e: MouseEvent) => {
-    if(this.props.toggleCoverTransparency) {
-      this.props.toggleCoverTransparency(false)
-    }
     if(this.autoScrollTimer) {
       clearInterval(this.autoScrollTimer)
     }
@@ -397,8 +392,9 @@ type Props = {
   withDivider: boolean,
   onSort?: (newList: Array<ItemList>) => void,
   onSortDone?: (result :SortResult) => void,
-  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
-} & Partial<DispatchProps>
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
+  onSortStart?: (e: MouseEvent) => void
+}
 
 Panel.defaultProps = {
   items: [],
@@ -417,10 +413,4 @@ export interface SortResult {
   toIndex: number
 }
 
-const mapDispatch = (dispatch: Dispatch) => ({
-  toggleCoverTransparency: dispatch.player.toggleCoverTransparency
-})
-
-type DispatchProps = ReturnType<typeof mapDispatch>
-
-export default connect(null, mapDispatch)(Panel)
+export default Panel
