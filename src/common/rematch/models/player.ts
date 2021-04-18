@@ -5,6 +5,7 @@ import { RootModel } from './index'
 const initState = {
   playerVisible: false,
   showNowPlaying: false,
+  spinnerTransparent: false,
   playing: {
     ready: false,
     url: "",
@@ -27,6 +28,13 @@ export const player = createModel<RootModel>()({
     ...initState
   },
   reducers: {
+    toggleCoverTransparency(state: typeof initState, payload: boolean) {
+      console.log(payload)
+      return {
+        ...state,
+        spinnerTransparent: payload
+      }
+    },
     playerVisibilityChange(state: typeof initState, payload: boolean) {
       return {
         ...state,

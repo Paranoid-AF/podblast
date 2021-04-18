@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+import { Dispatch } from '../../../common/rematch'
 import './index.less'
 
 import PanelItem from './Item'
@@ -72,7 +74,7 @@ class Panel extends Component <Props, State> {
       return 'none' as AutoScrollState
     }
     const navi = this.panelRef.current.parentNode as HTMLDivElement
-    if(!navi || navi.className !== 'navi') {
+    if(!navi || !navi.className.split(' ').includes('navi')) {
       return 'none' as AutoScrollState
     }
     const panelHeight = navi.getBoundingClientRect().height
@@ -81,13 +83,15 @@ class Panel extends Component <Props, State> {
     const scrollUp = posY < autoScrollThreshold
     const scrollDown = posY > panelHeight - autoScrollThreshold
 
-    if(scrollUp) {
-      return 'up' as AutoScrollState
-    } else if(scrollDown) {
-      return 'down' as AutoScrollState
-    } else {
-      return 'none' as AutoScrollState
+    if(scrollUp || scrollDown) {
+      if(scrollUp) {
+        return 'up' as AutoScrollState
+      }
+      if(scrollDown) {
+        return 'down' as AutoScrollState
+      }
     }
+    return 'none' as AutoScrollState
   }
 
   autoScrollTick = () => {
@@ -95,7 +99,9 @@ class Panel extends Component <Props, State> {
       return
     }
     const navi = this.panelRef.current.parentNode as HTMLDivElement
-    if(!navi || navi.className !== 'navi') {
+    
+    
+    if(!navi || !navi.className.split(' ').includes('navi')) {
       return
     }
 
@@ -115,6 +121,9 @@ class Panel extends Component <Props, State> {
   }
 
   handleItemMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
+    if(this.props.toggleCoverTransparency) {
+      this.props.toggleCoverTransparency(true)
+    }
     if(this.autoScrollTimer) {
       clearInterval(this.autoScrollTimer)
     }
@@ -283,6 +292,9 @@ class Panel extends Component <Props, State> {
   }
 
   handleMouseUp = (e: MouseEvent) => {
+    if(this.props.toggleCoverTransparency) {
+      this.props.toggleCoverTransparency(false)
+    }
     if(this.autoScrollTimer) {
       clearInterval(this.autoScrollTimer)
     }
@@ -386,7 +398,7 @@ type Props = {
   onSort?: (newList: Array<ItemList>) => void,
   onSortDone?: (result :SortResult) => void,
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void
-}
+} & Partial<DispatchProps>
 
 Panel.defaultProps = {
   items: [],
@@ -405,4 +417,10 @@ export interface SortResult {
   toIndex: number
 }
 
-export default Panel
+const mapDispatch = (dispatch: Dispatch) => ({
+  toggleCoverTransparency: dispatch.player.toggleCoverTransparency
+})
+
+type DispatchProps = ReturnType<typeof mapDispatch>
+
+export default connect(null, mapDispatch)(Panel)

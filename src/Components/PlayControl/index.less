@@ -8,6 +8,14 @@
   width: @naviActualWidth;
   z-index: 1000;
   user-select: none;
+
+  &.transparent {
+    * {
+      pointer-events: none;
+    }
+    opacity: 0.2;
+    transition: opacity 0.3s;
+  }
 }
 
 .control-capsule {

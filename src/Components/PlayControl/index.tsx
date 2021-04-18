@@ -12,8 +12,10 @@ import './index.less'
 function PlayControl(props: StateProps & DispatchProps) {
   const [isExpanded, setExpanded] = useState(false)
   const handleHover = useCallback((e: React.MouseEvent) => {
-    setExpanded(true)
-  }, [setExpanded])
+    if(!props.transparent) {
+      setExpanded(true)
+    }
+  }, [props.transparent, setExpanded])
   const handleLeave = useCallback((e: React.MouseEvent) => {
     setExpanded(false)
   }, [setExpanded])
@@ -95,7 +97,7 @@ function PlayControl(props: StateProps & DispatchProps) {
   }
 
   return (
-    <div className="control-container" onMouseLeave={handleLeave}>
+    <div className={props.transparent ? "control-container transparent" : "control-container"} onMouseLeave={handleLeave}>
       { renderSpin(props.showNowPlaying) }
       <div className={capsuleClassName}>
         <div className="capsule-info">
@@ -157,7 +159,8 @@ export const mapState = (state: RootState) => ({
   isPaused: state.player.playing.paused,
   config: state.app.config.data,
   showingPIP: state.player.playerVisible,
-  loading: state.player.playing.buffering
+  loading: state.player.playing.buffering,
+  transparent: state.player.spinnerTransparent
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
