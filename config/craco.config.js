@@ -2,7 +2,7 @@ const CracoLessPlugin = require('craco-less');
 const LessConfig = require('./less.config');
 module.exports = {
   webpack: {
-    entry: './src/view/index.tsx'
+    entry: './src/index.tsx'
   },
   plugins: [
     {
