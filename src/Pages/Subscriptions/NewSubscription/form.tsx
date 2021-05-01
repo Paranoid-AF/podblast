@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useRef, useState } from 'react'
 import { Dispatch, RootState } from '../../../common/rematch'
 import type { FormItem } from '../../../../src-electron/extensions/child-process'
 import { Checkbox, Form, Input, message, Radio, Select, Spin } from 'antd';
@@ -117,6 +117,7 @@ function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
   const [form] = Form.useForm()
   const [currentForm, setCurrentForm] = useState<null | Array<FormItem> | undefined>()
   const [formLoading, setFormLoading] = useState(false)
+  const currentLoading = useRef<Record<string, string>>({})
   const sourceFilter = useCallback((inputValue: string, option?: any) => {
     if(
       option.provider.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0 ||
@@ -142,7 +143,11 @@ function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
     setFormLoading(true)
     try {
       props.onFormChange(target.id, target.provider, null)
+      currentLoading.current = target
       const formResult = await props.getForm({ sourceId: target.id, provider: target.provider })
+      if(currentLoading.current !== target) {
+        return // This response should be ignored, since the current request has been changed.
+      }
       setCurrentForm(formResult)
       props.onFormChange(target.id, target.provider, form)
     } catch(e) {
@@ -159,7 +164,6 @@ function NewSubscriptionForm(props: DispatchProps & StateProps & Props) {
           showSearch
           filterOption={sourceFilter}
           onChange={handleChange}
-          disabled={formLoading} // Prevent race when loading form.
         >
           {sourceOptions}
         </Select>
