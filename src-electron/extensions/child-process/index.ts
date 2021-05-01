@@ -201,8 +201,8 @@ export interface SourceInfo {
   name: string,
   description?: string,
   preForm: () => Promise<Array<FormItem>>,
-  postForm: (data: Record<string, any>) => Promise<SourceResult>, // Key is form item ID, while value is value. Returns a token to fetch content.
-  fetch: (key: string, page: number) => Promise<unknown>,
+  postForm: (data: Record<string, any>) => Promise<SourceResult>, // The key is form item ID, while value is value. Returns a token to fetch content.
+  fetch: (key: { params: SourceResult['params'], additionalInfo: SourceResult['additionalInfo'] }, page: number) => Promise<unknown>,
   provider: string,
   icon?: string
 }
@@ -224,10 +224,12 @@ export interface FormItem {
 }
 
 export interface SourceResult {
-  name: string,
-  icon?: string, // Base64
+  title: string,
+  description?: string,
+  cover_color?: string, // HEX
+  cover_pic?: string, // Base64
   params: Record<string, any>,
-  key: string
+  additionalInfo: any
 }
 
 type ExtensionType = 'INTERNAL' | 'EXTERNAL'

@@ -7,8 +7,11 @@ export class Subscription {
   @Column()
   title: string
 
+  @Column({ nullable: true })
+  description: string
+
   @Column()
-  param: string // Param for source
+  params: string // Param for source, provided in subscription creation form
 
   @Column()
   source: string // ID of source
@@ -17,11 +20,11 @@ export class Subscription {
   extension: string // ID of extension
 
   @Column({ nullable: true })
-  backgroundColor: string // Hex
+  cover_color: string // Hex
 
   @Column({ nullable: true })
-  backgroundImage: string // Image URL
+  cover_pic: string // Image Base64
 
   @Column({ nullable: true })
-  options: string // Additional options in JSON, such as proxy
+  additional_info: string // Additional info passed by extension on subscription creation
 }

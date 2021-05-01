@@ -90,8 +90,10 @@ export const removeExtension = async (id: string) => {
     const filePath = extensionInfo.file
     const removalStatus = shell.moveItemToTrash(filePath, false)
     if(removalStatus) {
-      unloadExtension(id)
-      await flushExtensionConfig(id)
+      await Promise.all([
+        unloadExtension(id),
+        flushExtensionConfig(id)
+      ])
       return {
         status: 'success',
         info: 'Successfully moved extension files to trash.'

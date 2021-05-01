@@ -75,11 +75,22 @@ podblast.registerSource({
       },
     ]
   },
+  /*
+export interface SourceResult {
+  title: string,
+  description?: string,
+  cover_color?: string, // HEX
+  cover_pic?: string, // Base64
+  params: Record<string, any>, // Provided automatically, ignore for extensions.
+  additionalInfo: string
+}
+  */
   postForm: function(data) {
     console.log(data)
     return {
-      name: 'Test RSS Source',
-      key: 'foo'
+      title: 'Test RSS Subscription',
+      description: 'This is a subscription for testing purpose.',
+      additionalInfo: 'foo'
     }
   },
   icon: 'icon.png'

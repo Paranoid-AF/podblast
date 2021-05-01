@@ -7,7 +7,7 @@ interface ExtensionPayload {
   payload?: any
 }
 
-export const extension = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
+export const extension = async (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
   const [ send, disband ] = sender
   switch(payload.action) {
     case 'updateExtensionList':
@@ -25,6 +25,10 @@ export const extension = (event: Electron.IpcMainInvokeEvent, payload: Extension
     case 'getSourceForm':
       return (send('getForm', {id: payload.payload.id, provider: payload.payload.provider}) as Promise<Array<FormItem>>)
     case 'submitSourceForm':
-      return (send('submitForm', {id: payload.payload.id, provider: payload.payload.provider, data: payload.payload.content}) as Promise<SourceResult | null>)
+      const result = await (send('submitForm', {id: payload.payload.id, provider: payload.payload.provider, data: payload.payload.content}) as Promise<SourceResult | null>)
+      if(result) {
+        result['params'] = payload.payload.content
+      }
+      return result
   }
 }
