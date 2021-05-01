@@ -25,6 +25,7 @@
     "ext": "ts,js",
     "exec": "npm run build:core -s && electron ./build-electron"
   },
+  "cracoConfig": "config/craco.config.js",
   "scripts": {
     "start:view": "vite --config ./config/vite.config.js",
     "start:view:legacy": "craco start",
