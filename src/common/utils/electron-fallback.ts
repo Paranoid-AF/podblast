@@ -6,7 +6,6 @@ function injectNotice() {
       <style>
         body {
           margin: 20px;
-          background: #fff;
         }
       </style>
       <h1>You're not supposed to be here!</h1>

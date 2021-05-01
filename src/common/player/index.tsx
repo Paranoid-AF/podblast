@@ -77,6 +77,7 @@ const getSeekTo = (targetSeekTo: SeekTo) => {
 }
 
 export function renderPlayer() {
+  document.body.style.background = '#000';
   ReactDOM.render(
     <Player
       getUpdater={
