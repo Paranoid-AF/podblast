@@ -142,45 +142,49 @@ export const unloadExtension = (extensionId: string, removeFromList: boolean = t
   updateExtensionList()
 }
 
-const externalExtensionPath = process.env.extPath ?? path.join(process.cwd(), './extensions')
-const internalExtensionPath = path.join(__dirname, '../../assets/extensions')
+export function loadAll() {
+  const externalExtensionPath = process.env.extPath ?? path.join(process.cwd(), './extensions')
+  const internalExtensionPath = path.join(__dirname, '../../assets/extensions')
 
-const externalExtensionNames = listExtensions(externalExtensionPath)
-const internalExtensionNames = listExtensions(internalExtensionPath)
+  const externalExtensionNames = listExtensions(externalExtensionPath)
+  const internalExtensionNames = listExtensions(internalExtensionPath)
 
-const extensionList: Array<{
-  name: string,
-  type: ExtensionType
-}> = [
-  ...externalExtensionNames.map(val => {
-    return {
-      name: val,
-      type: 'EXTERNAL' as ExtensionType
-    }
-  }),
-  ...internalExtensionNames.map(val => {
-    return {
-      name: val,
-      type: 'INTERNAL' as ExtensionType
-    }
+  const extensionList: Array<{
+    name: string,
+    type: ExtensionType
+  }> = [
+    ...externalExtensionNames.map(val => {
+      return {
+        name: val,
+        type: 'EXTERNAL' as ExtensionType
+      }
+    }),
+    ...internalExtensionNames.map(val => {
+      return {
+        name: val,
+        type: 'INTERNAL' as ExtensionType
+      }
+    })
+  ]
+
+  if(extensionList.length === 0) {
+    extensionReady()
+  }
+
+  extensionList.forEach((packageInfo, index, arr) => {
+    loadExtension(
+      packageInfo.name,
+      packageInfo.type
+    ).then(() => {
+      if(arr.length - 1 <= index) {
+        updateSourceList()
+        extensionReady()
+      }
+    })
   })
-]
-
-if(extensionList.length === 0) {
-  extensionReady()
 }
 
-extensionList.forEach((packageInfo, index, arr) => {
-  loadExtension(
-    packageInfo.name,
-    packageInfo.type
-  ).then(() => {
-    if(arr.length - 1 <= index) {
-      updateSourceList()
-      extensionReady()
-    }
-  })
-})
+loadAll()
 
 export interface ExtensionInfo {
   id: string,
