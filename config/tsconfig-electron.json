@@ -18,15 +18,15 @@
     "noEmit": false,
     "types": [ "node" ],
     "typeRoots": [ "../node_modules/@types" ],
-    "outDir": "./build-electron",
+    "outDir": "../build-electron",
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true
   },
   "include": [
-    "./src-electron"
+    "../src-electron"
   ],
   "exclude": [
-    "./src-electron/assets"
+    "../src-electron/assets"
   ]
 }

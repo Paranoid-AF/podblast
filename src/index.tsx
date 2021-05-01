@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { renderPlayer } from './common/player'
 import { ConfigProvider } from 'antd'
+import 'antd/dist/antd.less';
 
 if(typeof window.electron === 'undefined') {
   window.electron = {
