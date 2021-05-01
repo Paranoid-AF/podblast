@@ -28,9 +28,9 @@
   "cracoConfig": "config/craco.config.js",
   "scripts": {
     "start:view": "vite --config ./config/vite.config.js",
-    "start:view:legacy": "craco start",
+    "start:view:legacy": "cross-env BROWSER=none craco start",
     "start:core": "nodemon --watch src-electron",
-    "start": "concurrently -k \"cross-env BROWSER=none npm run start:view\" \"npm run start:core -s\"",
+    "start": "concurrently -k \"npm run start:view\" \"npm run start:core -s\"",
     "build:view": "cross-env GENERATE_SOURCEMAP=false craco build",
     "build:core": "rimraf ./build-electron/* && tsc --p ./config/tsconfig-electron.json && cpy \"./assets\" \"../build-electron\" --cwd=\"./src-electron\" --parents",
     "build": "npm run build:view -s && npm run build:core -s && rimraf ./dist/* && electron-builder",
