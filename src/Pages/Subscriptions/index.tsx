@@ -5,28 +5,38 @@ import PageBase from '../../Components/PageBase'
 import './index.less'
 import NewSubscription from './NewSubscription'
 import SubscriptionList from './SubscriptionList'
+class Subscriptions extends React.PureComponent {
+  state = {
+    newSubModalVisible: false
+  }
 
-function Subscriptions() {
-  const [newSubModalVisible, setNewSubModalVisible] = useState(false)
-  const handleNewSubShow = useCallback(() => {
-    setNewSubModalVisible(true)
-  }, [setNewSubModalVisible])
-  const handleNewSubCancel = useCallback(() => {
-    setNewSubModalVisible(false)
-  }, [setNewSubModalVisible])
-  return (
+  handleNewSubShow = () => {
+    this.setState({
+      newSubModalVisible: true
+    })
+  }
+
+  handleNewSubCancel = () => {
+    this.setState({
+      newSubModalVisible: false
+    })
+  }
+
+  render() {
+    return (
     <PageBase title="Subscriptions">
       <div className="subs-toolbar">
         <div>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleNewSubShow}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={this.handleNewSubShow}>
             Add
           </Button>
         </div>
       </div>
-      <NewSubscription isOpen={newSubModalVisible} onClose={handleNewSubCancel} />
+      <NewSubscription isOpen={this.state.newSubModalVisible} onClose={this.handleNewSubCancel} />
       <SubscriptionList />
     </PageBase>
-  )
+    )
+  }
 }
 
 export default Subscriptions

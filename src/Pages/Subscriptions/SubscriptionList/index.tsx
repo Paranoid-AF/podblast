@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../../common/rematch'
+import './index.less'
 
 class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
   componentDidMount() {
@@ -11,7 +12,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
 
   render() {
     return (
-      <div></div>
+      <div className="sub-list"></div>
     )
   }
 }

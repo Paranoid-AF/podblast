@@ -40,6 +40,10 @@ function PageBase(props: Props) {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
 
+    if(props.onScroll) {
+      props.onScroll(event)
+    }
+
     if(hideScrollBarTimeout.current) {
       clearTimeout(hideScrollBarTimeout.current)
       hideScrollBarTimeout.current = null
@@ -82,7 +86,8 @@ interface TitleStyle {
 
 interface Props {
   title: string,
-  children: any
+  children: any,
+  onScroll?: React.UIEventHandler<HTMLDivElement>,
 }
 
 export default PageBase
