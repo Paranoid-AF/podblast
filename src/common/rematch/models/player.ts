@@ -175,7 +175,7 @@ export const player = createModel<RootModel>()({
   effects: (dispatch: any) => ({
     async togglePIP(payload: boolean) {
       window.electron.invoke('player', {
-        action: 'togglePlayerWindow', payload: payload
+        type: 'togglePlayerWindow', payload: payload
       })
     },
     async seekTo(target: number) {
@@ -195,7 +195,7 @@ export const player = createModel<RootModel>()({
         channel: payload.channel
       })
       await window.electron.invoke('player', {
-        action: 'setParams',
+        type: 'setParams',
         payload: {
           url: payload.url,
           playing: true,
@@ -213,7 +213,7 @@ export const player = createModel<RootModel>()({
     },
     async togglePause(paused: boolean) {
       await window.electron.invoke('player', {
-        action: 'setParams',
+        type: 'setParams',
         payload: {
           playing: !paused
         }
@@ -222,7 +222,7 @@ export const player = createModel<RootModel>()({
     },
     async setVolume(value: number) {
       await window.electron.invoke('player', {
-        action: 'setParams',
+        type: 'setParams',
         payload: {
           volume: value
         }
@@ -231,7 +231,7 @@ export const player = createModel<RootModel>()({
     async toggleMuted(value: boolean) {
       dispatch.player.setMuted(value)
       await window.electron.invoke('player', {
-        action: 'setParams',
+        type: 'setParams',
         payload: {
           muted: value
         }
@@ -239,7 +239,7 @@ export const player = createModel<RootModel>()({
     },
     async changePlaybackSpeed(value: number) {
       window.electron.invoke('player', {
-        action: 'setParams',
+        type: 'setParams',
         payload: {
           playbackRate: value
         }
@@ -251,7 +251,7 @@ export const player = createModel<RootModel>()({
     },
     async setUpProxy(extensionName: string) {
       await window.electron.invoke('player', {
-        action: 'setProxy',
+        type: 'setProxy',
         payload: {
           extensionName
         }
@@ -259,7 +259,7 @@ export const player = createModel<RootModel>()({
     },
     async setUpUserAgent(userAgent: string) {
       await window.electron.invoke('player', {
-        action: 'setUserAgent',
+        type: 'setUserAgent',
         payload: userAgent
       })
     }
@@ -274,7 +274,7 @@ function seekTo_Debounced(timeBySec: number) {
   }
   timer_seekTo = setTimeout(() => {
     window.electron.invoke('player', {
-      action: 'seekTo',
+      type: 'seekTo',
       payload: timeBySec
     })
   }, 300)

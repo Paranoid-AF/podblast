@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core'
 import { message } from 'antd'
-import { InvokeContent } from '../../../react-app-env'
+import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 import type { Extension } from '../../../../src-electron/data/entity/Extension'
 import type { FormItem, SourceResult } from '../../../../src-electron/extensions/child-process'
@@ -44,9 +44,9 @@ export const extension = createModel<RootModel>()({
   effects: (dispatch: any) => ({
     async removeExtension (extensionId: string) {
       const result = await window.electron.invoke('extension', {
-        action: 'removeExtension',
+        type: 'removeExtension',
         payload: extensionId
-      } as InvokeContent)
+      } as InvokeAction)
       if(result.status === 'error') {
         message.error(result.info)
       }
@@ -56,18 +56,18 @@ export const extension = createModel<RootModel>()({
     },
     async enableExtension (extensionId: string) {
       await window.electron.invoke('extension', {
-        action: 'enableExtension',
+        type: 'enableExtension',
         payload: extensionId
       })
     },
     async disableExtension (extensionId: string) {
       await window.electron.invoke('extension', {
-        action: 'disableExtension',
+        type: 'disableExtension',
         payload: extensionId
       })
     },
     async getSourceForm (payload: { sourceId: string, provider?: string }) {
-      const result = (await window.electron.invoke('extension', { action: 'getSourceForm', payload: { id: payload.sourceId, provider: payload.provider } }))
+      const result = (await window.electron.invoke('extension', { type: 'getSourceForm', payload: { id: payload.sourceId, provider: payload.provider } }))
       if(result.status === 'success') {
         return (result.data as Array<FormItem>)
       } else {
@@ -75,7 +75,7 @@ export const extension = createModel<RootModel>()({
       }
     },
     async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
-      const result = (await window.electron.invoke('extension', { action: 'submitSourceForm', payload: { id: payload.sourceId, content: payload.formContent, provider: payload.provider } }))
+      const result = (await window.electron.invoke('extension', { type: 'submitSourceForm', payload: { id: payload.sourceId, content: payload.formContent, provider: payload.provider } }))
       if(result.status === 'success') {
         return (result.data as SourceResult)
       } else {

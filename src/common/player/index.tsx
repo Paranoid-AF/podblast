@@ -32,13 +32,13 @@ function setUpMediaControlInfo(mediaInfo: ContentInfo['info']) {
 function setUpMediaControlHandlers() {
   const mediaSession = (navigator as any)?.mediaSession
   mediaSession.setActionHandler('previoustrack', async () => {
-    const config: any = await window.electron.invoke('player', { action: 'getConfig' })
+    const config: any = await window.electron.invoke('player', { type: 'getConfig' })
     if(seekTo) {
       seekTo(currentPos - config.backward, 'seconds')
     }
   })
   mediaSession.setActionHandler('nexttrack', async () => {
-    const config: any = await window.electron.invoke('player', { action: 'getConfig' })
+    const config: any = await window.electron.invoke('player', { type: 'getConfig' })
     if(seekTo) {
       seekTo(currentPos + config.forward, 'seconds')
     }
@@ -61,7 +61,7 @@ window.electron.on('seek_to', (event, param) => {
 
 const handleEvents = (type: EventTypes, payload?: any) => {
   window.electron.invoke('playerComponent', {
-    action: 'event',
+    type: 'event',
     payload: {
       type,
       payload

@@ -11,8 +11,8 @@ import { getExtensionConfig } from '../../../extensions'
 const windowMargin = 50
 const matchPac = new RegExp(/pac\+(.*)/)
 
-interface ExtensionPayload {
-  action: string,
+interface ExtensionAction {
+  type: string,
   payload?: any
 }
 
@@ -69,17 +69,17 @@ function seekTo(amount: number, type: 'seconds' | 'fraction' = 'seconds') {
   })
 }
 
-export const player = async (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
-  switch(payload.action) {
+export const player = async (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
+  switch(action.type) {
     case 'togglePlayerWindow':
-      const state = payload.payload as boolean
+      const state = action.payload as boolean
       togglePlayerWindow(state)
       break
     case 'setParams':
-      setPlayParams(payload.payload)
+      setPlayParams(action.payload)
       break
     case 'seekTo':
-      seekTo(payload.payload)
+      seekTo(action.payload)
       break
     case 'getConfig':
       return {
@@ -87,7 +87,7 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
         forward: config['player.forwardTime']
       }
     case 'setProxy':
-      const extensionName = payload.payload['extensionName']
+      const extensionName = action.payload['extensionName']
       return (async () => {
         let proxyAddress = ''
         if(config['network.proxyEnabled'] === 'enabled') {
@@ -131,7 +131,7 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
       })()
     case 'setUserAgent':
       if(playerWindow.target) {
-        let userAgent: string = payload.payload
+        let userAgent: string = action.payload
         if(userAgent === '' && mainWindow.target) {
           userAgent = mainWindow.target.webContents.getUserAgent()
         }
@@ -141,15 +141,15 @@ export const player = async (event: Electron.IpcMainInvokeEvent, payload: Extens
   }
 }
 
-export const playerComponent = (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
-  switch(payload.action) {
+export const playerComponent = (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
+  switch(action.type) {
     case 'event':
-      if(typeof payload.payload?.payload === 'undefined') {
+      if(typeof action.payload?.payload === 'undefined') {
         sendMessage_Main('player_event', {
-          type: payload.payload.type
+          type: action.payload.type
         })
       } else {
-        sendMessage_Main('player_event', payload.payload)
+        sendMessage_Main('player_event', action.payload)
       }
       
     break

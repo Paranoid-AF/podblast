@@ -2,14 +2,14 @@ import { disableExtension, enableExtension, removeExtension } from '../../../ext
 import { sender } from '../../../extensions/ipc'
 import type { FormItem, SourceResult } from '../../../extensions/child-process'
 
-interface ExtensionPayload {
-  action: string,
+interface ExtensionAction {
+  type: string,
   payload?: any
 }
 
-export const extension = async (event: Electron.IpcMainInvokeEvent, payload: ExtensionPayload) => {
+export const extension = async (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
   const [ send, disband ] = sender
-  switch(payload.action) {
+  switch(action.type) {
     case 'updateExtensionList':
       send('getExtensionList')
       break
@@ -17,17 +17,17 @@ export const extension = async (event: Electron.IpcMainInvokeEvent, payload: Ext
       send('getSourceList')
       break
     case 'removeExtension':
-      return removeExtension(payload.payload as string)
+      return removeExtension(action.payload as string)
     case 'disableExtension':
-      return disableExtension(payload.payload as string)
+      return disableExtension(action.payload as string)
     case 'enableExtension':
-      return enableExtension(payload.payload as string)
+      return enableExtension(action.payload as string)
     case 'getSourceForm':
-      return (send('getForm', {id: payload.payload.id, provider: payload.payload.provider}) as Promise<Array<FormItem>>)
+      return (send('getForm', {id: action.payload.id, provider: action.payload.provider}) as Promise<Array<FormItem>>)
     case 'submitSourceForm':
-      const result = await (send('submitForm', {id: payload.payload.id, provider: payload.payload.provider, data: payload.payload.content}) as Promise<SourceResult | null>)
+      const result = await (send('submitForm', {id: action.payload.id, provider: action.payload.provider, data: action.payload.content}) as Promise<SourceResult | null>)
       if(result) {
-        result['params'] = payload.payload.content
+        result['params'] = action.payload.content
       }
       return result
   }

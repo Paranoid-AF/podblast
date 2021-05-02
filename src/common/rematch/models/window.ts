@@ -36,23 +36,23 @@ export const appWindow = createModel<RootModel>()({
   effects: (dispatch: any) => ({
     async maximize() {
       window.electron.invoke('appWindow', {
-        action: "maximize"
+        type: "maximize"
       })
       dispatch.appWindow.setMaximizeState(true)
     },
     async minimize() {
       window.electron.invoke('appWindow', {
-        action: "minimize"
+        type: "minimize"
       })
     },
     async close() {
       window.electron.invoke('appWindow', {
-        action: "close"
+        type: "close"
       })
     },
     async restore() {
       window.electron.invoke('appWindow', {
-        action: "restore"
+        type: "restore"
       })
     },
     async init(payload: typeof initState) {
@@ -63,7 +63,7 @@ export const appWindow = createModel<RootModel>()({
     },
     async openExplorer(folderPath: string) {
       await window.electron.invoke('utils', {
-        action: "openExplorer",
+        type: "openExplorer",
         payload: folderPath
       })
     }

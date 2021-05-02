@@ -1,5 +1,5 @@
 import { createModel } from '@rematch/core'
-import { InvokeContent } from '../../../react-app-env'
+import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 
 const initState = {
@@ -24,12 +24,12 @@ export const app = createModel<RootModel>()({
   effects: (dispatch: any) => ({
     async setConfig(target: { key: string, value: any }) {
       await window.electron.invoke('confmgr', {
-        action: 'setConfig',
+        type: 'setConfig',
         payload: {
           key: target.key,
           value: target.value
         } as any
-      } as InvokeContent)
+      } as InvokeAction)
     }
   })
 })

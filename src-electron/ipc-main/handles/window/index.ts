@@ -5,14 +5,14 @@ enum ActionTypes {
   MAXIMIZE = 'maximize',
   RESTORE = 'restore'
 }
-export interface appWindowPayload {
-  action: ActionTypes
+export interface AppWindowAction {
+  type: ActionTypes
 }
-export const appWindow = (event: Electron.IpcMainInvokeEvent, payload: appWindowPayload) => {
+export const appWindow = (event: Electron.IpcMainInvokeEvent, action: AppWindowAction) => {
   if(mainWindow.target === null) {
     return
   }
-  switch(payload.action) {
+  switch(action.type) {
     case ActionTypes.CLOSE:
       mainWindow.target.close()
       break

@@ -41,7 +41,7 @@ export const config = new Proxy(currentConfig,
       return true
     }
   }
-)
+) as Partial<AllConfig>
 
 export function getConfigSummary() {
   const result: ConfigSummary = {
