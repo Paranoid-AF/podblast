@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react'
 import PageBase from '../../Components/PageBase'
 import './index.less'
 import NewSubscription from './NewSubscription'
+import SubscriptionList from './SubscriptionList'
 
 function Subscriptions() {
   const [newSubModalVisible, setNewSubModalVisible] = useState(false)
@@ -23,10 +24,9 @@ function Subscriptions() {
         </div>
       </div>
       <NewSubscription isOpen={newSubModalVisible} onClose={handleNewSubCancel} />
+      <SubscriptionList />
     </PageBase>
   )
 }
-
-
 
 export default Subscriptions

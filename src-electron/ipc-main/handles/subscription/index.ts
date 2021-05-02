@@ -9,12 +9,12 @@ interface SubscriptionAction {
   payload?: any
 }
 
-interface PayloadSaveSubscription extends SourceResult {
+export interface PayloadSaveSubscription extends SourceResult {
   source: string,
   extension: string,
 }
 
-interface PayloadListSubscription {
+export interface PayloadListSubscription {
   page?: number, // Starts with 1
   amount?: number,
 }
@@ -63,15 +63,27 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
       }
     }
     case 'list': {
-      const payload = action.payload as PayloadListSubscription
-      const amount = payload.amount ?? 10
-      const page = payload.page ?? 1
-      const result = await repo.findAndCount({
-        take: amount,
-        skip: (page - 1) * amount
-      })
-      const subscriptionList = result[0]
-      return subscriptionList
+      try {
+        const payload = action.payload as PayloadListSubscription
+        const amount = payload.amount ?? 10
+        const page = payload.page ?? 1
+        const result = await repo.findAndCount({
+          take: amount,
+          skip: (page - 1) * amount
+        })
+        return {
+          status: 'success',
+          data: {
+            list: result[0],
+            total: result[1]
+          }
+        }
+      } catch(err) {
+        return {
+          status: 'error',
+          info: 'Error fetching data from database'
+        }
+      }
     }
   }
 }
