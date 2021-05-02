@@ -75,11 +75,31 @@ export const extension = createModel<RootModel>()({
       }
     },
     async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
-      const result = (await window.electron.invoke('extension', { type: 'submitSourceForm', payload: { id: payload.sourceId, content: payload.formContent, provider: payload.provider } }))
+      const result = (await window.electron.invoke('extension', {
+        type: 'submitSourceForm',
+        payload: {
+          id: payload.sourceId,
+          content: payload.formContent,
+          provider: payload.provider
+        }
+      }))
       if(result.status === 'success') {
-        return (result.data as SourceResult)
+        const sourceResult = result.data as SourceResult
+        const targetUUID = await (window.electron.invoke('subscription', {
+          type: 'add',
+          payload: {
+            ...sourceResult,
+            source: payload.sourceId,
+            extension: payload.provider ?? ''
+          }
+        }))
+        if(targetUUID.status === 'success') {
+          return targetUUID.data
+        } else {
+          throw new Error(result.info ?? 'Error saving subscription.')
+        }
       } else {
-        throw new Error(result.info ?? 'Unknown error.')
+        throw new Error(result.info ?? 'Error saving subscription.')
       }
     }
   })

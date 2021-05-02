@@ -230,10 +230,10 @@ export interface FormItem {
 export interface SourceResult {
   title: string,
   description?: string,
-  cover_color?: string, // HEX
-  cover_pic?: string, // Base64
+  coverColor?: string, // HEX
+  coverPic?: string, // Base64
   params: Record<string, any>,
-  additionalInfo: any
+  additionalInfo?: any
 }
 
 type ExtensionType = 'INTERNAL' | 'EXTERNAL'
