@@ -1,3 +1,4 @@
+import type { IpcMainInvokeEvent } from 'electron'
 import { screen } from 'electron'
 import { config } from '../../../confmgr'
 import { sendMessage as sendMessage_Player } from './sendMessage'
@@ -69,7 +70,7 @@ function seekTo(amount: number, type: 'seconds' | 'fraction' = 'seconds') {
   })
 }
 
-export const player = async (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
+export const player = async (event: IpcMainInvokeEvent, action: ExtensionAction) => {
   switch(action.type) {
     case 'togglePlayerWindow':
       const state = action.payload as boolean
@@ -141,7 +142,7 @@ export const player = async (event: Electron.IpcMainInvokeEvent, action: Extensi
   }
 }
 
-export const playerComponent = (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
+export const playerComponent = (event: IpcMainInvokeEvent, action: ExtensionAction) => {
   switch(action.type) {
     case 'event':
       if(typeof action.payload?.payload === 'undefined') {

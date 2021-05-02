@@ -1,3 +1,4 @@
+import type { IpcMainInvokeEvent } from 'electron'
 import mainWindow from '../../../windows/main'
 enum ActionTypes {
   CLOSE = 'close',
@@ -8,7 +9,7 @@ enum ActionTypes {
 export interface AppWindowAction {
   type: ActionTypes
 }
-export const appWindow = (event: Electron.IpcMainInvokeEvent, action: AppWindowAction) => {
+export const appWindow = (event: IpcMainInvokeEvent, action: AppWindowAction) => {
   if(mainWindow.target === null) {
     return
   }

@@ -1,3 +1,4 @@
+import type { IpcMainInvokeEvent } from 'electron'
 import { shell } from 'electron'
 
 interface UtilsAction {
@@ -5,7 +6,7 @@ interface UtilsAction {
   payload: any
 }
 
-export const utils = (event: Electron.IpcMainInvokeEvent, action: UtilsAction) => {
+export const utils = (event: IpcMainInvokeEvent, action: UtilsAction) => {
   switch(action.type) {
     case 'openExplorer':
       shell.openPath(action.payload)

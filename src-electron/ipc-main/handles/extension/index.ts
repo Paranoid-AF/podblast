@@ -1,3 +1,4 @@
+import type { IpcMainInvokeEvent } from 'electron'
 import { disableExtension, enableExtension, removeExtension } from '../../../extensions'
 import { sender } from '../../../extensions/ipc'
 import type { FormItem, SourceResult } from '../../../extensions/child-process'
@@ -7,7 +8,7 @@ interface ExtensionAction {
   payload?: any
 }
 
-export const extension = async (event: Electron.IpcMainInvokeEvent, action: ExtensionAction) => {
+export const extension = async (event: IpcMainInvokeEvent, action: ExtensionAction) => {
   const [ send, disband ] = sender
   switch(action.type) {
     case 'updateExtensionList':
