@@ -3,12 +3,16 @@ import type { SourceResult } from '../../../../src-electron/extensions/child-pro
 import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 import type {
-  PayloadSaveSubscription,
   PayloadListSubscription,
 } from '../../../../src-electron/ipc-main/handles/subscription'
 
+import type {
+  Subscription,
+} from '../../../../src-electron/data/entity/Subscription'
+
+
 const initState = {
-  list: [] as Array<PayloadSaveSubscription>,
+  list: [] as Array<Subscription>,
   total: Number.MAX_VALUE
 }
 

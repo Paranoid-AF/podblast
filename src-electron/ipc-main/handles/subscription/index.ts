@@ -10,6 +10,7 @@ interface SubscriptionAction {
 }
 
 export interface PayloadSaveSubscription extends SourceResult {
+  uuid: string,
   source: string,
   extension: string,
 }
