@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core'
+import type { SourceResult } from '../../../../src-electron/extensions/child-process'
 import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 import type {
@@ -34,6 +35,34 @@ export const subscription = createModel<RootModel>()({
     }
   },
   effects: (dispatch: any) => ({
+    async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
+      const result = (await window.electron.invoke('extension', {
+        type: 'submitSourceForm',
+        payload: {
+          id: payload.sourceId,
+          content: payload.formContent,
+          provider: payload.provider
+        }
+      } as InvokeAction))
+      if(result.status === 'success') {
+        const sourceResult = result.data as SourceResult
+        const targetUUID = await (window.electron.invoke('subscription', {
+          type: 'add',
+          payload: {
+            ...sourceResult,
+            source: payload.sourceId,
+            extension: payload.provider ?? ''
+          }
+        } as InvokeAction))
+        if(targetUUID.status === 'success') {
+          return targetUUID.data
+        } else {
+          throw new Error(result.info ?? 'Error saving subscription.')
+        }
+      } else {
+        throw new Error(result.info ?? 'Error saving subscription.')
+      }
+    },
     async fetchMore() {
       const result = await window.electron.invoke('subscription', {
         type: 'list',
@@ -41,7 +70,7 @@ export const subscription = createModel<RootModel>()({
           amount: itemsPerPage,
           page: currentPage++
         } as PayloadListSubscription
-      })
+      } as InvokeAction)
       if(result.status === 'success') {
         dispatch.subscription.appendList({
           list: result.data.list,

@@ -3,7 +3,7 @@ import { message } from 'antd'
 import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 import type { Extension } from '../../../../src-electron/data/entity/Extension'
-import type { FormItem, SourceResult } from '../../../../src-electron/extensions/child-process'
+import type { FormItem } from '../../../../src-electron/extensions/child-process'
 
 const initState = {
   loaded: false,
@@ -74,34 +74,6 @@ export const extension = createModel<RootModel>()({
         throw new Error(result.info ?? 'Unknown error.')
       }
     },
-    async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
-      const result = (await window.electron.invoke('extension', {
-        type: 'submitSourceForm',
-        payload: {
-          id: payload.sourceId,
-          content: payload.formContent,
-          provider: payload.provider
-        }
-      }))
-      if(result.status === 'success') {
-        const sourceResult = result.data as SourceResult
-        const targetUUID = await (window.electron.invoke('subscription', {
-          type: 'add',
-          payload: {
-            ...sourceResult,
-            source: payload.sourceId,
-            extension: payload.provider ?? ''
-          }
-        }))
-        if(targetUUID.status === 'success') {
-          return targetUUID.data
-        } else {
-          throw new Error(result.info ?? 'Error saving subscription.')
-        }
-      } else {
-        throw new Error(result.info ?? 'Error saving subscription.')
-      }
-    }
   })
 })
 
