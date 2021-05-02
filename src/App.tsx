@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './App.less'
 import Routes from './Routes'
 import { listenEvents } from './common/events'
@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import PlayControl from './Components/PlayControl'
 import NowPlaying from './Pages/NowPlaying'
 
-class App extends Component {
+class App extends React.PureComponent {
   componentDidMount() {
     listenEvents()
   }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import './index.less'
 import { RootState, Dispatch } from'../../common/rematch'
@@ -111,7 +111,7 @@ const routes = [
   }
 ]
 
-class Navi extends Component<StateProps & DispatchProps & RouteComponentProps> {
+class Navi extends React.PureComponent<StateProps & DispatchProps & RouteComponentProps> {
   state = {
     borderless: false,
     itemList: bruh

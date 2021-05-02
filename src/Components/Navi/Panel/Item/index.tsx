@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Tooltip } from 'antd'
 import './index.less'
 
-class PanelItem extends Component <Props, State> {
+class PanelItem extends React.PureComponent <Props, State> {
   static defaultProps = {
     color: "transparent",
     opacityOnInactive: 1,

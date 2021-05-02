@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.less'
 
@@ -10,7 +10,7 @@ const autoScrollStep = 4
 const autoScrollInterval = 7
 
 type AutoScrollState = 'up' | 'down' | 'none'
-class Panel extends Component <Props, State> {
+class Panel extends React.PureComponent <Props, State> {
   static defaultProps: Props
   initPos: Position = {
     x: -1,
