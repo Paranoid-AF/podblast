@@ -50,7 +50,7 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         if(payload.additionalInfo) {
           subInfo.additional_info = JSON.stringify({ value: payload.additionalInfo })
         }
-        repo.save(subInfo)
+        await repo.save(subInfo)
         return {
           status: 'success',
           data: currentUUID
