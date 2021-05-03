@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React from 'react'
 import { scaleLinear } from 'd3-scale'
 import './index.less'
 
@@ -16,66 +16,81 @@ const finalTitleStyle: TitleStyle = {
 
 const targetTitleBarOpacity = 0.8
 const scrollBarHideTimeout = 3000 // ms
+const collapseThreshold = 40 // px
 
-function PageBase(props: Props) {
-  const [ titleStyle, setTitleStyle ] = useState<TitleStyle>(initTitleStyle)
-  const [ titleBarOpacity, setTitleBarOpacity ] = useState(0)
-  const [ showScrollBar, setShowScrollBar ] = useState(true)
-  const collapseThreshold = 40 // px
-  const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
-  const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
-  const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
-  const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
-  const hideScrollBarTimeout = useRef<null | NodeJS.Timeout>(null)
+const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
+const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
+const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
+const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
 
-  const calcTitleStyle = useCallback((target: number) => {
+class PageBase extends React.PureComponent<Props> {
+  state = {
+    titleStyle: initTitleStyle,
+    titleBarOpacity: 0,
+    showScrollBar: true
+  }
+  hideScrollBarTimeout: null | NodeJS.Timeout = null
+  containerRef = React.createRef<HTMLDivElement>()
+  calcTitleStyle = (target: number) => {
     return {
       fontSize: fontSizeScaler(target),
       top: topScaler(target),
       left: leftScaler(target)
     } as TitleStyle
-  }, [fontSizeScaler, topScaler, leftScaler])
+  }
 
-  const handleScroll = useCallback((event: any) => {
+  handleScroll = (event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
 
-    if(props.onScroll) {
-      props.onScroll(event)
+    if(this.props.onScroll) {
+      this.props.onScroll(event)
     }
 
-    if(hideScrollBarTimeout.current) {
-      clearTimeout(hideScrollBarTimeout.current)
-      hideScrollBarTimeout.current = null
+    if(this.hideScrollBarTimeout) {
+      clearTimeout(this.hideScrollBarTimeout)
+      this.hideScrollBarTimeout = null
     }
-    hideScrollBarTimeout.current = setTimeout(() => {
-      setShowScrollBar(false)
+    this.hideScrollBarTimeout = setTimeout(() => {
+      this.setState({
+        showScrollBar: false
+      })
     }, scrollBarHideTimeout)
-    setShowScrollBar(true)
+    this.setState({
+      showScrollBar: true
+    })
 
     if(target <= 0) {
-      setTitleStyle(finalTitleStyle)
-      setTitleBarOpacity(targetTitleBarOpacity)
+      this.setState({
+        titleStyle: finalTitleStyle,
+        titleBarOpacity: targetTitleBarOpacity
+      })
       return
     }
     if(target >= collapseThreshold) {
-      setTitleStyle(initTitleStyle)
-      setTitleBarOpacity(0)
+      this.setState({
+        titleStyle: initTitleStyle,
+        titleBarOpacity: 0
+      })
       return
     }
-    setTitleStyle(calcTitleStyle(target))
-    setTitleBarOpacity(titleBarScaler(collapseThreshold - target))
-  }, [titleBarScaler, calcTitleStyle])
+    this.setState({
+      titleStyle: this.calcTitleStyle(target),
+      titleBarOpacity: titleBarScaler(collapseThreshold - target)
+    })
+  }
 
-  return (
-    <div className="pagebase">
-      <h1 className="pagebase-title" style={titleStyle}>{props.title}</h1>
-      <div className="pagebase-titlebar" style={ { opacity: titleBarOpacity } }></div>
-      <div className={ showScrollBar ? "pagebase-container" : "pagebase-container unscrollable" } onScroll={handleScroll}>
-        {props.children}
+  render() {
+    return (
+      <div className="pagebase">
+        <h1 className="pagebase-title" style={this.state.titleStyle}>{this.props.title}</h1>
+        <div className="pagebase-titlebar" style={ { opacity: this.state.titleBarOpacity } }></div>
+        <div className={ this.state.showScrollBar ? "pagebase-container" : "pagebase-container unscrollable" } onScroll={this.handleScroll} ref={this.containerRef}>
+          {this.props.children}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 interface TitleStyle {
