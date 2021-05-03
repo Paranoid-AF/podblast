@@ -30,7 +30,6 @@ class PageBase extends React.PureComponent<Props> {
     showScrollBar: true
   }
   hideScrollBarTimeout: null | NodeJS.Timeout = null
-  containerRef = React.createRef<HTMLDivElement>()
   calcTitleStyle = (target: number) => {
     return {
       fontSize: fontSizeScaler(target),
@@ -42,10 +41,6 @@ class PageBase extends React.PureComponent<Props> {
   handleScroll = (event: any) => {
     const top = event.target.scrollTop
     let target = collapseThreshold - top
-
-    if(this.props.onScroll) {
-      this.props.onScroll(event)
-    }
 
     if(this.hideScrollBarTimeout) {
       clearTimeout(this.hideScrollBarTimeout)
@@ -80,14 +75,22 @@ class PageBase extends React.PureComponent<Props> {
     })
   }
 
+  Container = React.forwardRef((props: any, ref: any) => (
+    <div className={props.className} ref={ref} onScroll={props.onScroll}>
+      {props.children}
+    </div>
+  ))
+
   render() {
+    const { Container } = this
+    const containerClassName = this.state.showScrollBar ? "pagebase-container" : "pagebase-container unscrollable"
     return (
       <div className="pagebase">
         <h1 className="pagebase-title" style={this.state.titleStyle}>{this.props.title}</h1>
         <div className="pagebase-titlebar" style={ { opacity: this.state.titleBarOpacity } }></div>
-        <div className={ this.state.showScrollBar ? "pagebase-container" : "pagebase-container unscrollable" } onScroll={this.handleScroll} ref={this.containerRef}>
+        <Container className={containerClassName} ref={this.props.innerRef} onScroll={this.handleScroll}>
           {this.props.children}
-        </div>
+        </Container>
       </div>
     )
   }
@@ -102,7 +105,7 @@ interface TitleStyle {
 interface Props {
   title: string,
   children: any,
-  onScroll?: React.UIEventHandler<HTMLDivElement>,
+  innerRef?: React.RefObject<HTMLDivElement>
 }
 
 export default PageBase
