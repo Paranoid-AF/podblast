@@ -11,7 +11,7 @@ enum MenuActions {
   REMOVE = 'REMOVE'
 }
 
-class SubscriptionListItem extends React.PureComponent<Subscription> {
+class SubscriptionListItem extends React.PureComponent<Subscription & Props> {
   handleRemoveItem = () => {
     console.log('Removing sub: '+this.props.uuid)
   }
@@ -50,6 +50,12 @@ class SubscriptionListItem extends React.PureComponent<Subscription> {
     }
   }
 
+  handleClick = () => {
+    if(this.props.onClick) {
+      this.props.onClick(this.props)
+    }
+  }
+
   renderCover() {
     const style: React.CSSProperties = {}
     if(this.props.cover_color) {
@@ -59,7 +65,7 @@ class SubscriptionListItem extends React.PureComponent<Subscription> {
       style.backgroundImage = `url('${this.props.cover_pic}')`
     }
     return (
-      <div className="cover-art" style={style}>
+      <div className="cover-art" style={style} onClick={this.handleClick}>
         {!this.props.cover_pic && (
           <div className="cover-text">{this.props.title[0]}</div>
         )}
@@ -81,13 +87,17 @@ class SubscriptionListItem extends React.PureComponent<Subscription> {
       <Dropdown overlay={this.menu} trigger={['contextMenu']}>
         <div className="sub-item">
           {this.renderCover()}
-          <span className="title">{this.props.title}</span>
+          <span className="title" onClick={this.handleClick}>{this.props.title}</span>
           <p></p>
-          <span className="source">{this.props.source}</span>
+          <span className="source" onClick={this.handleClick}>{this.props.source}</span>
         </div>
       </Dropdown>
     )
   } 
+}
+
+interface Props {
+  onClick?: (id: Subscription) => void
 }
 
 export default SubscriptionListItem

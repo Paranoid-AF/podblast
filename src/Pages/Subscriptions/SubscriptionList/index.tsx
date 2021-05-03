@@ -3,7 +3,14 @@ import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../../common/rematch'
 import './index.less'
 import Item from './Item'
-class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { generateURL } from '../../../common/utils/detail-url'
+
+import type {
+  Subscription,
+} from '../../../../src-electron/data/entity/Subscription'
+
+class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & RouteComponentProps> {
   loadMoreRef = React.createRef<HTMLDivElement>()
   intersectionObserver: IntersectionObserver | null = null
   keepLoading = false
@@ -49,6 +56,15 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
     }
   }
 
+  handleClick = (info: Subscription) => {
+    const { createTab, history } = this.props
+    createTab({
+      type: 'regular',
+      item: info
+    })
+    history.push(generateURL({ id: info.uuid }))
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -60,7 +76,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
                 source: this.getSourceNameById(item['source'])
               }
               return (
-                <Item key={item.uuid} {...itemCopy} />
+                <Item key={item.uuid} onClick={this.handleClick} {...itemCopy} />
               )
             })
           }
@@ -81,10 +97,11 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: Dispatch) => ({
   fetchMore: dispatch.subscription.fetchMore,
-  setPage: dispatch.subscription.setPage
+  setPage: dispatch.subscription.setPage,
+  createTab: dispatch.app.insertTab
 })
 
 type StateProps = ReturnType<typeof mapState>
 type DispatchProps = ReturnType<typeof mapDispatch>
 
-export default connect(mapState, mapDispatch)(SubscriptionList)
+export default connect(mapState, mapDispatch)(withRouter(SubscriptionList))

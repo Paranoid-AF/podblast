@@ -27,4 +27,7 @@ export class Subscription {
 
   @Column({ nullable: true })
   additional_info: string // Additional info passed by extension on subscription creation
+
+  @Column({ default: false })
+  pinned: boolean
 }

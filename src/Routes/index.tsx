@@ -12,6 +12,7 @@ import Navi from '../Components/Navi'
 import WindowControls from '../Components/WindowControls'
 
 import Home from '../Pages/Home'
+import Detail from '../Pages/Detail'
 import Extensions from '../Pages/Extensions'
 import Subscriptions from '../Pages/Subscriptions'
 
@@ -21,6 +22,7 @@ function Routes(props: StateProps) {
       <Navi />
       <div className="container">
         { props.platform === Platforms.WINDOWS && <WindowControls /> }
+        <Detail />
         <Switch>
           <Route path="/extensions">
             <Extensions />
@@ -28,7 +30,7 @@ function Routes(props: StateProps) {
           <Route path="/subscriptions">
             <Subscriptions />
           </Route>
-          <Route path="/">
+          <Route path="/" exact>
             <Home />
           </Route>
         </Switch>
