@@ -52,11 +52,7 @@ class DetailRoute extends React.PureComponent<StateProps & RouteComponentProps> 
         if(targetTab) {
           this.pageStorage[id] = targetTab
         } else {
-          message.error({
-            content: 'Page not found.',
-            duration: 2,
-            key: 'tab-page-not-found'
-          })
+          this.props.history.goBack()
         }
       }
     }
