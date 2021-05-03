@@ -81,6 +81,12 @@ class PageBase extends React.PureComponent<Props> {
     </div>
   ))
 
+  componentDidUpdate() {
+    if(this.props.afterUpdate) {
+      this.props.afterUpdate()
+    }
+  }
+
   render() {
     const { Container } = this
     const containerClassName = this.state.showScrollBar ? "pagebase-container" : "pagebase-container unscrollable"
@@ -105,7 +111,8 @@ interface TitleStyle {
 interface Props {
   title: string,
   children: any,
-  innerRef?: React.RefObject<HTMLDivElement>
+  innerRef?: React.RefObject<HTMLDivElement>,
+  afterUpdate?: () => void
 }
 
 export default PageBase

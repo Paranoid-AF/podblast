@@ -9,6 +9,9 @@ class Subscriptions extends React.PureComponent {
   state = {
     newSubModalVisible: false
   }
+  containerRef = React.createRef<HTMLDivElement>()
+  containerScroll = 0
+  shouldScroll = false
 
   handleNewSubShow = () => {
     this.setState({
@@ -22,9 +25,38 @@ class Subscriptions extends React.PureComponent {
     })
   }
 
+  handlePreSubmit = () => {
+    const current = this.containerRef.current
+    if(current) {
+      this.containerScroll = current.scrollTop
+      console.log(current.scrollTop)
+    }
+  }
+
+  handlePostSubmit = () => {
+    this.shouldScroll = true
+  }
+
+  postContainerUpdate = () => {
+    if(this.shouldScroll) {
+      const current = this.containerRef.current
+      if(current && current.scrollTop !== this.containerScroll) {
+        const selfCheck = setInterval(() => {
+          if(current.scrollHeight >= this.containerScroll) {
+            current.scrollTo({
+              top: this.containerScroll
+            })
+            clearInterval(selfCheck)
+          }
+        }, 100)
+        this.shouldScroll = false
+      }
+    }
+  }
+
   render() {
     return (
-    <PageBase title="Subscriptions">
+    <PageBase title="Subscriptions" innerRef={this.containerRef} afterUpdate={this.postContainerUpdate}>
       <div className="subs-toolbar">
         <div>
           <Button type="primary" icon={<PlusOutlined />} onClick={this.handleNewSubShow}>
@@ -32,7 +64,12 @@ class Subscriptions extends React.PureComponent {
           </Button>
         </div>
       </div>
-      <NewSubscription isOpen={this.state.newSubModalVisible} onClose={this.handleNewSubCancel} />
+      <NewSubscription
+        isOpen={this.state.newSubModalVisible}
+        onClose={this.handleNewSubCancel}
+        beforeSubmit={this.handlePreSubmit}
+        afterSubmit={this.handlePostSubmit}
+      />
       <SubscriptionList />
     </PageBase>
     )

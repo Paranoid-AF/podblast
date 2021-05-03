@@ -18,6 +18,9 @@ function NewSubscription(props: Props & DispatchProps) {
       setFormSubmitting(true)
       form.validateFields()
         .then((val) => {
+          if(props.beforeSubmit) {
+            props.beforeSubmit()
+          }
           if(sourceInfo.current) {
             props.submitForm({
               sourceId: sourceInfo.current.id,
@@ -25,6 +28,9 @@ function NewSubscription(props: Props & DispatchProps) {
               provider: sourceInfo.current.provider
             }).then((result) => {
               console.log(result) // TODO
+              if(props.afterSubmit) {
+                props.afterSubmit()
+              }
               handleClose()
             }).catch((info) => {
               message.error("Extension error on postForm.")
@@ -69,7 +75,9 @@ function NewSubscription(props: Props & DispatchProps) {
 }
 interface Props {
   isOpen: boolean,
-  onClose: () => void
+  onClose: () => void,
+  beforeSubmit?: () => void,
+  afterSubmit?: () => void
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({
