@@ -11,7 +11,8 @@ import type {
 } from '../../../../src-electron/data/entity/Subscription'
 
 interface PayloadFetchMore {
-  page: number
+  page: number,
+  setCurrentPage?: boolean
 }
 
 const initState = {
@@ -76,12 +77,13 @@ export const subscription = createModel<RootModel>()({
               return
             }
             return new Promise((resolve) => {
-              dispatch.subscription.fetchMore({ page: pageAfterReset })
+              dispatch.subscription.fetchMore({ page: pageAfterReset, setCurrentPage: false })
                 .then(() => {
                   pageAfterReset++
                   resolve('')
-                  refetchAll()
                 })
+            }).then(() => {
+              refetchAll()
             })
           })()
           return targetUUID.data
@@ -92,7 +94,10 @@ export const subscription = createModel<RootModel>()({
         throw new Error(result.info ?? 'Error saving subscription.')
       }
     },
-    async fetchMore({ page }: PayloadFetchMore) {
+    async fetchMore({ page, setCurrentPage }: PayloadFetchMore) {
+      if(typeof setCurrentPage === 'undefined') {
+        setCurrentPage = true
+      }
       const result = await window.electron.invoke('subscription', {
         type: 'list',
         payload: {
@@ -101,7 +106,9 @@ export const subscription = createModel<RootModel>()({
         } as PayloadListSubscription
       } as InvokeAction)
       if(result.status === 'success') {
-        currentPage = page
+        if(setCurrentPage) {
+          currentPage = page
+        }
         dispatch.subscription.appendList({
           list: result.data.list,
           total: result.data.total
