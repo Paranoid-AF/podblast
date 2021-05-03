@@ -5,9 +5,12 @@ import './index.less'
 import Item from './Item'
 class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
   componentDidMount() {
-    this.props.fetchMore()
-    this.props.fetchMore()
-    this.props.fetchMore()
+    this.props.fetchMore({ page: 1 })
+    this.props.fetchMore({ page: 2 })
+    this.props.fetchMore({ page: 3 })
+    this.props.fetchMore({ page: 4 })
+    this.props.fetchMore({ page: 5 })
+    this.props.fetchMore({ page: 6 })
   }
 
   getSourceNameById(id: string) {
@@ -45,7 +48,7 @@ const mapState = (state: RootState) => ({
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  fetchMore: () => dispatch.subscription.fetchMore()
+  fetchMore: dispatch.subscription.fetchMore
 })
 
 type StateProps = ReturnType<typeof mapState>

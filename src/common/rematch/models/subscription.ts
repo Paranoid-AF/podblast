@@ -10,6 +10,9 @@ import type {
   Subscription,
 } from '../../../../src-electron/data/entity/Subscription'
 
+interface PayloadFetchMore {
+  page: number
+}
 
 const initState = {
   list: [] as Array<Subscription>,
@@ -24,6 +27,12 @@ export const subscription = createModel<RootModel>()({
     ...initState
   },
   reducers: {
+    resetList(state: typeof initState) {
+      return {
+        list: [],
+        total: Number.MAX_VALUE
+      }
+    },
     appendList(state: typeof initState, payload: {
       list: typeof initState['list'],
       total: typeof initState['total'],
@@ -59,6 +68,22 @@ export const subscription = createModel<RootModel>()({
           }
         } as InvokeAction))
         if(targetUUID.status === 'success') {
+          /* Refetch all data */
+          let pageAfterReset = 1
+          dispatch.subscription.resetList();
+          (function refetchAll() {
+            if(pageAfterReset > currentPage + 1) {
+              return
+            }
+            return new Promise((resolve) => {
+              dispatch.subscription.fetchMore({ page: pageAfterReset })
+                .then(() => {
+                  pageAfterReset++
+                  resolve('')
+                  refetchAll()
+                })
+            })
+          })()
           return targetUUID.data
         } else {
           throw new Error(result.info ?? 'Error saving subscription.')
@@ -67,15 +92,16 @@ export const subscription = createModel<RootModel>()({
         throw new Error(result.info ?? 'Error saving subscription.')
       }
     },
-    async fetchMore() {
+    async fetchMore({ page }: PayloadFetchMore) {
       const result = await window.electron.invoke('subscription', {
         type: 'list',
         payload: {
           amount: itemsPerPage,
-          page: currentPage++
+          page: page
         } as PayloadListSubscription
       } as InvokeAction)
       if(result.status === 'success') {
+        currentPage = page
         dispatch.subscription.appendList({
           list: result.data.list,
           total: result.data.total
