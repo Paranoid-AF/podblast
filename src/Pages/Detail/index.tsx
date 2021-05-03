@@ -1,5 +1,5 @@
 import React from 'react'
-import { store, RootState, Dispatch } from'../../common/rematch'
+import { store, RootState } from'../../common/rematch'
 import { connect } from 'react-redux'
 import type { Unsubscribe } from 'redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'

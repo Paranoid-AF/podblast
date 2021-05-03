@@ -23,12 +23,10 @@ function Routes(props: StateProps) {
       <div className="container">
         { props.platform === Platforms.WINDOWS && <WindowControls /> }
         <Detail />
+        <Subscriptions />
         <Switch>
           <Route path="/extensions">
             <Extensions />
-          </Route>
-          <Route path="/subscriptions">
-            <Subscriptions />
           </Route>
           <Route path="/" exact>
             <Home />

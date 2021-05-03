@@ -88,10 +88,14 @@ class PageBase extends React.PureComponent<Props> {
   }
 
   render() {
+    let visible = true
+    if(typeof this.props.visible !== 'undefined') {
+      visible = this.props.visible
+    }
     const { Container } = this
     const containerClassName = this.state.showScrollBar ? "pagebase-container" : "pagebase-container unscrollable"
     return (
-      <div className="pagebase">
+      <div className="pagebase" style={{ display: visible ? 'block' : 'none' }}>
         <h1 className="pagebase-title" style={this.state.titleStyle}>{this.props.title}</h1>
         <div className="pagebase-titlebar" style={ { opacity: this.state.titleBarOpacity } }></div>
         <Container className={containerClassName} ref={this.props.innerRef} onScroll={this.handleScroll}>
@@ -112,7 +116,8 @@ interface Props {
   title: string,
   children: any,
   innerRef?: React.RefObject<HTMLDivElement>,
-  afterUpdate?: () => void
+  afterUpdate?: () => void,
+  visible?: boolean
 }
 
 export default PageBase

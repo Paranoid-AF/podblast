@@ -5,7 +5,8 @@ import PageBase from '../../Components/PageBase'
 import './index.less'
 import NewSubscription from './NewSubscription'
 import SubscriptionList from './SubscriptionList'
-class Subscriptions extends React.PureComponent {
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+class Subscriptions extends React.PureComponent<RouteComponentProps> {
   state = {
     newSubModalVisible: false
   }
@@ -56,7 +57,12 @@ class Subscriptions extends React.PureComponent {
 
   render() {
     return (
-    <PageBase title="Subscriptions" innerRef={this.containerRef} afterUpdate={this.postContainerUpdate}>
+    <PageBase
+      title="Subscriptions"
+      innerRef={this.containerRef}
+      afterUpdate={this.postContainerUpdate}
+      visible={this.props.location.pathname === '/subscriptions'}
+    >
       <div className="subs-toolbar">
         <div>
           <Button type="primary" icon={<PlusOutlined />} onClick={this.handleNewSubShow}>
@@ -76,4 +82,4 @@ class Subscriptions extends React.PureComponent {
   }
 }
 
-export default Subscriptions
+export default withRouter(Subscriptions)
