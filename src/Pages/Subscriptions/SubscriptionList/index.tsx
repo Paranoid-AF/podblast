@@ -4,13 +4,40 @@ import { RootState, Dispatch } from'../../../common/rematch'
 import './index.less'
 import Item from './Item'
 class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
+  loadMoreRef = React.createRef<HTMLDivElement>()
+  intersectionObserver: IntersectionObserver | null = null
+  keepLoading = false
+
+  async loadMore() {
+    const { allLoaded, page, setPage } = this.props
+    if(!allLoaded) {
+      await this.props.fetchMore({ page })
+      await setPage(page + 1)
+      if(this.keepLoading) {
+        await this.loadMore()
+      }
+    }
+  }
+
+  registerIntersection() {
+    this.intersectionObserver = new IntersectionObserver((entries, observer) => {
+      const target = entries.find(item => (item.target === this.loadMoreRef.current))
+      if(target) {
+        if(target.isIntersecting) {
+          this.keepLoading = true
+          this.loadMore()
+        } else {
+          this.keepLoading = false
+        }
+      }
+    })
+  }
+
   componentDidMount() {
-    this.props.fetchMore({ page: 1 })
-    this.props.fetchMore({ page: 2 })
-    this.props.fetchMore({ page: 3 })
-    this.props.fetchMore({ page: 4 })
-    this.props.fetchMore({ page: 5 })
-    this.props.fetchMore({ page: 6 })
+    this.registerIntersection()
+    if(this.loadMoreRef.current) {
+      this.intersectionObserver?.observe(this.loadMoreRef.current)
+    }
   }
 
   getSourceNameById(id: string) {
@@ -24,19 +51,22 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
 
   render() {
     return (
-      <div className="sub-list">
-        {
-          this.props.list.map(item => {
-            const itemCopy = {
-              ...item,
-              source: this.getSourceNameById(item['source'])
-            }
-            return (
-              <Item key={item.uuid} {...itemCopy} />
-            )
-          })
-        }
-      </div>
+      <React.Fragment>
+        <div className="sub-list">
+          {
+            this.props.list.map(item => {
+              const itemCopy = {
+                ...item,
+                source: this.getSourceNameById(item['source'])
+              }
+              return (
+                <Item key={item.uuid} {...itemCopy} />
+              )
+            })
+          }
+        </div>
+        <div className="sub-loadmore" ref={this.loadMoreRef}></div>
+      </React.Fragment>
     )
   }
 }
@@ -44,11 +74,14 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps> {
 const mapState = (state: RootState) => ({
   list: state.subscription.list,
   total: state.subscription.total,
-  sourceList: state.extension.sourceList
+  sourceList: state.extension.sourceList,
+  page: state.subscription.page,
+  allLoaded: state.subscription.allLoaded
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  fetchMore: dispatch.subscription.fetchMore
+  fetchMore: dispatch.subscription.fetchMore,
+  setPage: dispatch.subscription.setPage
 })
 
 type StateProps = ReturnType<typeof mapState>

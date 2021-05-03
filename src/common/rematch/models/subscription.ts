@@ -12,12 +12,14 @@ import type {
 
 interface PayloadFetchMore {
   page: number,
-  setCurrentPage?: boolean
+  setCurrentPage?: boolean,
 }
 
 const initState = {
   list: [] as Array<Subscription>,
-  total: Number.MAX_VALUE
+  total: Number.MAX_VALUE,
+  page: 1,
+  allLoaded: false
 }
 
 let currentPage = 1
@@ -28,8 +30,21 @@ export const subscription = createModel<RootModel>()({
     ...initState
   },
   reducers: {
+    setPage(state: typeof initState, payload: number) {
+      return {
+        ...state,
+        page: payload
+      }
+    },
+    toggleAllLoaded(state: typeof initState, payload: boolean) {
+      return {
+        ...state,
+        allLoaded: payload
+      }
+    },
     resetList(state: typeof initState) {
       return {
+        ...state,
         list: [],
         total: Number.MAX_VALUE
       }
@@ -69,6 +84,7 @@ export const subscription = createModel<RootModel>()({
           }
         } as InvokeAction))
         if(targetUUID.status === 'success') {
+          dispatch.subscription.toggleAllLoaded(false)
           /* Refetch all data */
           let pageAfterReset = 1
           dispatch.subscription.resetList();
@@ -106,6 +122,9 @@ export const subscription = createModel<RootModel>()({
         } as PayloadListSubscription
       } as InvokeAction)
       if(result.status === 'success') {
+        if(result.data.list.length <= 0) {
+          dispatch.subscription.toggleAllLoaded(true)
+        }
         if(setCurrentPage) {
           currentPage = page
         }
