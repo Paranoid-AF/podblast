@@ -7,7 +7,6 @@ import type { Subscription } from '../../../src-electron/data/entity/Subscriptio
 
 import { parseURL } from '../../common/utils/detail-url'
 import Item from './Item'
-import { message } from 'antd'
 
 class DetailRoute extends React.PureComponent<StateProps & RouteComponentProps> {
   pageStorage: Record<string, Subscription> = {}
