@@ -17,21 +17,12 @@ class DetailRoute extends React.PureComponent<StateProps & RouteComponentProps> 
   componentDidMount() {
     this.unsubStore = store.subscribe(() => {
       const state = store.getState()
-      const { pinned, regular } = state.app.tabs
-      const existingTabs = new Set<string>()
-      let changed = false;
-      [...pinned, ...regular].forEach(item => {
-        existingTabs.add(item.uuid)
-      })
       for(let key in this.pageStorage) {
-        if(!existingTabs.has(key)) {
-          changed = true
+        if(!state.app.tabIds.has(key)) {
           delete this.pageStorage[key]
         }
       }
-      if(changed) {
-        this.forceUpdate()
-      }      
+      /* No need to forceUpdate here, as the props (tab) will change anyway. */
     })
   }
 
@@ -75,7 +66,8 @@ class DetailRoute extends React.PureComponent<StateProps & RouteComponentProps> 
 }
 
 const mapState = (state: RootState) => ({
-  tabs: state.app.tabs
+  tabs: state.app.tabs,
+  tabIds: state.app.tabIds
 })
 
 type StateProps = ReturnType<typeof mapState>

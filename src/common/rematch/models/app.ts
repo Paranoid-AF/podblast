@@ -14,7 +14,8 @@ const initState = {
   tabs: {
     pinned: [] as Array<Subscription>,
     regular: [] as Array<Subscription>
-  }
+  },
+  tabIds: new Set<string>()
 }
 
 export const app = createModel<RootModel>()({
@@ -29,6 +30,9 @@ export const app = createModel<RootModel>()({
       }
     },
     loadPinnedTabs(state: typeof initState, payload: typeof initState['tabs']['pinned']) {
+      payload.forEach(item => {
+        state.tabIds.add(item.uuid)
+      })
       return {
         ...state,
         tabs: {
@@ -38,6 +42,7 @@ export const app = createModel<RootModel>()({
       }
     },
     insertTab(state: typeof initState, { type, item } : { type: keyof typeof initState['tabs'],  item: Subscription}) {
+      state.tabIds.add(item.uuid)
       return {
         ...state,
         tabs: {
@@ -52,6 +57,7 @@ export const app = createModel<RootModel>()({
     removeTab(state: typeof initState, { type, uuid } : { type: keyof typeof initState['tabs'],  uuid: Subscription['uuid']}) {
       const result = [...state.tabs[type]]
       const targetIndex = result.findIndex(item => (item.uuid === uuid))
+      state.tabIds.delete(uuid)
       if(targetIndex >= 0) {
         result.splice(targetIndex, 1)
         return {
