@@ -30,4 +30,14 @@ export class Subscription {
 
   @Column({ default: false })
   pinned: boolean
+
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date
+
+  @Column({ nullable: true })
+  last_played_episode: string
+
+  @Column({ nullable: true })
+  last_latest_episode: string
+
 }
