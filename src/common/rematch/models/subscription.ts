@@ -75,7 +75,7 @@ export const subscription = createModel<RootModel>()({
       } as InvokeAction))
       if(result.status === 'success') {
         const sourceResult = result.data as SourceResult
-        const targetUUID = await (window.electron.invoke('subscription', {
+        const targetInfo = await (window.electron.invoke('subscription', {
           type: 'add',
           payload: {
             ...sourceResult,
@@ -83,7 +83,7 @@ export const subscription = createModel<RootModel>()({
             extension: payload.provider ?? ''
           }
         } as InvokeAction))
-        if(targetUUID.status === 'success') {
+        if(targetInfo.status === 'success') {
           dispatch.subscription.toggleAllLoaded(false)
           /* Refetch all data */
           let pageAfterReset = 1
@@ -102,7 +102,7 @@ export const subscription = createModel<RootModel>()({
               refetchAll()
             })
           })()
-          return targetUUID.data
+          return targetInfo.data as Subscription
         } else {
           throw new Error(result.info ?? 'Error saving subscription.')
         }

@@ -54,7 +54,7 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         await repo.save(subInfo)
         return {
           status: 'success',
-          data: currentUUID
+          data: subInfo
         }
       } catch(err) {
         return {

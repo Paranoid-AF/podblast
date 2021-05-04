@@ -4,8 +4,11 @@ import Modal, { ModalProps } from 'antd/lib/modal'
 import React, { useCallback, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from '../../../common/rematch'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { generateURL } from '../../../common/utils/detail-url'
 import NewSubscriptionForm from './form'
-function NewSubscription(props: Props & DispatchProps) {
+
+function NewSubscription(props: Props & DispatchProps & RouteComponentProps) {
   const [form, setForm] = useState<FormInstance<any> | null>(null)
   const [formSubmitting, setFormSubmitting] = useState(false)
   const sourceInfo = useRef<{ id: string, provider: string } | null>(null)
@@ -27,13 +30,16 @@ function NewSubscription(props: Props & DispatchProps) {
               formContent: val,
               provider: sourceInfo.current.provider
             }).then((result) => {
-              console.log(result) // TODO
               if(props.afterSubmit) {
                 props.afterSubmit()
               }
               handleClose()
+              /* Jump to the new subscription detail */
+              props.insertTab({ type: 'regular', item: result })
+              props.history.push(generateURL({ id: result.uuid }))
             }).catch((info) => {
               message.error("Extension error on postForm.")
+              console.error(info)
             }).finally(() => {
               setFormSubmitting(false)
             })
@@ -81,8 +87,9 @@ interface Props {
 }
 
 const mapDispatch = (dispatch: Dispatch) => ({
+  insertTab: dispatch.app.insertTab,
   submitForm: dispatch.subscription.submitSourceForm
 })
 
 type DispatchProps = ReturnType<typeof mapDispatch>
-export default connect(null, mapDispatch)(NewSubscription)
+export default connect(null, mapDispatch)(withRouter(NewSubscription))

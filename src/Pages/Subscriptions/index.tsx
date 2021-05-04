@@ -30,7 +30,6 @@ class Subscriptions extends React.PureComponent<RouteComponentProps> {
     const current = this.containerRef.current
     if(current) {
       this.containerScroll = current.scrollTop
-      console.log(current.scrollTop)
     }
   }
 
