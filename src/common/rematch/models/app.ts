@@ -69,6 +69,26 @@ export const app = createModel<RootModel>()({
         }
       }
       return state
+    },
+    swapTabs(state: typeof initState, { type, uuidFrom, uuidTo } : { type: keyof typeof initState['tabs'],  uuidFrom: Subscription['uuid'], uuidTo: Subscription['uuid']}) {
+      const result = [...state.tabs[type]]
+      const targetFrom = result.findIndex(item => (item.uuid === uuidFrom))
+      const targetTo = result.findIndex(item => (item.uuid === uuidTo))
+      if(targetFrom >= 0 && targetTo >= 0) {
+        const temp = result[targetFrom]
+        result.splice(targetFrom, 1)
+        result.splice(targetTo, 0, temp)
+        return {
+          ...state,
+          tabs: {
+            ...state.tabs,
+            [type]: result
+          }
+        }
+      }
+      return {
+        ...state
+      }
     }
   },
   effects: (dispatch: any) => ({

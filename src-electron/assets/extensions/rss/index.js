@@ -12,6 +12,13 @@ podblast.registerSource({
         defaultValue: 'https://pythonhunter.org/episodes/feed.xml'
       },
       {
+        id: 'name',
+        name: 'Subscription Name',
+        type: 'INPUT',
+        placeholder: '输入节目标题',
+        defaultValue: ''
+      },
+      {
         id: 'test1',
         name: '选项测试',
         type: 'SELECT',
@@ -88,8 +95,9 @@ export interface SourceResult {
   postForm: function(data) {
     console.log(data)
     return {
-      title: 'Test RSS Subscription',
+      title: data.name,
       description: 'This is a subscription for testing purpose.',
+      cover_pic: data.url,
       additionalInfo: 'foo'
     }
   },

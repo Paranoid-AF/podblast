@@ -57,11 +57,13 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
   }
 
   handleClick = (info: Subscription) => {
-    const { createTab, history } = this.props
-    createTab({
-      type: 'regular',
-      item: info
-    })
+    const { createTab, history, tabIds } = this.props
+    if(!tabIds.has(info.uuid)) {
+      createTab({
+        type: 'regular',
+        item: info
+      })
+    }
     history.push(generateURL({ id: info.uuid }))
   }
 
@@ -92,7 +94,8 @@ const mapState = (state: RootState) => ({
   total: state.subscription.total,
   sourceList: state.extension.sourceList,
   page: state.subscription.page,
-  allLoaded: state.subscription.allLoaded
+  allLoaded: state.subscription.allLoaded,
+  tabIds: state.app.tabIds
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
