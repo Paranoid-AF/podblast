@@ -1,6 +1,6 @@
 module.exports = {
   modifyVars: {
-    // '@primary-color': '#1DA57A',
+    '@primary-color': '#4e4cb1',
   },
   javascriptEnabled: true,
 }
