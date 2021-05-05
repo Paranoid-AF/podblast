@@ -71,7 +71,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
   }
 
   handleRemoveItem = (item: Subscription) => {
-    console.log('Removing sub: '+item.uuid)
+    this.props.deleteSubscription({ uuid: item.uuid })
   }
 
   handleContextMenu = (item: Subscription, action: MenuActions) => {
@@ -146,7 +146,8 @@ const mapDispatch = (dispatch: Dispatch) => ({
   fetchMore: dispatch.subscription.fetchMore,
   setPage: dispatch.subscription.setPage,
   createTab: dispatch.app.insertTab,
-  pinSubscription: dispatch.subscription.pinSubscription
+  pinSubscription: dispatch.subscription.pinSubscription,
+  deleteSubscription: dispatch.subscription.deleteSubscription
 })
 
 type StateProps = ReturnType<typeof mapState>

@@ -51,7 +51,6 @@ class SubscriptionListItem extends React.PureComponent<Subscription & Props> {
   )
 
   render() {
-    console.log('updated', this.props)
     return (
       <Dropdown overlay={this.renderMenu()} trigger={['contextMenu']}>
         <div className="sub-item">

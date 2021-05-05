@@ -75,7 +75,21 @@ export const subscription = createModel<RootModel>()({
         ],
         total: payload.total
       }
-    }
+    },
+    removeFromList(state: typeof initState, { uuid }: { uuid: string }) {
+      const targetIndex = state.list.findIndex(item => (item.uuid === uuid))
+      if(targetIndex >= 0) {
+        const result = [...state.list]
+        result.splice(targetIndex, 1)
+        return {
+          ...state,
+          list: result
+        }
+      }
+      return {
+        ...state
+      }
+    },
   },
   effects: (dispatch: any) => ({
     async submitSourceForm (payload: { sourceId: string, formContent: Record<string, any>, provider?: string }) {
@@ -183,7 +197,6 @@ export const subscription = createModel<RootModel>()({
         type: 'listPinned'
       })
       if(result.data) {
-        console.log(result.data)
         result.data.forEach((item: Subscription) => {
           dispatch.app.insertTab({
             type: 'pinned',
@@ -191,6 +204,37 @@ export const subscription = createModel<RootModel>()({
           })
         })
       }
+    },
+    async deleteSubscription({ uuid }: { uuid: string }) {
+      /* Clean up tabs */
+      const { tabs, tabIds } = store.getState().app
+      if(tabIds.has(uuid)) {
+        let targetIndex: number = -1
+        let type: 'none' | 'pinned' | 'regular' = 'none'
+        targetIndex = tabs.pinned.findIndex(item => (item.uuid === uuid))
+        if(targetIndex >= 0) {
+          type = 'pinned'
+        } else {
+          targetIndex = tabs.regular.findIndex(item => (item.uuid === uuid))
+          if(targetIndex >= 0) {
+            type = 'regular'
+          }
+        }
+        if(type !== 'none') {
+          dispatch.app.removeTab({
+            type, 
+            uuid
+          })
+        }
+      }
+      /* Remove from subscription list */
+      dispatch.subscription.removeFromList({ uuid })
+      await window.electron.invoke('subscription', {
+        type: 'delete',
+        payload: {
+          uuid: uuid
+        }
+      })
     }
   })
 })

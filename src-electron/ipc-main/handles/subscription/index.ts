@@ -25,6 +25,10 @@ export interface PayloadPinSubscription {
   operation: 'pin' | 'unpin'
 }
 
+export interface PayloadDeleteSubscription {
+  uuid: string
+}
+
 export const subscription = async (event: IpcMainInvokeEvent, action: SubscriptionAction) => {
   const repo = connection.current?.getRepository(Subscription)
   if(!repo) {
@@ -137,6 +141,25 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         return {
           status: 'error',
           info: 'Error saving pin state'
+        }
+      }
+    }
+    case 'delete': {
+      const payload = action.payload as PayloadDeleteSubscription
+      const target = await repo.findOne({
+        where: {
+          uuid: payload.uuid
+        }
+      })
+      if(target) {
+        await repo.remove(target)
+        return {
+          status: 'success'
+        }
+      } else {
+        return {
+          status: 'error',
+          info: 'No matching entity.'
         }
       }
     }

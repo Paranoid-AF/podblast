@@ -25,7 +25,6 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
   nextListRegular: Array<ItemList> | null = null
 
   static getDerivedStateFromProps(props: StateProps) {
-    console.log(props)
     return {
       regularTabs: mapProps(props.tabs.regular),
       pinnedTabs: mapProps(props.tabs.pinned)
