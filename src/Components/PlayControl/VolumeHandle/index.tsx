@@ -26,6 +26,10 @@ function VolumeHandle(props: Props) {
     if(props.onVolumeChange) {
       props.onVolumeChange(targetValue)
     }
+    const iframe = document.querySelector('.nowplaying') as HTMLIFrameElement | null
+    if(iframe) {
+      iframe.style.pointerEvents = 'none'
+    }
   }, [props])
   const handleVolumeAfterChange = useCallback((value: number) => {
     const targetValue = value / 100
@@ -34,6 +38,10 @@ function VolumeHandle(props: Props) {
     isChangingVolume.current = false
     if(props.onVolumeAfterChange) {
       props.onVolumeAfterChange(targetValue)
+    }
+    const iframe = document.querySelector('.nowplaying') as HTMLIFrameElement | null
+    if(iframe) {
+      iframe.style.pointerEvents = 'all'
     }
   }, [props])
   const handleMute = useCallback(() => {

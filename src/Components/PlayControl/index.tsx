@@ -23,9 +23,17 @@ function PlayControl(props: StateProps & DispatchProps) {
     if(e.button === 0) {
       props.toggleNowPlaying(true)
     }
+    const iframe = document.querySelector('.nowplaying') as HTMLIFrameElement | null
+    if(iframe) {
+      iframe.style.pointerEvents = 'all'
+    }
   }, [props])
   const collapseCapsule = useCallback((e: React.MouseEvent) => {
     props.toggleNowPlaying(false)
+    const iframe = document.querySelector('.nowplaying') as HTMLIFrameElement | null
+    if(iframe) {
+      iframe.style.pointerEvents = 'none'
+    }
   }, [props])
   const handleSeek = useCallback((amount: number) => {
     props.seekTo(amount)
