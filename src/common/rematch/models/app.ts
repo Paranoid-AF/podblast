@@ -89,6 +89,29 @@ export const app = createModel<RootModel>()({
       return {
         ...state
       }
+    },
+    changeTabPinState(state: typeof initState, payload: { uuid: string, state: boolean }) {
+      const tabPinned = [...state.tabs.pinned]
+      const tabRegular = [...state.tabs.regular]
+      if(payload.state) {
+        const targetIndex = tabRegular.findIndex(item => item.uuid === payload.uuid)
+        if(targetIndex >= 0) {
+          const temp = tabRegular[targetIndex]
+          tabRegular.splice(targetIndex, 1)
+          tabPinned.push(temp)
+        }
+      } else {
+        const targetIndex = tabPinned.findIndex(item => item.uuid === payload.uuid)
+        tabPinned.splice(targetIndex, 1)
+        state.tabIds.delete(payload.uuid)
+      }
+      return {
+        ...state,
+        tabs: {
+          regular: tabRegular,
+          pinned: tabPinned
+        }
+      }
     }
   },
   effects: (dispatch: any) => ({

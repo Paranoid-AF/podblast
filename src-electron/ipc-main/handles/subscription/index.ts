@@ -20,6 +20,11 @@ export interface PayloadListSubscription {
   amount?: number,
 }
 
+export interface PayloadPinSubscription {
+  uuid: string,
+  operation: 'pin' | 'unpin'
+}
+
 export const subscription = async (event: IpcMainInvokeEvent, action: SubscriptionAction) => {
   const repo = connection.current?.getRepository(Subscription)
   if(!repo) {
@@ -83,6 +88,37 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         return {
           status: 'error',
           info: 'Error fetching data from database'
+        }
+      }
+    }
+    case 'pin': {
+      try {
+        const payload = action.payload as PayloadPinSubscription
+        const target = await repo.findOne({
+          where: {
+            uuid: payload.uuid
+          }
+        })
+        if(!target) {
+          return {
+            status: 'error',
+            info: 'No matched subscription.'
+          }
+        }
+        if(payload.operation === 'pin') {
+          target.pinned = true
+        }
+        if(payload.operation === 'unpin') {
+          target.pinned = false
+        }
+        await repo.save(target)
+        return {
+          status: 'success'
+        }
+      } catch(err) {
+        return {
+          status: 'error',
+          info: 'Error saving pin state'
         }
       }
     }

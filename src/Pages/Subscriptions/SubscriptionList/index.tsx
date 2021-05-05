@@ -81,7 +81,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
         break
       }
       case MenuActions.PIN_TO_SIDEBAR: {
-        console.log('Pinned to sidebar...')
+        this.props.pinSubscription(item.uuid)
         break
       }
       case MenuActions.REMOVE: {
@@ -142,7 +142,8 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: Dispatch) => ({
   fetchMore: dispatch.subscription.fetchMore,
   setPage: dispatch.subscription.setPage,
-  createTab: dispatch.app.insertTab
+  createTab: dispatch.app.insertTab,
+  pinSubscription: dispatch.subscription.pinSubscription
 })
 
 type StateProps = ReturnType<typeof mapState>

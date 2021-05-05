@@ -41,18 +41,19 @@ class SubscriptionListItem extends React.PureComponent<Subscription & Props> {
     )
   }
 
-  menu = (
+  renderMenu = () => (
     <Menu onClick={this.handleMenuClick as any}>
       <Menu.Item key={MenuActions.OPEN}>Open</Menu.Item>
-      <Menu.Item key={MenuActions.PIN_TO_SIDEBAR}>Pin to Sidebar</Menu.Item>
+      <Menu.Item key={MenuActions.PIN_TO_SIDEBAR}>{ this.props.pinned ? "Unpin from Sidebar" : "Pin to Sidebar" }</Menu.Item>
       <Menu.Divider />
       <Menu.Item key={MenuActions.REMOVE} danger>Remove Subscription</Menu.Item>
     </Menu>
   )
 
   render() {
+    console.log('updated', this.props)
     return (
-      <Dropdown overlay={this.menu} trigger={['contextMenu']}>
+      <Dropdown overlay={this.renderMenu()} trigger={['contextMenu']}>
         <div className="sub-item">
           {this.renderCover()}
           <span className="title" onClick={this.handleClick}>{this.props.title}</span>

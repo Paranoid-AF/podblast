@@ -4,6 +4,7 @@ import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 import type {
   PayloadListSubscription,
+  PayloadPinSubscription
 } from '../../../../src-electron/ipc-main/handles/subscription'
 
 import type {
@@ -34,6 +35,17 @@ export const subscription = createModel<RootModel>()({
       return {
         ...state,
         page: payload
+      }
+    },
+    setPinState(state: typeof initState, payload: { uuid: string, state: boolean }) {
+      const result = [...state.list]
+      const target = result.find(item => (item.uuid === payload.uuid))
+      if(target) {
+        target.pinned = payload.state
+      }
+      return {
+        ...state,
+        list: result
       }
     },
     toggleAllLoaded(state: typeof initState, payload: boolean) {
@@ -134,6 +146,25 @@ export const subscription = createModel<RootModel>()({
         })
       } else {
         throw new Error(result.info)
+      }
+    },
+    async pinSubscription(uuid: string) {
+      const result = await window.electron.invoke('subscription', {
+        type: 'pin',
+        payload: {
+          operation: 'pin',
+          uuid
+        } as PayloadPinSubscription
+      })
+      if(result.status === 'success') {
+        dispatch.subscription.setPinState({
+          uuid,
+          state: true
+        })
+        dispatch.app.changeTabPinState({
+          uuid,
+          state: true   
+        })
       }
     }
   })
