@@ -112,8 +112,15 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
         }
       }
     }
+    let naviClassName = 'navi'
+    if(this.props.isNowPlaying) {
+      naviClassName += ' no-drag'
+    }
+    if(this.props.contentPlaying.ready) {
+      naviClassName += ' play'
+    }
     return (
-      <div className={this.props.contentPlaying.ready ? "navi play" : "navi"}>
+      <div className={naviClassName} >
         <Panel
           items={routes}
           current={currentItemKey}
@@ -142,7 +149,8 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
 
 const mapState = (state: RootState) => ({
   contentPlaying: state.player.playing,
-  tabs: state.app.tabs
+  tabs: state.app.tabs,
+  isNowPlaying: state.player.showNowPlaying
 })
 
 const mapDispatch = (dispatch: Dispatch) => ({
