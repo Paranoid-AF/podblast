@@ -63,7 +63,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
     const { createTab, history, tabIds } = this.props
     if(!tabIds.has(info.uuid)) {
       createTab({
-        type: 'regular',
+        type: info.pinned ? 'pinned' : 'regular',
         item: info
       })
     }

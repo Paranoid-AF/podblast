@@ -11,6 +11,8 @@ import type {
   Subscription,
 } from '../../../../src-electron/data/entity/Subscription'
 
+import { store } from '../index'
+
 interface PayloadFetchMore {
   page: number,
   setCurrentPage?: boolean,
@@ -165,6 +167,15 @@ export const subscription = createModel<RootModel>()({
           uuid,
           state: operation === 'pin'
         })
+        if(operation === 'pin') {
+          const targetItem = store.getState().subscription.list.find(item => (item.uuid === uuid))
+          if(targetItem) {
+            dispatch.app.insertTab({
+              type: 'pinned',
+              item: targetItem
+            })
+          }
+        }
       }
     }
   })

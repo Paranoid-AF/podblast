@@ -7,6 +7,15 @@ import { connect } from 'react-redux'
 import { generateURL, parseURL } from '../../common/utils/detail-url'
 import { routes } from '../../Routes/navi'
 
+function mapProps(props: StateProps['tabs']['pinned'] | StateProps['tabs']['regular']) {
+  return props.map(item => ({
+    key: item.uuid,
+    name: item.title,
+    color: item.cover_color || '#888',
+    image: item.cover_pic || undefined
+  } as ItemList))
+}
+
 class Navi extends React.PureComponent<StateProps & DispatchProps & RouteComponentProps> {
   state = {
     borderless: false,
@@ -17,12 +26,8 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
 
   static getDerivedStateFromProps(props: StateProps) {
     return {
-      regularTabs: props.tabs.regular.map(item => ({
-        key: item.uuid,
-        name: item.title,
-        color: item.cover_color || '#888',
-        image: item.cover_pic || undefined
-      } as ItemList))
+      regularTabs: mapProps(props.tabs.regular),
+      pinnedTabs: mapProps(props.tabs.pinned)
     }
   }
 
@@ -93,12 +98,28 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
         }
       }
     }
+    if(currentItemKey === '') {
+      const { pinnedTabs } = this.state
+      for(let i=0; i<pinnedTabs.length; i++) {
+        const urlInfo = parseURL(this.props.location)
+        if(urlInfo && urlInfo.id === pinnedTabs[i].key) {
+          currentItemKey = pinnedTabs[i].key
+          break
+        }
+      }
+    }
     return (
       <div className={this.props.contentPlaying.ready ? "navi play" : "navi"}>
         <Panel
           items={routes}
           current={currentItemKey}
           onClick={this.handleRoutesClick}
+        />
+        <Panel
+          items={this.state.pinnedTabs}
+          current={currentItemKey}
+          onClick={this.handleTabClick}
+          withDivider={this.state.pinnedTabs.length > 0}
         />
         <Panel
           items={this.state.regularTabs}

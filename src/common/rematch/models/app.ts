@@ -42,6 +42,11 @@ export const app = createModel<RootModel>()({
       }
     },
     insertTab(state: typeof initState, { type, item } : { type: keyof typeof initState['tabs'],  item: Subscription}) {
+      if(state.tabIds.has(item.uuid)) {
+        return {
+          ...state
+        }
+      }
       state.tabIds.add(item.uuid)
       return {
         ...state,
