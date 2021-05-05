@@ -81,7 +81,10 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
         break
       }
       case MenuActions.PIN_TO_SIDEBAR: {
-        this.props.pinSubscription(item.uuid)
+        this.props.pinSubscription({
+          uuid: item.uuid,
+          operation: item.pinned ? 'unpin' : 'pin'
+        })
         break
       }
       case MenuActions.REMOVE: {

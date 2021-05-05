@@ -148,22 +148,22 @@ export const subscription = createModel<RootModel>()({
         throw new Error(result.info)
       }
     },
-    async pinSubscription(uuid: string) {
+    async pinSubscription({ uuid, operation }: { uuid: string, operation: 'pin' | 'unpin' }) {
       const result = await window.electron.invoke('subscription', {
         type: 'pin',
         payload: {
-          operation: 'pin',
+          operation: operation,
           uuid
         } as PayloadPinSubscription
       })
       if(result.status === 'success') {
         dispatch.subscription.setPinState({
           uuid,
-          state: true
+          state: operation === 'pin'
         })
         dispatch.app.changeTabPinState({
           uuid,
-          state: true   
+          state: operation === 'pin'
         })
       }
     }
