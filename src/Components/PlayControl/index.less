@@ -1,5 +1,8 @@
 @import '../../Components/Navi/index.less';
-@capsuleBackground: #323232;
+@capsuleBackground: #423fa0;
+@bottomBarBackground: #3a3885;
+@loadingIndicatorColor: #211e6b;
+@volumeBarBackground: #222146;
 @playControlHeight: 64px;
 .control-container {
   position: fixed;
@@ -27,7 +30,7 @@
   border-radius: 1000px;
   z-index: -1;
   opacity: 0;
-  transition: width .2s, opacity .2s, border-radius .2s;
+  transition: width .2s, opacity .2s, border-radius .2s, background .2s;
   -webkit-app-region: no-drag;
   color: #fff;
   background: @capsuleBackground;
@@ -56,6 +59,7 @@
     box-shadow: none;
     padding-top: 0;
     overflow: visible;
+    background: @bottomBarBackground;
   }
 
   >.control-buttons {
