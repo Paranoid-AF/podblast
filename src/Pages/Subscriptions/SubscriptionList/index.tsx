@@ -10,6 +10,9 @@ import type {
   Subscription,
 } from '../../../../src-electron/data/entity/Subscription'
 
+import { MenuActions } from './Item'
+import { Modal } from 'antd'
+
 class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & RouteComponentProps> {
   loadMoreRef = React.createRef<HTMLDivElement>()
   intersectionObserver: IntersectionObserver | null = null
@@ -67,6 +70,44 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
     history.push(generateURL({ id: info.uuid }))
   }
 
+  handleRemoveItem = (item: Subscription) => {
+    console.log('Removing sub: '+item.uuid)
+  }
+
+  handleContextMenu = (item: Subscription, action: MenuActions) => {
+    switch(action) {
+      case MenuActions.OPEN: {
+        this.handleClick(item)
+        break
+      }
+      case MenuActions.PIN_TO_SIDEBAR: {
+        console.log('Pinned to sidebar...')
+        break
+      }
+      case MenuActions.REMOVE: {
+        Modal.confirm({
+          title: 'Remove Subscription',
+          content: (
+            <span>
+              <p>You're about to remove the following subscription.</p>
+              <p>
+                Name: {item.title} <br/>
+                Source: {item.source}
+              </p>
+              <p>This operation may not be reverted.</p>
+            </span>
+          ),
+          okText: 'Remove',
+          onOk: () => {this.handleRemoveItem(item)},
+          okButtonProps: {
+            danger: true
+          }
+        })
+        break
+      }
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -78,7 +119,7 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
                 source: this.getSourceNameById(item['source'])
               }
               return (
-                <Item key={item.uuid} onClick={this.handleClick} {...itemCopy} />
+                <Item key={item.uuid} onClick={this.handleClick} onContextMenu={this.handleContextMenu} {...itemCopy} />
               )
             })
           }

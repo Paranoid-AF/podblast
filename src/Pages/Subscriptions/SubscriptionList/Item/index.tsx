@@ -3,50 +3,18 @@ import './index.less'
 import type {
   Subscription,
 } from '../../../../../src-electron/data/entity/Subscription'
-import { Menu, Dropdown, Modal } from 'antd';
+import { Menu, Dropdown } from 'antd';
 
-enum MenuActions {
+export enum MenuActions {
   OPEN = 'OPEN',
   PIN_TO_SIDEBAR = 'PIN_TO_SIDEBAR',
   REMOVE = 'REMOVE'
 }
 
 class SubscriptionListItem extends React.PureComponent<Subscription & Props> {
-  handleRemoveItem = () => {
-    console.log('Removing sub: '+this.props.uuid)
-  }
-
   handleMenuClick = (event: { key: MenuActions }) => {
-    switch(event.key) {
-      case MenuActions.OPEN: {
-        console.log('Opening...')
-        break
-      }
-      case MenuActions.PIN_TO_SIDEBAR: {
-        console.log('Pinned to sidebar...')
-        break
-      }
-      case MenuActions.REMOVE: {
-        Modal.confirm({
-          title: 'Remove Subscription',
-          content: (
-            <span>
-              <p>You're about to remove the following subscription.</p>
-              <p>
-                Name: {this.props.title} <br/>
-                Source: {this.props.source}
-              </p>
-              <p>This operation may not be reverted.</p>
-            </span>
-          ),
-          okText: 'Remove',
-          onOk: this.handleRemoveItem,
-          okButtonProps: {
-            danger: true
-          }
-        })
-        break
-      }
+    if(this.props.onContextMenu) {
+      this.props.onContextMenu(this.props, event.key)
     }
   }
 
@@ -97,7 +65,8 @@ class SubscriptionListItem extends React.PureComponent<Subscription & Props> {
 }
 
 interface Props {
-  onClick?: (id: Subscription) => void
+  onClick?: (iten: Subscription) => void,
+  onContextMenu?: (item: Subscription, action: MenuActions) => void
 }
 
 export default SubscriptionListItem

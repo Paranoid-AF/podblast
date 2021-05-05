@@ -5,119 +5,15 @@ import { RootState, Dispatch } from'../../common/rematch'
 import Panel, { ItemList, SortResult } from './Panel'
 import { connect } from 'react-redux'
 import { generateURL, parseURL } from '../../common/utils/detail-url'
-
-const bruh = [
-  {
-    key: "channel/uuid1",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid2",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid3",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid4",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid5",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid6",
-    name: "华北浪革",
-    color: "#888"
-  },
-  {
-    key: "channel/uuid7",
-    name: "捕蛇者说",
-    image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
-  },
-  {
-    key: "channel/uuid8",
-    name: "捕蛇者说",
-    image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
-  },
-  {
-    key: "channel/uuid9",
-    name: "捕蛇者说",
-    image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
-  },
-  {
-    key: "channel/uuid10",
-    name: "捕蛇者说",
-    image: "https://i.typlog.com/pythonhunter/8444690454_041962.png?x-oss-process=style/ss"
-  },
-  {
-    key: "channel/uuid11",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid12",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid13",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid14",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid15",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid16",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-  {
-    key: "channel/uuid17",
-    name: "内核恐慌",
-    image: "https://pan.icu/assets/icon@2x.png"
-  },
-]
-
-const routes = [
-  {
-    key: "home",
-    name: "首页",
-    link: "/"
-  },
-  {
-    key: "extensions",
-    name: "扩展程序",
-    link: "/extensions"
-  },
-  {
-    key: "sub",
-    name: "订阅",
-    link: "/subscriptions"
-  }
-]
+import { routes } from '../../Routes/navi'
 
 class Navi extends React.PureComponent<StateProps & DispatchProps & RouteComponentProps> {
   state = {
     borderless: false,
-    regularTabs: [] as Array<ItemList>
+    regularTabs: [] as Array<ItemList>,
+    pinnedTabs: [] as Array<ItemList>
   }
-  nextList: Array<ItemList> | null = null
+  nextListRegular: Array<ItemList> | null = null
 
   static getDerivedStateFromProps(props: StateProps) {
     return {
@@ -131,7 +27,7 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
   }
 
   handleRegularTabsPanelSort = (newList: Array<ItemList>) => {
-    this.nextList = newList
+    this.nextListRegular = newList
   }
 
   handleRegularTabsSortStart = () => {
@@ -141,11 +37,10 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
   }
 
   handleRegularTabsSortDone = (result: SortResult) => {
-    console.log(result)
     if(this.props.toggleCoverTransparency) {
       this.props.toggleCoverTransparency(false)
     }
-    if(this.nextList !== null) {
+    if(this.nextListRegular !== null) {
       this.props.swapTabs({
         type: 'regular',
         uuidFrom: this.state.regularTabs[result.fromIndex]['key'],
@@ -155,7 +50,6 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
   }
 
   handleRoutesClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    // console.log('clicked ' + key, e)
     for(let i=0; i<routes.length; i++) {
       if(routes[i].key === key) {
         this.props.history.push(routes[i].link)
