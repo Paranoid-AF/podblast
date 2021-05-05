@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { RootState, Dispatch } from'../../../common/rematch'
 import './index.less'
 import Item from './Item'
+import Empty from './Empty'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { generateURL } from '../../../common/utils/detail-url'
 
@@ -116,6 +117,9 @@ class SubscriptionList extends React.PureComponent<StateProps & DispatchProps & 
       <React.Fragment>
         <div className="sub-list">
           {
+            this.props.list.length === 0 ?
+            (<Empty />)
+            :
             this.props.list.map(item => {
               const itemCopy = {
                 ...item,
