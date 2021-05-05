@@ -25,10 +25,15 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
   nextListRegular: Array<ItemList> | null = null
 
   static getDerivedStateFromProps(props: StateProps) {
+    console.log(props)
     return {
       regularTabs: mapProps(props.tabs.regular),
       pinnedTabs: mapProps(props.tabs.pinned)
     }
+  }
+
+  componentDidMount() {
+    this.props.initPinnedTabs()
   }
 
   handleRegularTabsPanelSort = (newList: Array<ItemList>) => {
@@ -143,7 +148,8 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: Dispatch) => ({
   toggleCoverTransparency: dispatch.player.toggleCoverTransparency,
-  swapTabs: dispatch.app.swapTabs
+  swapTabs: dispatch.app.swapTabs,
+  initPinnedTabs: dispatch.subscription.initPinnedTabs
 })
 
 type StateProps = ReturnType<typeof mapState>

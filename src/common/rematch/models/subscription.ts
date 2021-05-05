@@ -177,6 +177,20 @@ export const subscription = createModel<RootModel>()({
           }
         }
       }
+    },
+    async initPinnedTabs() {
+      const result = await window.electron.invoke('subscription', {
+        type: 'listPinned'
+      })
+      if(result.data) {
+        console.log(result.data)
+        result.data.forEach((item: Subscription) => {
+          dispatch.app.insertTab({
+            type: 'pinned',
+            item: item
+          })
+        })
+      }
     }
   })
 })

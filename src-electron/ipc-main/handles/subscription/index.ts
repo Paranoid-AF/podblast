@@ -91,6 +91,24 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         }
       }
     }
+    case 'listPinned': {
+      try {
+        const result = await repo.find({
+          where: {
+            pinned: true
+          }
+        })
+        return {
+          status: 'success',
+          data: result
+        }
+      } catch(err) {
+        return {
+          status: 'error',
+          info: 'Unable to fetch all pinned subscriptions'
+        }
+      }
+    }
     case 'pin': {
       try {
         const payload = action.payload as PayloadPinSubscription
