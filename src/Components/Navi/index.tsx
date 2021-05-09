@@ -89,6 +89,13 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
     this.props.history.push(targetURL)
   }
 
+  handleCloseRegularTab = (key: string) => {
+    this.props.closeTab({
+      type: 'regular',
+      uuid: key
+    })
+  }
+
   renderControl = () => {
     if(this.props.contentPlaying.ready) {
       return (
@@ -159,6 +166,7 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
           onSortStart={this.handleTabSortStart}
           onSortDone={this.handleRegularTabsSortDone}
           onClick={this.handleTabClick}
+          onClose={this.handleCloseRegularTab}
           withDivider={false}
         />
         {this.renderControl()}
@@ -177,7 +185,8 @@ const mapDispatch = (dispatch: Dispatch) => ({
   toggleCoverTransparency: dispatch.player.toggleCoverTransparency,
   swapRegularTabs: dispatch.app.swapRegularTabs,
   swapPinnedTabs: dispatch.app.swapPinnedTabs,
-  initPinnedTabs: dispatch.subscription.initPinnedTabs
+  initPinnedTabs: dispatch.subscription.initPinnedTabs,
+  closeTab: dispatch.app.removeTab
 })
 
 type StateProps = ReturnType<typeof mapState>

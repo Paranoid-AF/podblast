@@ -353,6 +353,7 @@ class Panel extends React.PureComponent <Props, State> {
         tooltip={(this.state.sortActive || dragged) ? false : undefined}
         dragged={dragged}
         setRef={this.setItemRef(dragged)}
+        onClose={this.props.onClose}
       />
     )
   }
@@ -394,6 +395,7 @@ type Props = {
   onSortDone?: (result :SortResult) => void,
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onSortStart?: (e: MouseEvent) => void
+  onClose?: (key: string) => void
 }
 
 Panel.defaultProps = {

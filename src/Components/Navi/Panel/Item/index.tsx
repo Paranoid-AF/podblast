@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tooltip } from 'antd'
 import './index.less'
+import { CloseOutlined } from '@ant-design/icons'
 
 class PanelItem extends React.PureComponent <Props, State> {
   static defaultProps = {
@@ -22,7 +23,7 @@ class PanelItem extends React.PureComponent <Props, State> {
   state = {
     tooltip: false,
     pressed: false,
-    showButton: false
+    showClose: false
   }
 
   itemRef: React.RefObject<HTMLDivElement> = React.createRef()
@@ -109,6 +110,28 @@ class PanelItem extends React.PureComponent <Props, State> {
     e.stopPropagation()
   }
 
+  onMouseEnterItem = () => {
+    if(this.props.onClose) {
+      this.setState({
+        showClose: true
+      })
+    }
+  }
+
+  onMouseLeaveItem = () => {
+    if(this.props.onClose) {
+      this.setState({
+        showClose: false
+      })
+    }
+  }
+
+  handleClose = () => {
+    if(this.props.onClose) {
+      this.props.onClose(this.props.id)
+    }
+  }
+
   renderFinal() {
     const itemStyle: ItemStyle = {
       backgroundColor: this.props.color
@@ -137,7 +160,10 @@ class PanelItem extends React.PureComponent <Props, State> {
       }
     }
     return (
-    <div className="panel-item-wrapper">
+    <div className="panel-item-wrapper" onMouseEnter={this.onMouseEnterItem} onMouseLeave={this.onMouseLeaveItem}>
+      <div className="panel-item-close" onClick={this.handleClose} style={ { display: this.state.showClose ? 'block' : 'none' } }>
+        <CloseOutlined />
+      </div>
       <div className={spinnerClassname}>
         <div ref={this.itemRef}
             className={itemClassName}
@@ -192,7 +218,8 @@ interface ItemStyle {
 
 type State = {
   tooltip?: boolean,
-  pressed: boolean
+  pressed: boolean,
+  showClose: boolean
 }
 
 type Props = {
@@ -212,7 +239,8 @@ type Props = {
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => void,
   setRef?: ((key: string, ref: React.RefObject<HTMLDivElement>) => void) | null,
-  removeRef?: (key: string) => void | null
+  removeRef?: (key: string) => void | null,
+  onClose?: (key: string) => void
 }
 
 export default PanelItem

@@ -1,5 +1,6 @@
 @import "../../../../App.less";
 @windowDragArea: 15px;
+
 .panel-item-wrapper {
   position: relative;
   width: calc(100% - @windowDragArea * 2);
@@ -103,5 +104,28 @@
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+.panel-item-close {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  font-size: 9px;
+  left: -11.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity .5s;
+  cursor: pointer;
+  padding-left: 3px; // Fix antd icon align
+  transition: background .1s;
+  -webkit-app-region: no-drag;
+  &:hover{
+    background: rgba(255, 255, 255, 0.5);
   }
 }
