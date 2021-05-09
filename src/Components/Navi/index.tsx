@@ -23,6 +23,7 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
     pinnedTabs: [] as Array<ItemList>
   }
   nextListRegular: Array<ItemList> | null = null
+  nextListPinned: Array<ItemList> | null = null
 
   static getDerivedStateFromProps(props: StateProps) {
     return {
@@ -35,14 +36,14 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
     this.props.initPinnedTabs()
   }
 
-  handleRegularTabsPanelSort = (newList: Array<ItemList>) => {
-    this.nextListRegular = newList
-  }
-
-  handleRegularTabsSortStart = () => {
+  handleTabSortStart = () => {
     if(this.props.toggleCoverTransparency) {
       this.props.toggleCoverTransparency(true)
     }
+  }
+
+  handleRegularTabsPanelSort = (newList: Array<ItemList>) => {
+    this.nextListRegular = newList
   }
 
   handleRegularTabsSortDone = (result: SortResult) => {
@@ -50,13 +51,29 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
       this.props.toggleCoverTransparency(false)
     }
     if(this.nextListRegular !== null) {
-      this.props.swapTabs({
-        type: 'regular',
+      this.props.swapRegularTabs({
         uuidFrom: this.state.regularTabs[result.fromIndex]['key'],
         uuidTo: this.state.regularTabs[result.toIndex]['key']
       })
     }
   }
+
+  handlePinnedTabsPanelSort = (newList: Array<ItemList>) => {
+    this.nextListPinned = newList
+  }
+
+  handlePinnedTabsSortDone = (result: SortResult) => {
+    if(this.props.toggleCoverTransparency) {
+      this.props.toggleCoverTransparency(false)
+    }
+    if(this.nextListPinned !== null) {
+      this.props.swapPinnedTabs({
+        uuidFrom: this.state.pinnedTabs[result.fromIndex]['key'],
+        uuidTo: this.state.pinnedTabs[result.toIndex]['key']
+      })
+    }
+  }
+
 
   handleRoutesClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
     for(let i=0; i<routes.length; i++) {
@@ -131,12 +148,15 @@ class Navi extends React.PureComponent<StateProps & DispatchProps & RouteCompone
           current={currentItemKey}
           onClick={this.handleTabClick}
           withDivider={this.state.pinnedTabs.length > 0}
+          onSort={this.handlePinnedTabsPanelSort}
+          onSortStart={this.handleTabSortStart}
+          onSortDone={this.handlePinnedTabsSortDone}
         />
         <Panel
           items={this.state.regularTabs}
           current={currentItemKey}
           onSort={this.handleRegularTabsPanelSort}
-          onSortStart={this.handleRegularTabsSortStart}
+          onSortStart={this.handleTabSortStart}
           onSortDone={this.handleRegularTabsSortDone}
           onClick={this.handleTabClick}
           withDivider={false}
@@ -155,7 +175,8 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: Dispatch) => ({
   toggleCoverTransparency: dispatch.player.toggleCoverTransparency,
-  swapTabs: dispatch.app.swapTabs,
+  swapRegularTabs: dispatch.app.swapRegularTabs,
+  swapPinnedTabs: dispatch.app.swapPinnedTabs,
   initPinnedTabs: dispatch.subscription.initPinnedTabs
 })
 

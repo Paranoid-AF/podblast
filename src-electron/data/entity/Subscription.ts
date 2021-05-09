@@ -31,6 +31,9 @@ export class Subscription {
   @Column({ default: false })
   pinned: boolean
 
+  @Column({ nullable: true })
+  pin_order?: number
+
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date
 

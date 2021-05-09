@@ -29,6 +29,10 @@ export interface PayloadDeleteSubscription {
   uuid: string
 }
 
+export interface PayloadSwapPinTab {
+  newOrderUUIDs: Array<string>
+}
+
 export const subscription = async (event: IpcMainInvokeEvent, action: SubscriptionAction) => {
   const repo = connection.current?.getRepository(Subscription)
   if(!repo) {
@@ -100,6 +104,9 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         const result = await repo.find({
           where: {
             pinned: true
+          },
+          order: {
+            pin_order: 'ASC'
           }
         })
         return {
@@ -129,9 +136,17 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
         }
         if(payload.operation === 'pin') {
           target.pinned = true
+          const lastMaxPinOrder = (
+            await repo.createQueryBuilder()
+              .select(`MAX(pin_order) as current`)
+              .where(`pinned = true`)
+              .getRawOne()
+          )
+          target.pin_order = lastMaxPinOrder.current + 1
         }
         if(payload.operation === 'unpin') {
           target.pinned = false
+          target.pin_order = undefined
         }
         await repo.save(target)
         return {
@@ -162,6 +177,23 @@ export const subscription = async (event: IpcMainInvokeEvent, action: Subscripti
           info: 'No matching entity.'
         }
       }
+    }
+    case 'swapPinOrder': {
+      const payload = action.payload as PayloadSwapPinTab
+      const indexMap = new Map()
+      const records = await repo.createQueryBuilder()
+        .where(`pinned = true`)
+        .andWhere(`uuid IN (:...uuids)`, { uuids: payload.newOrderUUIDs })
+        .getMany()
+      payload.newOrderUUIDs.forEach((id, index) => {
+        indexMap.set(id, index)
+      })
+      records.forEach(item => {
+        if(indexMap.has(item.uuid)) {
+          item.pin_order = indexMap.get(item.uuid)
+        }
+      })
+      await repo.save(records)
     }
   }
 }

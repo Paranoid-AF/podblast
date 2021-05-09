@@ -3,8 +3,13 @@ import { InvokeAction } from '../../../react-app-env'
 import { RootModel } from './index'
 
 import type {
+  PayloadSwapPinTab
+} from '../../../../src-electron/ipc-main/handles/subscription'
+
+import type {
   Subscription,
 } from '../../../../src-electron/data/entity/Subscription'
+import { store } from '..'
 
 const initState = {
   config: {
@@ -128,6 +133,20 @@ export const app = createModel<RootModel>()({
           value: target.value
         } as any
       } as InvokeAction)
-    }
+    },
+    async swapRegularTabs({ uuidFrom, uuidTo } : { uuidFrom: Subscription['uuid'], uuidTo: Subscription['uuid']}) {
+      dispatch.app.swapTabs({ type: 'regular', uuidFrom, uuidTo })
+    },
+    async swapPinnedTabs({ uuidFrom, uuidTo } : { uuidFrom: Subscription['uuid'], uuidTo: Subscription['uuid']}) {
+      dispatch.app.swapTabs({ type: 'pinned', uuidFrom, uuidTo })
+      const newOrder = store.getState().app.tabs.pinned
+      const uuids = newOrder.map(item => (item.uuid))
+      await window.electron.invoke('subscription', {
+        type: 'swapPinOrder',
+        payload: {
+          newOrderUUIDs: uuids
+        } as PayloadSwapPinTab
+      } as InvokeAction)
+    },
   })
 })
