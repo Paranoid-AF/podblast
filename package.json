@@ -7,7 +7,7 @@
     "cheerio": "^1.0.0-rc.5",
     "electron-is-dev": "^1.2.0",
     "got": "^11.8.0",
-    "ipc-promise-invoke": "^2.1.0",
+    "ipc-promise-invoke": "^2.2.0",
     "proxy-agent": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.30",

@@ -7196,10 +7196,10 @@ ipaddr.js@1.9.1, ipaddr.js@^1.9.0:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-ipc-promise-invoke@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ipc-promise-invoke/-/ipc-promise-invoke-2.1.0.tgz#7ae48255cba3f59481bc3db8497ba333c79f6d1c"
-  integrity sha512-G/bvM7a7OYHv8NcduadkKAyM48uYGHJ3WnIIoEvp02+mMB1J/i5ihDhG8njsbDAVm/IQuBBU7O5eIpbsb51x5w==
+ipc-promise-invoke@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ipc-promise-invoke/-/ipc-promise-invoke-2.2.0.tgz#4bbb38381fc130c5b7d8817f671e820c7d19babc"
+  integrity sha512-TPl5TdGd8A8Nb5Si3/mPpf0gscTIAsbZXBZt5r01mNP8AojmiH+rYWaYcK3+PRySIRffy4cNivWEz0md1ilrxQ==
   dependencies:
     uuid "^8.3.1"
 
