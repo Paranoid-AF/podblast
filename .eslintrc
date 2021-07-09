@@ -1,10 +1,6 @@
 {
   "extends": "react-app",
   "rules": {
-    "no-unused-vars": "off",
-    "react/jsx-no-undef": ["error", { "allowGlobals": true }]
-  },
-  "globals": {
-    "Locale": true
+    "no-unused-vars": "off"
   }
 }

@@ -38,9 +38,6 @@
     "test:view": "craco test",
     "postinstall": "electron-builder install-app-deps"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

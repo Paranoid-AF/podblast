@@ -48,8 +48,8 @@ function Home(props: DispatchProps) {
         </button>
         </p>
         <p>
-          <Locale>TEST_LOCALE_STRING</Locale>
-          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT'))}}>Test Locale Fetch</button>
+          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT'))}}>Test Locale</button>
+          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT', ['a', 'b', 'c', 'd']))}}>Test Locale with Params</button>
         </p>
       </React.Fragment>
     </PageBase>

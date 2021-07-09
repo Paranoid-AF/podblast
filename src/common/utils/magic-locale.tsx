@@ -1,32 +1,15 @@
-import React, { FunctionComponent, Fragment } from 'react'
-import { connect } from 'react-redux'
-import { RootState } from'../rematch'
 import { store } from '../rematch'
-export interface Props {
-  children: string,
-  language: string,
-}
 
 // TODO: Make this actually functional.
-function getLocaleText(localeString: string, language: string) {
-  return localeString + '_' + language
+function getLocaleText(localeString: string, language: string, replaceStrings?: string[]) {
+  if(replaceStrings) {
+    return localeString + '_' + language + '_' + replaceStrings.join('_')
+  } else {
+    return localeString + '_' + language
+  }
 }
 
-const LocaleProvider: FunctionComponent<Props> = (props: Props) => {
-  return (
-    <Fragment>
-      {getLocaleText(props.children, props.language)}
-    </Fragment>
-  )
-}
-
-const mapState = (state: RootState) => ({
-  language: state.app.config.data['app.language'],
-})
-
-window['Locale'] = connect(mapState)(LocaleProvider)
-
-window['l'] = function(localeString: string) {
+window['l'] = function(localeString: string, replaceStrings?: string[]) {
   const language = store.getState().app.config.data['app.language']
-  return getLocaleText(localeString, language)
+  return getLocaleText(localeString, language, replaceStrings)
 }
