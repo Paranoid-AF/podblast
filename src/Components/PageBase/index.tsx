@@ -21,12 +21,10 @@ const collapseThreshold = 40 // px
 const fontSizeScaler = scaleLinear().domain([finalTitleStyle.fontSize, initTitleStyle.fontSize]).range([0, collapseThreshold]).invert
 const topScaler = scaleLinear().domain([finalTitleStyle.top, initTitleStyle.top]).range([0, collapseThreshold]).invert
 const leftScaler = scaleLinear().domain([finalTitleStyle.left, initTitleStyle.left]).range([0, collapseThreshold]).invert
-const titleBarScaler = scaleLinear().domain([0, targetTitleBarOpacity]).range([0, collapseThreshold]).invert
 
 class PageBase extends React.PureComponent<Props> {
   state = {
     titleStyle: initTitleStyle,
-    titleBarOpacity: 0,
     showScrollBar: true
   }
   hideScrollBarTimeout: null | NodeJS.Timeout = null
@@ -58,20 +56,17 @@ class PageBase extends React.PureComponent<Props> {
     if(target <= 0) {
       this.setState({
         titleStyle: finalTitleStyle,
-        titleBarOpacity: targetTitleBarOpacity
       })
       return
     }
     if(target >= collapseThreshold) {
       this.setState({
         titleStyle: initTitleStyle,
-        titleBarOpacity: 0
       })
       return
     }
     this.setState({
       titleStyle: this.calcTitleStyle(target),
-      titleBarOpacity: titleBarScaler(collapseThreshold - target)
     })
   }
 
@@ -97,7 +92,7 @@ class PageBase extends React.PureComponent<Props> {
     return (
       <div className="pagebase" style={{ display: visible ? 'block' : 'none' }}>
         <h1 className="pagebase-title" style={this.state.titleStyle}>{this.props.title}</h1>
-        <div className="pagebase-titlebar" style={ { opacity: this.state.titleBarOpacity } }></div>
+        <div className="pagebase-titlebar"></div>
         <Container className={containerClassName} ref={this.props.innerRef} onScroll={this.handleScroll}>
           {this.props.children}
         </Container>
