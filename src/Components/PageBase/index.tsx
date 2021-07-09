@@ -14,7 +14,6 @@ const finalTitleStyle: TitleStyle = {
   left: 6
 }
 
-const targetTitleBarOpacity = 0.8
 const scrollBarHideTimeout = 3000 // ms
 const collapseThreshold = 40 // px
 

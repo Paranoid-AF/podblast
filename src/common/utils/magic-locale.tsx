@@ -1,6 +1,6 @@
 import React, { FunctionComponent, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { RootState, Dispatch } from'../rematch'
+import { RootState } from'../rematch'
 import { store } from '../rematch'
 export interface Props {
   children: string,
