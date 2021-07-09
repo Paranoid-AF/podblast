@@ -1,7 +1,10 @@
+@import './prevent-selection';
+
 @import "./Components/Navi";
 @containerBackground: #f9f9fa;
 @naviExtensionWidth: 6px; // To make radius work
 @containerRadius: 6px;
+
 .app-wrapper {
     position: relative;
     width: 100vw;
@@ -23,7 +26,6 @@
     border-top-left-radius: @containerRadius;
     border-bottom-left-radius: @containerRadius;
 }
-
 
 body {
     background-color: @containerBackground; /* App border */
