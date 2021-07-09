@@ -3,13 +3,15 @@ export const defaultConfig: AllConfig = {
   'player.volume': 0.6,
   'player.forwardTime': 10,
   'player.backwardTime': 5,
-  'player.playbackSpeed': 1
+  'player.playbackSpeed': 1,
+  'app.language': 'en-US',
 }
 
 export type AllConfig = (
   FileConfig &
   ProxyConfig &
-  PlayerConfig
+  PlayerConfig &
+  AppConfig
 )
 
 export interface PlayerConfig {
@@ -27,4 +29,8 @@ export interface FileConfig {
 export interface ProxyConfig {
   'network.proxyEnabled': 'useGlobal' | 'enabled' | 'disabled',
   'network.proxyAddress'?: string
+}
+
+export interface AppConfig {
+  'app.language': 'zh-CN' | 'en-US',
 }

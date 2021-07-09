@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './common/utils/electron-fallback';
+import './common/utils/magic-locale';
 import './index.css';
 import App from './App';
 import { renderPlayer } from './common/player'

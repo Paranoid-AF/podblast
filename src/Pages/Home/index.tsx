@@ -47,6 +47,10 @@ function Home(props: DispatchProps) {
           Audio Test
         </button>
         </p>
+        <p>
+          <Locale>TEST_LOCALE_STRING</Locale>
+          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT'))}}>Test Locale Fetch</button>
+        </p>
       </React.Fragment>
     </PageBase>
   )
