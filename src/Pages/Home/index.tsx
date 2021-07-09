@@ -4,6 +4,9 @@ import { Dispatch } from '../../common/rematch'
 import PageBase from '../../Components/PageBase'
 
 function Home(props: DispatchProps) {
+  const testI18N = (
+    <strong>HI!</strong>
+  )
   return (
     <PageBase title="Podblast">
       <React.Fragment>
@@ -48,8 +51,11 @@ function Home(props: DispatchProps) {
         </button>
         </p>
         <p>
-          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT'))}}>Test Locale</button>
-          <button onClick={() => {alert(l('TEST_LOCALE_STRING_INSTANT', ['a', 'b', 'c', 'd']))}}>Test Locale with Params</button>
+          <button onClick={() => {alert(lang('TEST_LOCALE_STRING_INSTANT').join(''))}}>Test Locale</button>
+          <button onClick={() => {alert(lang('TEST_LOCALE_STRING_INSTANT', ['a', 'b', 'c', 'd']).join(''))}}>Test Locale with Params</button>
+        </p>
+        <p>
+          {lang('TEST_LOCALE_STRING_INSTANT', ['纯字符串', testI18N])}
         </p>
       </React.Fragment>
     </PageBase>

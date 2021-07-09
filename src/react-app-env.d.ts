@@ -1,18 +1,17 @@
 /// <reference types="react-scripts" />
 
 declare global {
+  function lang(localeString: string, replaceStrings?: string[]): string[];
+  function lang(localeString: string, replaceStrings?: Array<string | React.ComponentType | JSX.Element>): Array<string | React.ComponentType | JSX.Element>
   interface Window {
     electron: {
       invoke: (channel: string, content: InvokeAction) => Promise<IpcMessage>,
       on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void,
       isDummy?: boolean
     },
-    l: (localeString: string, replaceStrings?: string[]) => string,
+    lang: typeof lang,
   }
-
-  declare const l: typeof window['l']
-  declare const Locale: typeof window['Locale']
-
+  
 }
 
 interface IpcMessage {
