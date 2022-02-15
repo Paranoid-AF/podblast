@@ -12,7 +12,7 @@
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.30",
     "uuid": "^8.3.2",
-    "vm2": "^3.9.2"
+    "vm2": "^3.9.6"
   },
   "build": {
     "files": [
